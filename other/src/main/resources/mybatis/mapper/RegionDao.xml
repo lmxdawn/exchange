@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.lmxdawn.other.dao.RegionDao">
+
+    <select id="listAllByParams" resultType="com.lmxdawn.other.entity.Region">
+        SELECT id,`name`,is_leaf
+        FROM `region`
+        <where>
+            <if test="provinceId != null">
+                `province_id` = #{provinceId}
+                <if test="cityId != null">
+                    AND `city_id` = #{cityId}
+                    <if test="countyId != null">
+                        AND `county_id` = #{countyId}
+                    </if>
+                </if>
+            </if>
+        </where>
+    </select>
+
+</mapper>

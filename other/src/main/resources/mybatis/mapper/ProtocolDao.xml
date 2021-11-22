@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.lmxdawn.other.dao.ProtocolDao">
+
+    <select id="listPageDubbo" parameterType="com.lmxdawn.dubboapi.req.other.ProtocolQueryDubboReq" resultType="com.lmxdawn.dubboapi.res.other.ProtocolInfoDubboRes">
+        SELECT id,`key`,title,content,status,create_time,modified_time
+        FROM `protocol`
+        <where>
+            <choose>
+                <when test="status == -1">
+                    status IN (0,1)
+                </when>
+                <otherwise>
+                    status = #{status}
+                </otherwise>
+            </choose>
+        </where>
+        ORDER BY id
+        DESC
+    </select>
+
+    <select id="findByKey" resultType="com.lmxdawn.other.entity.Protocol">
+        SELECT id,title,content,create_time,modified_time
+        FROM `protocol`
+        <where>
+            `key` = #{key}
+            and `status` = 1
+        </where>
+        limit 1
+    </select>
+
+    <insert id="insert" keyProperty="id" parameterType="com.lmxdawn.other.entity.Protocol">
+        INSERT INTO `protocol`(`key`,title,content,status,create_time,modified_time)
+        VALUES
+        (#{key},
+         #{title},
+         #{content},
+         #{status},
+         #{createTime},
+         #{modifiedTime})
+    </insert>
+
+    <update id="update" parameterType="com.lmxdawn.other.entity.Protocol">
+        UPDATE `protocol`
+        <set>
+            <if test="key != null">`key`=#{key},</if>
+            <if test="title != null">`title`=#{title},</if>
+            <if test="content != null">`content`=#{content},</if>
+            <if test="status != null">`status`=#{status},</if>
+            modified_time=#{modifiedTime}
+        </set>
+        WHERE `id` = #{id}
+    </update>
+
+</mapper>

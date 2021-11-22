@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.lmxdawn.other.dao.SystemAppVersionDao">
+
+    <select id="listPageDubbo" parameterType="com.lmxdawn.dubboapi.req.other.SystemAppVersionQueryDubboReq" resultType="com.lmxdawn.dubboapi.res.other.SystemAppVersionInfoDubboRes">
+        SELECT id,`type`,platform,version,url,is_force_update,is_clear_cache,log,status,create_time,modified_time
+        FROM `system_app_version`
+        <where>
+            <choose>
+                <when test="status == -1">
+                    status IN (0,1)
+                </when>
+                <otherwise>
+                    status = #{status}
+                </otherwise>
+            </choose>
+        </where>
+        ORDER BY version
+        DESC
+    </select>
+
+    <select id="findByVersion" resultType="com.lmxdawn.other.entity.SystemAppVersion">
+        SELECT `type`,`version`,`url`,is_force_update,is_clear_cache,`log`,`status`,`create_time`
+        FROM `system_app_version`
+        <where>
+            platform = #{platform}
+            and `type` = #{type}
+            and `version` > #{version}
+        </where>
+        order by version DESC
+        limit 1
+    </select>
+
+    <insert id="insert" keyProperty="id" parameterType="com.lmxdawn.other.entity.SystemAppVersion">
+        INSERT INTO `system_app_version`(`type`,`platform`,`version`,`url`,is_force_update,is_clear_cache,log,`status`,create_time,modified_time)
+        VALUES
+        (#{type},
+         #{platform},
+         #{version},
+         #{url},
+         #{isForceUpdate},
+         #{isClearCache},
+         #{log},
+         #{status},
+         #{createTime},
+         #{modifiedTime})
+    </insert>
+
+    <update id="update" parameterType="com.lmxdawn.other.entity.SystemAppVersion">
+        UPDATE `system_app_version`
+        <set>
+            <if test="type != null">`type`=#{type},</if>
+            <if test="platform != null">`platform`=#{platform},</if>
+            <if test="version != null">`version`=#{version},</if>
+            <if test="url != null">`url`=#{url},</if>
+            <if test="isForceUpdate != null">`is_force_update`=#{isForceUpdate},</if>
+            <if test="isClearCache != null">`is_clear_cache`=#{isClearCache},</if>
+            <if test="log != null">`log`=#{log},</if>
+            <if test="status != null">`status`=#{status},</if>
+            modified_time=#{modifiedTime}
+        </set>
+        WHERE `id` = #{id}
+    </update>
+
+</mapper>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.lmxdawn.other.dao.SettingDao">
+
+    <select id="listByModule" resultType="com.lmxdawn.other.entity.Setting">
+        SELECT `key`,`value`
+        FROM setting
+        where `module` = #{module}
+    </select>
+
+    <select id="listPageDubbo" parameterType="com.lmxdawn.dubboapi.req.other.SettingQueryDubboReq" resultType="com.lmxdawn.dubboapi.res.other.SettingInfoDubboRes">
+        SELECT id,`module`,`key`,`describe`,`value`,modified_time
+        FROM `setting`
+        <where>
+            <if test="module != null and '' != module">
+                `module` = #{module}
+                <if test="key != null and '' != key">
+                    AND `key` = #{key}
+                </if>
+            </if>
+        </where>
+        ORDER BY id
+        ASC
+    </select>
+
+    <select id="findByKeyDubbo" parameterType="com.lmxdawn.dubboapi.req.other.SettingQueryDubboReq" resultType="com.lmxdawn.other.entity.Setting">
+        SELECT `value`
+        FROM `setting`
+        <where>
+            `module` = #{module} and `key` = #{key}
+        </where>
+        LIMIT 1
+    </select>
+
+    <update id="updateSettingDubbo" parameterType="com.lmxdawn.other.entity.Setting">
+        UPDATE `setting`
+        <set>
+            `value`=#{value},
+            modified_time=#{modifiedTime}
+        </set>
+        WHERE `id` = #{id}
+    </update>
+
+</mapper>

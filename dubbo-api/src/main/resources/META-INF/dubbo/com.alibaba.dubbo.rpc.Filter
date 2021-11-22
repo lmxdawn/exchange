@@ -1,0 +1,2 @@
+consumerAuthFilter=com.lmxdawn.dubboapi.interceptor.ConsumerAuthFilter
+providerRpcFilter=com.lmxdawn.dubboapi.interceptor.ProviderRpcFilter
