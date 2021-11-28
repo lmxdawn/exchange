@@ -19,15 +19,16 @@ nohup java -jar -Dspring.profiles.active=prod user/target/user-0.0.1-SNAPSHOT.ja
 ```
 
 # 模块说明
-> admin：后台
-
-> common：公共模块
 
 > dubbo-api：dubbo的API
 
-> gateway：网关
+> gateway：网关 9001
 
-> user：用户
+> admin：后台 9002
+
+> user：用户 9003
+
+> other：其它模块 9004
 
 # Swagger
 
