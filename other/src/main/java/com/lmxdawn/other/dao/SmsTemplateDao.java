@@ -17,7 +17,7 @@ public interface SmsTemplateDao {
      * @param
      * @return
      */
-    List<SmsTemplateInfoDubboRes> listPageDubbo(SmsTemplateQueryDubboReq smsTemplateQueryDubboReq);
+    List<SmsTemplateInfoDubboRes> listPageDubbo(SmsTemplateQueryDubboReq req);
 
     /**
      * 查找

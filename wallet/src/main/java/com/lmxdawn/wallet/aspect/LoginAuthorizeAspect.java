@@ -1,11 +1,11 @@
 package com.lmxdawn.wallet.aspect;
 
+import com.lmxdawn.dubboapi.service.user.UserDubboService;
 import com.lmxdawn.wallet.annotation.LoginAuthAnnotation;
 import com.lmxdawn.wallet.enums.ResultEnum;
 import com.lmxdawn.wallet.exception.JsonException;
-import com.lmxdawn.wallet.util.JwtUtils;
-import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -25,6 +25,9 @@ import java.lang.reflect.Method;
 @Component
 @Slf4j
 public class LoginAuthorizeAspect {
+
+    @DubboReference
+    private UserDubboService userDubboService;
 
     @Pointcut("@annotation(com.lmxdawn.wallet.annotation.LoginAuthAnnotation)")
     public void loginVerify() {
@@ -47,7 +50,9 @@ public class LoginAuthorizeAspect {
 
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (attributes == null) {
-            throw new JsonException(ResultEnum.NOT_NETWORK);
+            if (login) {
+                throw new JsonException(ResultEnum.LOGIN_VERIFY_FALL);
+            }
         }
         HttpServletRequest request = attributes.getRequest();
         String token = request.getHeader("x-token");
@@ -57,29 +62,15 @@ public class LoginAuthorizeAspect {
             }
         }
 
-        // 验证 token
-        Claims claims = JwtUtils.parse(token);
-        if (claims == null) {
-            if (login) {
-                throw new JsonException(ResultEnum.LOGIN_VERIFY_FALL);
-            }
-        }
-        long uid = 0;
-        try {
-            uid = Long.parseLong(claims.get("uid").toString());
-        }catch (Exception e) {
-            if (login) {
-                throw new JsonException(ResultEnum.LOGIN_VERIFY_FALL);
-            }
-        }
-        if (uid <= 0) {
+        Long uid = userDubboService.Login(token);
+        if (uid == null || uid <= 0) {
             if (login) {
                 throw new JsonException(ResultEnum.LOGIN_VERIFY_FALL);
             }
         }
 
         // 设置
-        request.setAttribute("uid", uid);
+        request.setAttribute("uid", uid == null ? 0 : uid);
     }
 
 }

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.lmxdawn.wallet.dao.CoinDao">
+
+    <select id="listPageDubbo" parameterType="com.lmxdawn.dubboapi.req.wallet.CoinQueryDubboReq" resultType="com.lmxdawn.dubboapi.res.wallet.CoinInfoDubboRes">
+        SELECT id,`name`,coin_name,symbol,sort,status,create_time,modified_time
+        FROM `coin`
+        <where>
+            <choose>
+                <when test="status == -1">
+                    status IN (0,1)
+                </when>
+                <otherwise>
+                    status = #{status}
+                </otherwise>
+            </choose>
+        </where>
+        ORDER BY sort
+        ASC
+    </select>
+
+    <select id="listAll" resultType="com.lmxdawn.wallet.entity.Coin">
+        SELECT id,`name`,coin_name,symbol
+        FROM coin
+        <where>
+            status = 1
+        </where>
+        ORDER BY `sort` ASC
+    </select>
+
+    <select id="findById" resultType="com.lmxdawn.wallet.entity.Coin">
+        SELECT id
+        FROM `coin`
+        <where>
+            id = #{id}
+        </where>
+        limit 1
+    </select>
+
+    <select id="findByName" resultType="com.lmxdawn.wallet.entity.Coin">
+        SELECT id
+        FROM `coin`
+        <where>
+            `name` = #{name}
+        </where>
+        limit 1
+    </select>
+
+    <insert id="insert" keyProperty="id" parameterType="com.lmxdawn.wallet.entity.Coin">
+        INSERT INTO `coin`(`name`,coin_name,symbol,sort,status,create_time,modified_time)
+        VALUES
+        (#{name},
+         #{coinName},
+         #{symbol},
+         #{sort},
+         #{status},
+         #{createTime},
+         #{modifiedTime})
+    </insert>
+
+    <update id="update" parameterType="com.lmxdawn.wallet.entity.Coin">
+        UPDATE `coin`
+        <trim prefix="set" suffixOverrides=",">
+            <if test="name != null">`name`=#{name},</if>
+            <if test="coinName != null">`coin_name`=#{coinName},</if>
+            <if test="symbol != null">`symbol`=#{symbol},</if>
+            <if test="sort != null">`sort`=#{sort},</if>
+            <if test="status != null">`status`=#{status},</if>
+            <if test="modifiedTime != null">`modified_time`=#{modifiedTime},</if>
+        </trim>
+        WHERE `id` = #{id}
+    </update>
+
+</mapper>

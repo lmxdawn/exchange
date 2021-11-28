@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.lmxdawn.wallet.dao.CoinProtocolDao">
+
+    <select id="listPageDubbo" parameterType="com.lmxdawn.dubboapi.req.wallet.CoinProtocolQueryDubboReq" resultType="com.lmxdawn.dubboapi.res.wallet.CoinProtocolDubboRes">
+        SELECT id,`name`,rpc_host,rpc_user,rpc_pwd,sort,status,create_time,modified_time
+        FROM `coin_protocol`
+        <where>
+            <choose>
+                <when test="status == -1">
+                    status IN (0,1)
+                </when>
+                <otherwise>
+                    status = #{status}
+                </otherwise>
+            </choose>
+        </where>
+        ORDER BY sort
+        ASC
+    </select>
+
+    <select id="listAll" resultType="com.lmxdawn.wallet.entity.CoinProtocol">
+        SELECT id,`name`,rpc_host,rpc_user,rpc_pwd
+        FROM `coin_protocol`
+        <where>
+            status = 1
+        </where>
+        ORDER BY `sort` ASC
+    </select>
+
+    <select id="findById" resultType="com.lmxdawn.wallet.entity.CoinProtocol">
+        SELECT id
+        FROM `coin_protocol`
+        <where>
+            id = #{id}
+        </where>
+        limit 1
+    </select>
+
+    <select id="findByName" resultType="com.lmxdawn.wallet.entity.CoinProtocol">
+        SELECT id
+        FROM `coin_protocol`
+        <where>
+            `name` = #{name}
+        </where>
+        limit 1
+    </select>
+
+    <insert id="insert" keyProperty="id" parameterType="com.lmxdawn.wallet.entity.CoinProtocol">
+        INSERT INTO `coin_protocol`(`name`,rpc_host,rpc_user,rpc_pwd,sort,status,create_time,modified_time)
+        VALUES
+        (#{name},
+         #{rpcHost},
+         #{rpcUser},
+         #{rpcPwd},
+         #{sort},
+         #{status},
+         #{createTime},
+         #{modifiedTime})
+    </insert>
+
+    <update id="update" parameterType="com.lmxdawn.wallet.entity.CoinProtocol">
+        UPDATE `coin`
+        <trim prefix="set" suffixOverrides=",">
+            <if test="name != null">`name`=#{name},</if>
+            <if test="rpcHost != null">`rpc_host`=#{rpcHost},</if>
+            <if test="rpcUser != null">`rpc_user`=#{rpcUser},</if>
+            <if test="rpcPwd != null">`rpc_pwd`=#{rpcPwd},</if>
+            <if test="sort != null">`sort`=#{sort},</if>
+            <if test="status != null">`status`=#{status},</if>
+            <if test="modifiedTime != null">`modified_time`=#{modifiedTime},</if>
+        </trim>
+        WHERE `id` = #{id}
+    </update>
+
+</mapper>

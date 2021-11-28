@@ -117,14 +117,14 @@
 
     <update id="updateAuthAdmin" parameterType="com.lmxdawn.admin.entity.auth.AuthAdmin">
         UPDATE auth_admin
-        <set>
+        <trim prefix="set" suffixOverrides=",">
             <if test="username != null">username=#{username},</if>
             <if test="avatar != null">avatar=#{avatar},</if>
             <if test="password != null">password=#{password},</if>
             <if test="lastLoginIp != null">last_login_ip=#{lastLoginIp},</if>
-            <if test="lastLoginTime != null">last_login_time=#{lastLoginTime}</if>
-            <if test="status != null">status=#{status}</if>
-        </set>
+            <if test="lastLoginTime != null">last_login_time=#{lastLoginTime},</if>
+            <if test="status != null">status=#{status},</if>
+        </trim>
         WHERE id=#{id}
     </update>
 

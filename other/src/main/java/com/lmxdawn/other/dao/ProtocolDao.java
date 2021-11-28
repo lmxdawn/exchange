@@ -10,7 +10,7 @@ import java.util.List;
 @Mapper
 public interface ProtocolDao {
 
-    List<ProtocolInfoDubboRes> listPageDubbo(ProtocolQueryDubboReq queryDubboReq);
+    List<ProtocolInfoDubboRes> listPageDubbo(ProtocolQueryDubboReq req);
 
     /**
      * 查询

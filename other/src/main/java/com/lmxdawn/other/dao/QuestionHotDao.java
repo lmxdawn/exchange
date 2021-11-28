@@ -11,7 +11,7 @@ import java.util.List;
 @Mapper
 public interface QuestionHotDao {
 
-    List<QuestionHotInfoDubboRes> listPageDubbo(QuestionHotQueryDubboReq queryDubboReq);
+    List<QuestionHotInfoDubboRes> listPageDubbo(QuestionHotQueryDubboReq req);
 
     /**
      * 获取列表

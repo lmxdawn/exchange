@@ -24,14 +24,14 @@ public interface SettingDao {
      * @param
      * @return
      */
-    List<SettingInfoDubboRes> listPageDubbo(SettingQueryDubboReq settingQueryDubboReq);
+    List<SettingInfoDubboRes> listPageDubbo(SettingQueryDubboReq req);
 
     /**
      * 查询
      * @param
      * @return
      */
-    Setting findByKeyDubbo(SettingQueryDubboReq settingQueryDubboReq);
+    Setting findByKeyDubbo(SettingQueryDubboReq req);
 
     /**
      * 更新数据
