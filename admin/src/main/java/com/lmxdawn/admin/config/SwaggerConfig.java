@@ -23,7 +23,7 @@ public class SwaggerConfig {
         return new Docket(
                 // 设置使用 OpenApi 3.0 规范
                 DocumentationType.OAS_30)
-                .pathMapping("/user") // 解决gateway使用swagger的问题
+                .pathMapping("/admin") // 解决gateway使用swagger的问题
                 // 是否开启 Swagger
                 .enable(true)
                 // 配置项目基本信息

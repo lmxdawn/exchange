@@ -8,8 +8,8 @@
         FROM `coin_conf`
         <where>
             <choose>
-                <when test="status == -1">
-                    status IN (0,1)
+                <when test="status == 0">
+                    status IN (1,2)
                 </when>
                 <otherwise>
                     status = #{status}

@@ -8,8 +8,8 @@
         FROM `coin_protocol`
         <where>
             <choose>
-                <when test="status == -1">
-                    status IN (0,1)
+                <when test="status == 0">
+                    status IN (1,2)
                 </when>
                 <otherwise>
                     status = #{status}
@@ -61,7 +61,7 @@
     </insert>
 
     <update id="update" parameterType="com.lmxdawn.wallet.entity.CoinProtocol">
-        UPDATE `coin`
+        UPDATE `coin_protocol`
         <trim prefix="set" suffixOverrides=",">
             <if test="name != null">`name`=#{name},</if>
             <if test="rpcHost != null">`rpc_host`=#{rpcHost},</if>

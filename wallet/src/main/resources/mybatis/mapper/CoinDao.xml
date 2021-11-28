@@ -3,13 +3,13 @@
 
 <mapper namespace="com.lmxdawn.wallet.dao.CoinDao">
 
-    <select id="listPageDubbo" parameterType="com.lmxdawn.dubboapi.req.wallet.CoinQueryDubboReq" resultType="com.lmxdawn.dubboapi.res.wallet.CoinInfoDubboRes">
+    <select id="listPageDubbo" parameterType="com.lmxdawn.dubboapi.req.wallet.CoinQueryDubboReq" resultType="com.lmxdawn.dubboapi.res.wallet.CoinDubboRes">
         SELECT id,`name`,coin_name,symbol,sort,status,create_time,modified_time
         FROM `coin`
         <where>
             <choose>
-                <when test="status == -1">
-                    status IN (0,1)
+                <when test="status == 0">
+                    status IN (1,2)
                 </when>
                 <otherwise>
                     status = #{status}
