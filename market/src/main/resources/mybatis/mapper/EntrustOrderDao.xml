@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.lmxdawn.market.dao.EntrustOrderDao">
+
+    <select id="listPageByMemberId" resultType="com.lmxdawn.market.entity.EntrustOrder">
+        SELECT member_id,trade_coin_id,coin_id,`type`,direction,price,amount,amount_complete,status,create_time,modified_time
+        FROM `entrust_order`
+        <where>
+            member_id = #{memberId}
+        </where>
+        ORDER BY `create_time` DESC
+        limit #{offset},#{limit}
+    </select>
+
+    <insert id="insert" keyProperty="id" parameterType="com.lmxdawn.market.entity.EntrustOrder">
+        INSERT INTO `entrust_order`(member_id,trade_coin_id,coin_id,`type`,direction,price,amount,amount_complete,status,create_time,modified_time)
+        VALUES
+        (#{memberId},
+         #{tradeCoinId},
+         #{coinId},
+         #{type},
+         #{direction},
+         #{price},
+         #{amount},
+         #{amountComplete},
+         #{status},
+         #{createTime},
+         #{modifiedTime})
+    </insert>
+
+    <update id="update" parameterType="com.lmxdawn.market.entity.EntrustOrder">
+        UPDATE `entrust_order`
+        <trim prefix="set" suffixOverrides=",">
+            <if test="memberId != null">`member_id`=#{memberId},</if>
+            <if test="tradeCoinId != null">`trade_coin_id`=#{tradeCoinId},</if>
+            <if test="coinId != null">`coin_id`=#{coinId},</if>
+            <if test="type != null">`type`=#{type},</if>
+            <if test="direction != null">`direction`=#{direction},</if>
+            <if test="price != null">`price`=#{price},</if>
+            <if test="amount != null">`amount`=#{amount},</if>
+            <if test="amountComplete != null">`amount_complete`=#{amountComplete},</if>
+            <if test="status != null">`status`=#{status},</if>
+            <if test="createTime != null">`create_time`=#{createTime},</if>
+            <if test="modifiedTime != null">`modified_time`=#{modifiedTime},</if>
+        </trim>
+        WHERE `id` = #{id}
+    </update>
+
+</mapper>
