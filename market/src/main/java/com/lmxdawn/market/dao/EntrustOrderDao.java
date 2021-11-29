@@ -1,6 +1,7 @@
 package com.lmxdawn.market.dao;
 
 import com.lmxdawn.market.entity.EntrustOrder;
+import com.lmxdawn.market.req.EntrustOrderListPageReq;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -12,7 +13,7 @@ public interface EntrustOrderDao {
      * 查询
      * @return
      */
-    List<EntrustOrder> listPageByMemberId(Long memberId);
+    List<EntrustOrder> listPageByMemberId(EntrustOrderListPageReq req);
 
     /**
      * 插入

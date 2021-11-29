@@ -62,15 +62,15 @@ public class LoginAuthorizeAspect {
             }
         }
 
-        Long uid = userDubboService.Login(token);
-        if (uid == null || uid <= 0) {
+        Long memberId = userDubboService.Login(token);
+        if (memberId == null || memberId <= 0) {
             if (login) {
                 throw new JsonException(ResultEnum.LOGIN_VERIFY_FALL);
             }
         }
 
         // 设置
-        request.setAttribute("uid", uid == null ? 0 : uid);
+        request.setAttribute("memberId", memberId == null ? 0 : memberId);
     }
 
 }
