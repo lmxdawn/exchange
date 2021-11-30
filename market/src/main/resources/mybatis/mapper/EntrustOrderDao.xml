@@ -8,8 +8,15 @@
         FROM `entrust_order`
         <where>
             member_id = #{memberId}
-            AND trade_coin_id = #{tradeCoinId}
-            AND coin_id = #{coinId}
+            <if test="tradeCoinId != null and '' != tradeCoinId">
+                AND trade_coin_id = #{tradeCoinId}
+            </if>
+            <if test="coinId != null and '' != coinId">
+                AND coin_id = #{coinId}
+            </if>
+            <if test="direction != null and '' != direction">
+                AND direction = #{direction}
+            </if>
             <if test="status != null and '' != status">
                 AND status = #{status}
             </if>

@@ -18,14 +18,15 @@ public class EntrustOrderListPageReq extends ListPageReq {
     private Long memberId;
 
     @ApiModelProperty(value = "交易币种ID")
-    @NotNull(message = "交易币种不能为空")
     private Long tradeCoinId;
 
     @ApiModelProperty(value = "计价币种ID")
-    @NotNull(message = "计价币种不能为空")
     private Long coinId;
 
-    @ApiModelProperty(value = "状态（1：未完成，2：已完成）")
+    @ApiModelProperty(value = "类型（0：全部，1：限价，2：市价）")
+    private Integer direction;
+
+    @ApiModelProperty(value = "状态（0：全部，1：未完成，2：已完成）")
     private Integer status;
 
 }
