@@ -9,7 +9,7 @@ import lombok.Data;
 public class LoginTokenRes {
 
     @ApiModelProperty(value = "用户ID")
-    private Long uid;
+    private Long memberId;
 
     @ApiModelProperty(value = "用户token")
     private String token;

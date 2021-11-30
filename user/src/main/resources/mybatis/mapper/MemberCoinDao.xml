@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.lmxdawn.user.dao.MemberCoinDao">
+
+    <select id="listAllByMemberId" resultType="com.lmxdawn.user.entity.MemberCoin">
+        SELECT coin_id,balance,frozen_balance,status
+        FROM `member_coin`
+        <where>
+            member_id = #{memberId}
+        </where>
+    </select>
+
+    <select id="findByMemberIdAndCoinId" resultType="com.lmxdawn.user.entity.MemberCoin">
+        SELECT balance,frozen_balance,status
+        FROM `member_coin`
+        <where>
+            member_id = #{memberId}
+            and coin_id = #{coinId}
+        </where>
+        LIMIT 1
+    </select>
+
+    <insert id="insert" keyProperty="id" parameterType="com.lmxdawn.user.entity.MemberCoin">
+        INSERT INTO `member_coin`(member_id,coin_id,balance,frozen_balance,status,create_time,modified_time)
+        VALUES
+        (#{memberId},
+         #{coinId},
+         #{balance},
+         #{frozenBalance},
+         #{status},
+         #{createTime},
+         #{modifiedTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" parameterType="java.util.List">
+        INSERT INTO
+        `member_coin`(member_id,coin_id,balance,frozen_balance,status,create_time,modified_time)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{memberId},
+            #{coinId},
+            #{balance},
+            #{frozenBalance},
+            #{status},
+            #{createTime},
+            #{modifiedTime})
+        </foreach>
+        -- 如果存在则更新
+        ON DUPLICATE KEY UPDATE
+    </insert>
+
+    <update id="update" parameterType="com.lmxdawn.user.entity.MemberCoin">
+        UPDATE `member_coin`
+        <trim prefix="set" suffixOverrides=",">
+            <if test="status != null">`status`=#{status},</if>
+            <if test="createTime != null">`create_time`=#{createTime},</if>
+            <if test="modifiedTime != null">`modified_time`=#{modifiedTime},</if>
+        </trim>
+        WHERE `member_id` = #{memberId} and `coin_id` = #{coinId}
+    </update>
+
+    <update id="incrBalance" parameterType="com.lmxdawn.user.entity.MemberCoin">
+        UPDATE `member_coin`
+        <trim prefix="set" suffixOverrides=",">
+            `balance`=balance + #{balance},
+        </trim>
+        WHERE `member_id` = #{memberId} and `coin_id` = #{coinId}
+    </update>
+
+    <update id="decrBalance" parameterType="com.lmxdawn.user.entity.MemberCoin">
+        UPDATE `member_coin`
+        <trim prefix="set" suffixOverrides=",">
+            `balance`=balance - #{balance},
+        </trim>
+        WHERE `member_id` = #{memberId} and `coin_id` = #{coinId} and balance >= #{balance}
+    </update>
+
+    <update id="frozen" parameterType="com.lmxdawn.user.entity.MemberCoin">
+        UPDATE `member_coin`
+        <trim prefix="set" suffixOverrides=",">
+            `balance`=balance - #{balance},
+            `frozen_balance`=frozen_balance + #{frozenBalance},
+        </trim>
+        WHERE `member_id` = #{memberId} and `coin_id` = #{coinId} and balance >= #{balance}
+    </update>
+
+    <update id="unfrozen" parameterType="com.lmxdawn.user.entity.MemberCoin">
+        UPDATE `member_coin`
+        <trim prefix="set" suffixOverrides=",">
+            <if test="balance != null">`balance`=balance + #{balance},</if>
+            `frozen_balance`=frozen_balance - #{frozenBalance},
+        </trim>
+        WHERE `member_id` = #{memberId} and `coin_id` = #{coinId} and frozen_balance >= #{frozenBalance}
+    </update>
+
+</mapper>

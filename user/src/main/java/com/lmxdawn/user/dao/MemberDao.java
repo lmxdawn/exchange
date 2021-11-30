@@ -3,15 +3,22 @@ package com.lmxdawn.user.dao;
 import com.lmxdawn.user.entity.Member;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 @Mapper
 public interface MemberDao {
 
     /**
-     * 根据uid查询
-     * @param uid
+     * 查询所有
      * @return
      */
-    Member findByUid(Long uid);
+    List<Member> listAll();
+
+    /**
+     * 查询
+     * @return
+     */
+    Member findByMemberId(Long memberId);
 
     /**
      * 根据手机号查询
@@ -25,6 +32,6 @@ public interface MemberDao {
      * @param member
      * @return
      */
-    boolean insertMember(Member member);
+    boolean insert(Member member);
 
 }

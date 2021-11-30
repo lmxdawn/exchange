@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
-@Api(tags = "用户注册")
+@Api(tags = "授权")
 @RestController
 @RequestMapping("/register")
 public class RegisterController {
@@ -49,7 +49,7 @@ public class RegisterController {
         member.setName(registerReq.getName());
         member.setPwd(PasswordUtils.memberPwd(registerReq.getPwd()));
 
-        memberService.insertMember(member);
+        memberService.create(member);
 
         return ResultVOUtils.success();
     }

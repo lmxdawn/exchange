@@ -15,8 +15,8 @@ public class MemberServiceImpl implements MemberService {
     private MemberDao memberDao;
 
     @Override
-    public Member findByUid(Long uid) {
-        return memberDao.findByUid(uid);
+    public Member findByMemberId(Long memberId) {
+        return memberDao.findByMemberId(memberId);
     }
 
     @Override
@@ -25,9 +25,9 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public boolean insertMember(Member member) {
+    public boolean create(Member member) {
         member.setCreateTime(new Date());
         member.setModifiedTime(new Date());
-        return memberDao.insertMember(member);
+        return memberDao.insert(member);
     }
 }

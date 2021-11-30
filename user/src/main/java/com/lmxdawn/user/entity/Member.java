@@ -9,7 +9,7 @@ public class Member {
 	/**
 	 * 用户ID
 	 */
-	private Long uid;
+	private Long memberId;
 
 	/**
 	 * 手机号

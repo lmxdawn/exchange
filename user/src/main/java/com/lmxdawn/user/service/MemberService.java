@@ -4,7 +4,7 @@ import com.lmxdawn.user.entity.Member;
 
 public interface MemberService {
 
-    Member findByUid(Long uid);
+    Member findByMemberId(Long uid);
     Member findByTel(String tel);
-    boolean insertMember(Member member);
+    boolean create(Member member);
 }

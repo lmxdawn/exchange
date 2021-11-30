@@ -3,17 +3,22 @@
 
 <mapper namespace="com.lmxdawn.user.dao.MemberDao">
 
-    <select id="findByUid" parameterType="hashmap" resultType="com.lmxdawn.user.entity.Member">
-        SELECT uid,`name`,avatar,remark
+    <select id="listAll" resultType="com.lmxdawn.user.entity.Member">
+        SELECT member_id
+        FROM member
+    </select>
+
+    <select id="findByMemberId" resultType="com.lmxdawn.user.entity.Member">
+        SELECT member_id,`name`,avatar,remark
         FROM member
         <where>
-            uid = #{uid}
+            member_id = #{memberId}
         </where>
         LIMIT 1
     </select>
 
     <select id="findByTel" parameterType="hashmap" resultType="com.lmxdawn.user.entity.Member">
-        SELECT uid,pwd
+        SELECT member_id,pwd
         FROM member
         <where>
             tel = #{tel}
@@ -21,7 +26,7 @@
         LIMIT 1
     </select>
 
-    <insert id="insertMember" keyProperty="uid" parameterType="com.lmxdawn.user.entity.Member">
+    <insert id="insert" keyProperty="uid" parameterType="com.lmxdawn.user.entity.Member">
         INSERT INTO `member`(tel,pwd,`name`,avatar,create_time,modified_time)
         VALUES
         (#{tel},

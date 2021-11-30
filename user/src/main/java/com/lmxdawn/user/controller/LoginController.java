@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 
-@Api(tags = "用户登录")
+@Api(tags = "授权")
 @RestController
 @RequestMapping("/login")
 public class LoginController {
@@ -47,10 +47,10 @@ public class LoginController {
             return ResultVOUtils.error(ResultEnum.USER_LOGIN_PWD_ERR);
         }
 
-        String token = loginService.createToken(byTel.getUid());
+        String token = loginService.createToken(byTel.getMemberId());
 
         LoginTokenRes loginTokenRes = new LoginTokenRes();
-        loginTokenRes.setUid(byTel.getUid());
+        loginTokenRes.setMemberId(byTel.getMemberId());
         loginTokenRes.setToken(token);
 
         return ResultVOUtils.success(loginTokenRes);
