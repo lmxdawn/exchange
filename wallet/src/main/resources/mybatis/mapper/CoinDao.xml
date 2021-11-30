@@ -29,6 +29,15 @@
         ORDER BY `sort` ASC
     </select>
 
+    <select id="listByIdIn" resultType="com.lmxdawn.wallet.entity.Coin">
+        SELECT id,`name`,coin_name,symbol
+        FROM coin
+        where `id` in
+        <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
     <select id="findById" resultType="com.lmxdawn.wallet.entity.Coin">
         SELECT id
         FROM `coin`

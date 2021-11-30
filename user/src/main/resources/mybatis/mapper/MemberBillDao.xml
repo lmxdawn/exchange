@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.lmxdawn.user.dao.MemberBillDao">
+
+    <select id="listPage" parameterType="com.lmxdawn.user.req.MemberBillListPageReq" resultType="com.lmxdawn.user.entity.MemberBill">
+        SELECT id,member_id,coin_id,`category`,`type`,money,remark,create_time
+        FROM member_bill
+        <where>
+            member_id = #{memberId}
+            <if test="coinId != null and '' != coinId">
+                AND coin_id = #{coinId}
+            </if>
+            <if test="category != null and '' != category">
+                AND category = #{category}
+            </if>
+            <if test="createDate != null and '' != createDate">
+                AND create_date = #{createDate}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+        limit #{offset},#{limit}
+    </select>
+
+    <insert id="insert" keyProperty="id" parameterType="com.lmxdawn.user.entity.MemberBill">
+        INSERT INTO `member_bill`(member_id,coin_id,`category`,`type`,money,remark,create_date,create_time,modified_time)
+        VALUES
+        (#{memberId},
+         #{coinId},
+         #{category},
+         #{type},
+         #{money},
+         #{remark},
+         #{createDate},
+         #{createTime},
+         #{modifiedTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" parameterType="java.util.List">
+        INSERT INTO
+        `member_bill`(member_id,coin_id,`category`,`type`,money,remark,create_date,create_time,modified_time)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.memberId},
+            #{item.coinId},
+            #{item.category},
+            #{item.type},
+            #{item.money},
+            #{item.remark},
+            #{item.createDate},
+            #{item.createTime},
+            #{item.modifiedTime})
+        </foreach>
+    </insert>
+
+</mapper>

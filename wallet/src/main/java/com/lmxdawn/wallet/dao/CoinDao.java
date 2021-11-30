@@ -21,6 +21,14 @@ public interface CoinDao {
     List<Coin> listAll();
 
     /**
+     * 获取列表
+     *
+     * @param
+     * @return
+     */
+    List<Coin> listByIdIn(List<Long> ids);
+
+    /**
      * 查询
      *
      * @param

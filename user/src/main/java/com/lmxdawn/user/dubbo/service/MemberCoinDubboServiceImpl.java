@@ -1,17 +1,16 @@
 package com.lmxdawn.user.dubbo.service;
 
-import com.lmxdawn.dubboapi.res.wallet.CoinSimpleDubboRes;
 import com.lmxdawn.dubboapi.service.user.MemberCoinDubboService;
-import com.lmxdawn.dubboapi.service.wallet.CoinDubboService;
 import com.lmxdawn.user.dao.MemberCoinDao;
 import com.lmxdawn.user.dao.MemberDao;
 import com.lmxdawn.user.entity.Member;
 import com.lmxdawn.user.entity.MemberCoin;
-import org.apache.dubbo.config.annotation.DubboReference;
+import com.lmxdawn.user.service.MemberCoinService;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @DubboService
@@ -23,19 +22,16 @@ public class MemberCoinDubboServiceImpl implements MemberCoinDubboService {
     @Autowired
     private MemberCoinDao memberCoinDao;
 
-    @DubboReference
-    private CoinDubboService coinDubboService;
+    @Autowired
+    private MemberCoinService memberCoinService;
 
     @Override
     public boolean createAll(Long coinId) {
-        // 查询所有币种
-        List<CoinSimpleDubboRes> coinSimpleDubboRes = coinDubboService.listAll();
 
         List<Member> members = memberDao.listAll();
-        List<MemberCoin> insertBatch = new ArrayList<>();
 
         int maxInstall = 10000; // 每次批量数
-
+        List<MemberCoin> insertBatch = new ArrayList<>();
         members.forEach(v -> {
             if (insertBatch.size() == maxInstall) {
                 // 插入
@@ -43,9 +39,31 @@ public class MemberCoinDubboServiceImpl implements MemberCoinDubboService {
                 insertBatch.clear();
             }
             MemberCoin memberCoin = new MemberCoin();
+            memberCoin.setMemberId(v.getMemberId());
+            memberCoin.setCoinId(coinId);
+            memberCoin.setBalance(0.00);
+            memberCoin.setFrozenBalance(0.00);
+            memberCoin.setStatus(1);
+            memberCoin.setCreateTime(new Date());
+            memberCoin.setModifiedTime(new Date());
             insertBatch.add(memberCoin);
         });
 
+        // 还有没有插入的
+        if (insertBatch.size() > 0) {
+            memberCoinDao.insertBatch(insertBatch);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean frozenBalance(Long memberId, Long coinId, double money) {
+
+        boolean b = memberCoinService.frozenBalance(memberId, coinId, money);
+
         return false;
     }
+
+
 }

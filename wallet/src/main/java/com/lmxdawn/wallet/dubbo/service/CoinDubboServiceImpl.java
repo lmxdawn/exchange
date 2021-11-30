@@ -18,7 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @DubboService
@@ -56,6 +58,18 @@ public class CoinDubboServiceImpl implements CoinDubboService {
         pageSimpleDubboRes.setTotal(infoDubboResPageInfo.getTotal());
         pageSimpleDubboRes.setList(infoDubboResList);
         return pageSimpleDubboRes;
+    }
+
+    @Override
+    public Map<Long, CoinSimpleDubboRes> mapByCoinIds(List<Long> coinIds) {
+        Map<Long, CoinSimpleDubboRes> map = new HashMap<>();
+        List<Coin> coins = coinDao.listByIdIn(coinIds);
+        coins.forEach(v -> {
+            CoinSimpleDubboRes coinSimpleDubboRes = new CoinSimpleDubboRes();
+            BeanUtils.copyProperties(v, coinSimpleDubboRes);
+            map.put(v.getId(), coinSimpleDubboRes);
+        });
+        return map;
     }
 
     @Override

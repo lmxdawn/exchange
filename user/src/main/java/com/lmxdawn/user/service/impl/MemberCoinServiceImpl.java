@@ -9,9 +9,13 @@ import com.lmxdawn.user.service.MemberCoinService;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.*;
 
+@Service
 public class MemberCoinServiceImpl implements MemberCoinService {
 
     @Autowired
@@ -61,4 +65,42 @@ public class MemberCoinServiceImpl implements MemberCoinService {
 
         return list;
     }
+
+    @Override
+    public MemberCoin findByMemberIdCoinId(Long memberId, Long coinId) {
+        MemberCoin byMemberIdAndCoinId = memberCoinDao.findByMemberIdAndCoinId(memberId, coinId);
+        if (byMemberIdAndCoinId == null) {
+            MemberCoin memberCoin = new MemberCoin();
+            memberCoin.setMemberId(memberId);
+            memberCoin.setCoinId(coinId);
+            memberCoin.setBalance(0.00);
+            memberCoin.setFrozenBalance(0.00);
+            memberCoin.setStatus(1);
+            memberCoin.setCreateTime(new Date());
+            memberCoin.setModifiedTime(new Date());
+            memberCoinDao.insert(memberCoin);
+            return memberCoin;
+        }
+        return byMemberIdAndCoinId;
+    }
+
+    @Override
+    public boolean frozenBalance(Long memberId, Long coinId, double money) {
+        MemberCoin byMemberIdCoinId = findByMemberIdCoinId(memberId, coinId);
+        Double balance = byMemberIdCoinId.getBalance();
+        BigDecimal bigBalance = new BigDecimal(balance);
+        BigDecimal bigMoney = new BigDecimal(money);
+        // 余额不足
+        if (bigMoney.compareTo(bigBalance) > 0) {
+            return false;
+        }
+        MemberCoin memberCoinFrozen = new MemberCoin();
+        memberCoinFrozen.setMemberId(memberId);
+        memberCoinFrozen.setCoinId(coinId);
+        memberCoinFrozen.setBalance(money);
+        memberCoinFrozen.setFrozenBalance(money);
+        return memberCoinDao.frozen(memberCoinFrozen);
+    }
+
+
 }

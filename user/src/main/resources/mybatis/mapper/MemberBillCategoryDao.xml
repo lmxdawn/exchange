@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.lmxdawn.user.dao.MemberBillCategoryDao">
+
+    <select id="listSimpleAll" resultType="com.lmxdawn.user.entity.MemberBillCategory">
+        SELECT `name`,title
+        FROM member_bill_category
+    </select>
+
+    <select id="listSimpleByNameIn" resultType="com.lmxdawn.user.entity.MemberBillCategory">
+        SELECT `name`,title
+        FROM member_bill_category
+        where `name` in
+        <foreach collection="list" item="name" index="index" open="(" close=")" separator=",">
+            #{name}
+        </foreach>
+    </select>
+
+    <select id="findByName" resultType="com.lmxdawn.user.entity.MemberBillCategory">
+        SELECT `name`,title
+        FROM member_bill_category
+        where `name` = #{name}
+        limit 1
+    </select>
+
+</mapper>

@@ -20,6 +20,9 @@ public class ListPageReq {
     @ApiModelProperty(value = "页数", required = true)
     private Integer page;
 
+    @ApiModelProperty(value = "分页下标", hidden = true)
+    private Integer offset;
+
     @NotNull(message = "请填写每页查询数量")
     @Min(value = 1, message = "分页参数不能小于1")
     @Max(value = 5000, message = "分页参数不能大于5000")

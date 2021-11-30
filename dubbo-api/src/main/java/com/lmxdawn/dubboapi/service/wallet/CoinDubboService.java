@@ -7,6 +7,7 @@ import com.lmxdawn.dubboapi.res.wallet.CoinDubboRes;
 import com.lmxdawn.dubboapi.res.wallet.CoinSimpleDubboRes;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 币种
@@ -16,6 +17,8 @@ public interface CoinDubboService {
     List<CoinSimpleDubboRes> listAll();
 
     PageSimpleDubboRes<CoinDubboRes> list(CoinQueryDubboReq req);
+
+    Map<Long, CoinSimpleDubboRes> mapByCoinIds(List<Long> coinIds);
 
     Long insert(CoinSaveDubboReq req);
 
