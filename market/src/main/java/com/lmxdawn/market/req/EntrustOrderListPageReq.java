@@ -3,14 +3,16 @@ package com.lmxdawn.market.req;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 // 查询委托订单列表
+@EqualsAndHashCode(callSuper = true)
 @ApiModel
 @Data
-public class EntrustOrderListPageReq {
+public class EntrustOrderListPageReq extends ListPageReq {
 
     @ApiModelProperty(value = "用户ID", hidden = true)
     private Long memberId;

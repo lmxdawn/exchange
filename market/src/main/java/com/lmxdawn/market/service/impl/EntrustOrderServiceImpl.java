@@ -1,17 +1,21 @@
 package com.lmxdawn.market.service.impl;
 
+import com.lmxdawn.dubboapi.res.wallet.CoinSimpleDubboRes;
+import com.lmxdawn.dubboapi.service.wallet.CoinDubboService;
 import com.lmxdawn.market.dao.EntrustOrderDao;
 import com.lmxdawn.market.entity.EntrustOrder;
 import com.lmxdawn.market.req.EntrustOrderCreateReq;
 import com.lmxdawn.market.req.EntrustOrderListPageReq;
 import com.lmxdawn.market.res.EntrustOrderRes;
 import com.lmxdawn.market.service.EntrustOrderService;
+import com.lmxdawn.market.util.PageUtils;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class EntrustOrderServiceImpl implements EntrustOrderService {
@@ -19,14 +23,39 @@ public class EntrustOrderServiceImpl implements EntrustOrderService {
     @Autowired
     private EntrustOrderDao entrustOrderDao;
 
+    @DubboReference
+    private CoinDubboService coinDubboService;
+
     @Override
     public List<EntrustOrderRes> listPage(EntrustOrderListPageReq req) {
 
+        Integer offset = PageUtils.createOffset(req.getPage(), req.getLimit());
+        req.setOffset(offset);
+
         List<EntrustOrder> entrustOrders = entrustOrderDao.listPageByMemberId(req);
 
-        // entrustOrders
+        if (entrustOrders.size() == 0) {
+            return new ArrayList<>();
+        }
 
-        return null;
+        Set<Long> coinIdSet = new HashSet<>();
+        entrustOrders.forEach(v -> {
+            coinIdSet.add(v.getTradeCoinId());
+            coinIdSet.add(v.getCoinId());
+        });
+        List<Long> coinIds = new ArrayList<>(coinIdSet);
+
+        Map<Long, CoinSimpleDubboRes> coinMap = coinDubboService.mapByCoinIds(coinIds);
+
+        List<EntrustOrderRes> collect = entrustOrders.stream().map(v -> {
+            EntrustOrderRes entrustOrderRes = new EntrustOrderRes();
+            BeanUtils.copyProperties(v, entrustOrderRes);
+            entrustOrderRes.setTradeCoin(coinMap.get(v.getTradeCoinId()));
+            entrustOrderRes.setCoin(coinMap.get(v.getCoinId()));
+            return entrustOrderRes;
+        }).collect(Collectors.toList());
+
+        return collect;
     }
 
     @Override
@@ -38,6 +67,8 @@ public class EntrustOrderServiceImpl implements EntrustOrderService {
         entrustOrder.setStatus(1);
         entrustOrder.setCreateTime(new Date());
         entrustOrder.setModifiedTime(new Date());
+
+        // TODO 冻结余额
 
         return entrustOrderDao.insert(entrustOrder);
     }

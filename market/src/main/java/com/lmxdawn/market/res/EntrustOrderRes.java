@@ -1,5 +1,6 @@
 package com.lmxdawn.market.res;
 
+import com.lmxdawn.dubboapi.res.wallet.CoinSimpleDubboRes;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -15,11 +16,11 @@ public class EntrustOrderRes {
     @ApiModelProperty(value = "用户ID")
     private Long memberId;
 
-    @ApiModelProperty(value = "交易币种ID")
-    private Long tradeCoinId;
+    @ApiModelProperty(value = "交易币种")
+    private CoinSimpleDubboRes tradeCoin;
 
-    @ApiModelProperty(value = "计价币种ID")
-    private Long coinId;
+    @ApiModelProperty(value = "计价币种")
+    private CoinSimpleDubboRes coin;
 
     @ApiModelProperty(value = "类型（1：限价，2：市价）")
     private Integer type;

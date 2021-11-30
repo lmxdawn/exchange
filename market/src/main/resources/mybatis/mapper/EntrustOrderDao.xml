@@ -3,11 +3,16 @@
 
 <mapper namespace="com.lmxdawn.market.dao.EntrustOrderDao">
 
-    <select id="listPageByMemberId" resultType="com.lmxdawn.market.entity.EntrustOrder">
+    <select id="listPageByMemberId" parameterType="com.lmxdawn.market.req.EntrustOrderListPageReq" resultType="com.lmxdawn.market.entity.EntrustOrder">
         SELECT member_id,trade_coin_id,coin_id,`type`,direction,price,amount,amount_complete,status,create_time,modified_time
         FROM `entrust_order`
         <where>
             member_id = #{memberId}
+            AND trade_coin_id = #{tradeCoinId}
+            AND coin_id = #{coinId}
+            <if test="status != null and '' != status">
+                AND status = #{status}
+            </if>
         </where>
         ORDER BY `create_time` DESC
         limit #{offset},#{limit}
