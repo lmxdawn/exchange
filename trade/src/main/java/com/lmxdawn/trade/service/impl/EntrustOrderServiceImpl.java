@@ -72,21 +72,42 @@ public class EntrustOrderServiceImpl implements EntrustOrderService {
 
     @Override
     public boolean create(EntrustOrderCreateReq req) {
+        boolean insert;
+        // 如果是限价
+        if (req.getType() == 1) {
 
-        // 获取交易对配置
-        Symbol byTidAndCid = symbolDao.findByTidAndCid(req.getTradeCoinId(), req.getCoinId());
-        if (byTidAndCid == null) {
-            throw new JsonException(ResultEnum.SYMBOL_NOT);
+            // 获取交易对配置
+            Symbol byTidAndCid = symbolDao.findByTidAndCid(req.getTradeCoinId(), req.getCoinId());
+            if (byTidAndCid == null) {
+                throw new JsonException(ResultEnum.SYMBOL_NOT);
+            }
+            // 交易对精度
+            Integer tradeTotalPrecision = byTidAndCid.getTradeTotalPrecision();
+
+            BigDecimal bigPrice = new BigDecimal(req.getPrice() + "");
+            BigDecimal bigAmount = new BigDecimal(req.getAmount() + "");
+            BigDecimal bigMoney = bigAmount.multiply(bigPrice).setScale(tradeTotalPrecision, BigDecimal.ROUND_HALF_DOWN);
+            // 事务的创建
+            insert = commitCreate(req, bigMoney);
+
+        } else {
+            req.setPrice(0.00);
+            EntrustOrder entrustOrder = new EntrustOrder();
+            BeanUtils.copyProperties(req, entrustOrder);
+            entrustOrder.setAmountComplete((double) 0);
+            entrustOrder.setStatus(1);
+            entrustOrder.setCreateTime(new Date());
+            entrustOrder.setModifiedTime(new Date());
+            insert = entrustOrderDao.insert(entrustOrder);
         }
 
-        // 交易对精度
-        Integer tradeTotalPrecision = byTidAndCid.getTradeTotalPrecision();
+        return insert;
+    }
 
-        BigDecimal bigPrice = new BigDecimal(req.getPrice() + "");
-        BigDecimal bigAmount = new BigDecimal(req.getAmount() + "");
+    // 执行分布式事务
+    protected boolean commitCreate(EntrustOrderCreateReq req, BigDecimal bigMoney) {
 
-        BigDecimal bigMoney = bigAmount.multiply(bigPrice).setScale(tradeTotalPrecision, BigDecimal.ROUND_HALF_DOWN);
-
+        // 冻结余额
         memberCoinDubboService.frozenBalance(req.getMemberId(), req.getCoinId(), bigMoney.doubleValue());
 
         EntrustOrder entrustOrder = new EntrustOrder();
@@ -99,4 +120,6 @@ public class EntrustOrderServiceImpl implements EntrustOrderService {
 
         return entrustOrderDao.insert(entrustOrder);
     }
+
+
 }
