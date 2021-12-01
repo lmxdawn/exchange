@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.lmxdawn.example.dao.MemberDao">
+
+    <select id="findByUid" parameterType="hashmap" resultType="com.lmxdawn.example.entity.Member">
+        SELECT uid,`name`,avatar,remark
+        FROM member
+        <where>
+            uid = #{uid}
+        </where>
+        LIMIT 1
+    </select>
+
+    <select id="findByTel" parameterType="hashmap" resultType="com.lmxdawn.example.entity.Member">
+        SELECT uid,pwd
+        FROM member
+        <where>
+            tel = #{tel}
+        </where>
+        LIMIT 1
+    </select>
+
+    <insert id="insertMember" keyProperty="uid" parameterType="com.lmxdawn.example.entity.Member">
+        INSERT INTO `member`(tel,pwd,`name`,avatar,create_time,modified_time)
+        VALUES
+        (#{tel},
+         #{email},
+         #{pwd},
+         #{name},
+         #{avatar},
+         #{createTime},
+         #{modifiedTime})
+    </insert>
+
+
+</mapper>

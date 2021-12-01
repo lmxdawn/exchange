@@ -26,9 +26,15 @@ nohup java -jar -Dspring.profiles.active=prod user/target/user-0.0.1-SNAPSHOT.ja
 
 > admin：后台 9002
 
-> user：用户 9003
+> other：其它模块 9003
 
-> other：其它模块 9004
+> user：用户 9004
+
+> wallet：钱包 9005
+
+> market：行情 9006
+
+> trade：交易 9007
 
 # Swagger
 

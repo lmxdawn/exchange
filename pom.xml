@@ -14,6 +14,7 @@
         <module>wallet</module>
         <module>other</module>
         <module>market</module>
+        <module>trade</module>
     </modules>
     <name>parent</name>
     <description>交易所项目</description>
