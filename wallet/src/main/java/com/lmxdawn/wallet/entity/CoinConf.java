@@ -32,11 +32,6 @@ public class CoinConf {
 	private String contractAddress;
 
 	/**
-	 * 币种精度
-	 */
-	private Integer decimals;
-
-	/**
 	 * 是否可提现（1：否，2：是）
 	 */
 	private Integer isWithdraw;

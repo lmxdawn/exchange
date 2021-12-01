@@ -35,6 +35,10 @@ public class CoinSaveDubboReq implements Serializable {
     @Length(min = 1, max = 10, message = "币种单位格式错误")
     private String symbol;
 
+    @ApiModelProperty(value = "币种精度")
+    @Min(value = 0, message = "币种精度格式错误")
+    private Integer precision;
+
     @ApiModelProperty(value = "排序（升序）")
     private Integer sort;
 

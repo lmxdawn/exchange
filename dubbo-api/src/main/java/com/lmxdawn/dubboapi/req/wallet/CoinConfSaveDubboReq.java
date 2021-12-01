@@ -35,10 +35,6 @@ public class CoinConfSaveDubboReq implements Serializable {
     @ApiModelProperty(value = "合约地址（代币需要）")
     private String contractAddress;
 
-    @ApiModelProperty(value = "币种精度")
-    @Min(value = 0, message = "币种精度格式错误")
-    private Integer decimals;
-
     @ApiModelProperty(value = "是否可提现（1：否，2：是）")
     @NotNull(message = "是否可提现必传")
     @Min(value = 1, message = "是否可提现格式错误")

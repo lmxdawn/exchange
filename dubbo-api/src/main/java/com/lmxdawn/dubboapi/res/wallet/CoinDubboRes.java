@@ -22,6 +22,9 @@ public class CoinDubboRes implements Serializable {
     @ApiModelProperty(value = "币种单位")
     private String symbol;
 
+    @ApiModelProperty(value = "币种精度")
+    private Integer precision;
+
     @ApiModelProperty(value = "排序（升序）")
     private Integer sort;
 

@@ -37,6 +37,10 @@ nohup java -jar -Dspring.profiles.active=prod user/target/user-0.0.1-SNAPSHOT.ja
 
 # 使用
 
+> dubbo 做微服务的调用
+
+> seata 做微服务的分布式事务
+
 > 使用 jwt 做dubbo服务间的鉴权
 
 > example 目录是示例文件，需要加 module 时创建一个module，然后复制example里面的代码，全局替换 `example` 

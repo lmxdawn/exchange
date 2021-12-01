@@ -27,6 +27,11 @@ public class Coin {
 	private String symbol;
 
 	/**
+	 * 币种精度
+	 */
+	private Integer precision;
+
+	/**
 	 * 排序（升序）
 	 */
 	private Integer sort;

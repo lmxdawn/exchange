@@ -4,7 +4,7 @@
 <mapper namespace="com.lmxdawn.wallet.dao.CoinConfDao">
 
     <select id="listPageDubbo" parameterType="com.lmxdawn.dubboapi.req.wallet.CoinConfQueryDubboReq" resultType="com.lmxdawn.dubboapi.res.wallet.CoinConfDubboRes">
-        SELECT id,coin_id,protocol_id,private_key,contract_address,decimals,is_withdraw,withdraw_rate,min_withdraw_fee,min_withdraw,max_withdraw,is_recharge,min_recharge,confirmations,min_gather,gather_address,create_time,modified_time
+        SELECT id,coin_id,protocol_id,private_key,contract_address,is_withdraw,withdraw_rate,min_withdraw_fee,min_withdraw,max_withdraw,is_recharge,min_recharge,confirmations,min_gather,gather_address,create_time,modified_time
         FROM `coin_conf`
         <where>
             <choose>
@@ -36,7 +36,7 @@
     </select>
 
     <select id="findByCoinIdAndProtocolId" resultType="com.lmxdawn.wallet.entity.CoinConf">
-        SELECT id,coin_id,protocol_id,private_key,contract_address,decimals,is_withdraw,withdraw_rate,min_withdraw_fee,min_withdraw,max_withdraw,is_recharge,min_recharge,confirmations,min_gather,gather_address,create_time,modified_time
+        SELECT id,coin_id,protocol_id,private_key,contract_address,is_withdraw,withdraw_rate,min_withdraw_fee,min_withdraw,max_withdraw,is_recharge,min_recharge,confirmations,min_gather,gather_address,create_time,modified_time
         FROM `coin_conf`
         <where>
             `coin_id` = #{coinId}
@@ -46,13 +46,12 @@
     </select>
 
     <insert id="insert" keyProperty="id" parameterType="com.lmxdawn.wallet.entity.CoinConf">
-        INSERT INTO `coin_conf`(coin_id,protocol_id,private_key,contract_address,decimals,is_withdraw,withdraw_rate,min_withdraw_fee,min_withdraw,max_withdraw,is_recharge,min_recharge,confirmations,min_gather,gather_address,create_time,modified_time)
+        INSERT INTO `coin_conf`(coin_id,protocol_id,private_key,contract_address,is_withdraw,withdraw_rate,min_withdraw_fee,min_withdraw,max_withdraw,is_recharge,min_recharge,confirmations,min_gather,gather_address,create_time,modified_time)
         VALUES
         (#{coinId},
          #{protocolId},
          #{privateKey},
          #{contractAddress},
-         #{decimals},
          #{isWithdraw},
          #{withdrawRate},
          #{minWithdrawFee},
@@ -74,7 +73,6 @@
             <if test="protocolId != null">`protocol_id`=#{protocolId},</if>
             <if test="privateKey != null">`private_key`=#{privateKey},</if>
             <if test="contractAddress != null">`contract_address`=#{contractAddress},</if>
-            <if test="decimals != null">`decimals`=#{decimals},</if>
             <if test="isWithdraw != null">`is_withdraw`=#{isWithdraw},</if>
             <if test="withdrawRate != null">`withdraw_rate`=#{withdrawRate},</if>
             <if test="minWithdrawFee != null">`min_withdraw_fee`=#{minWithdrawFee},</if>

@@ -4,7 +4,7 @@
 <mapper namespace="com.lmxdawn.wallet.dao.CoinDao">
 
     <select id="listPageDubbo" parameterType="com.lmxdawn.dubboapi.req.wallet.CoinQueryDubboReq" resultType="com.lmxdawn.dubboapi.res.wallet.CoinDubboRes">
-        SELECT id,`name`,coin_name,symbol,sort,status,create_time,modified_time
+        SELECT id,`name`,coin_name,symbol,`precision`,sort,status,create_time,modified_time
         FROM `coin`
         <where>
             <choose>
@@ -21,7 +21,7 @@
     </select>
 
     <select id="listAll" resultType="com.lmxdawn.wallet.entity.Coin">
-        SELECT id,`name`,coin_name,symbol
+        SELECT id,`name`,coin_name,symbol,`precision`
         FROM coin
         <where>
             status = 1
@@ -30,7 +30,7 @@
     </select>
 
     <select id="listByIdIn" resultType="com.lmxdawn.wallet.entity.Coin">
-        SELECT id,`name`,coin_name,symbol
+        SELECT id,`name`,coin_name,symbol,`precision`
         FROM coin
         where `id` in
         <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
@@ -57,11 +57,12 @@
     </select>
 
     <insert id="insert" keyProperty="id" parameterType="com.lmxdawn.wallet.entity.Coin">
-        INSERT INTO `coin`(`name`,coin_name,symbol,sort,status,create_time,modified_time)
+        INSERT INTO `coin`(`name`,coin_name,symbol,`precision`,sort,status,create_time,modified_time)
         VALUES
         (#{name},
          #{coinName},
          #{symbol},
+         #{precision},
          #{sort},
          #{status},
          #{createTime},
@@ -74,6 +75,7 @@
             <if test="name != null">`name`=#{name},</if>
             <if test="coinName != null">`coin_name`=#{coinName},</if>
             <if test="symbol != null">`symbol`=#{symbol},</if>
+            <if test="precision != null">`precision`=#{precision},</if>
             <if test="sort != null">`sort`=#{sort},</if>
             <if test="status != null">`status`=#{status},</if>
             <if test="modifiedTime != null">`modified_time`=#{modifiedTime},</if>

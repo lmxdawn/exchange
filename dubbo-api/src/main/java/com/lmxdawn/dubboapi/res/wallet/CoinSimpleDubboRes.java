@@ -21,4 +21,7 @@ public class CoinSimpleDubboRes implements Serializable {
 
     @ApiModelProperty(value = "币种单位")
     private String symbol;
+
+    @ApiModelProperty(value = "币种精度")
+    private Integer precision;
 }

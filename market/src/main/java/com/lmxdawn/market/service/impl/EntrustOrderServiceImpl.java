@@ -1,6 +1,7 @@
 package com.lmxdawn.market.service.impl;
 
 import com.lmxdawn.dubboapi.res.wallet.CoinSimpleDubboRes;
+import com.lmxdawn.dubboapi.service.user.MemberCoinDubboService;
 import com.lmxdawn.dubboapi.service.wallet.CoinDubboService;
 import com.lmxdawn.market.dao.EntrustOrderDao;
 import com.lmxdawn.market.entity.EntrustOrder;
@@ -14,6 +15,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -25,6 +27,9 @@ public class EntrustOrderServiceImpl implements EntrustOrderService {
 
     @DubboReference
     private CoinDubboService coinDubboService;
+
+    @DubboReference
+    private MemberCoinDubboService memberCoinDubboService;
 
     @Override
     public List<EntrustOrderRes> listPage(EntrustOrderListPageReq req) {
@@ -61,6 +66,15 @@ public class EntrustOrderServiceImpl implements EntrustOrderService {
     @Override
     public boolean create(EntrustOrderCreateReq req) {
 
+        // 获取交易对配置
+
+        BigDecimal bigPrice = new BigDecimal(req.getPrice() + "");
+        BigDecimal bigAmount = new BigDecimal(req.getAmount() + "");
+
+        BigDecimal bigMoney = bigAmount.multiply(bigPrice);
+        // TODO 冻结余额
+        memberCoinDubboService.frozenBalance(req.getMemberId(), req.getCoinId(), bigMoney.doubleValue());
+
         EntrustOrder entrustOrder = new EntrustOrder();
         BeanUtils.copyProperties(req, entrustOrder);
         entrustOrder.setAmountComplete((double) 0);
@@ -68,7 +82,6 @@ public class EntrustOrderServiceImpl implements EntrustOrderService {
         entrustOrder.setCreateTime(new Date());
         entrustOrder.setModifiedTime(new Date());
 
-        // TODO 冻结余额
 
         return entrustOrderDao.insert(entrustOrder);
     }
