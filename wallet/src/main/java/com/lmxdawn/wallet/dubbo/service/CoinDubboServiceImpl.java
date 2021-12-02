@@ -63,6 +63,9 @@ public class CoinDubboServiceImpl implements CoinDubboService {
     @Override
     public Map<Long, CoinSimpleDubboRes> mapByCoinIds(List<Long> coinIds) {
         Map<Long, CoinSimpleDubboRes> map = new HashMap<>();
+        if (coinIds == null || coinIds.size() == 0) {
+            return map;
+        }
         List<Coin> coins = coinDao.listByIdIn(coinIds);
         coins.forEach(v -> {
             CoinSimpleDubboRes coinSimpleDubboRes = new CoinSimpleDubboRes();

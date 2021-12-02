@@ -22,7 +22,7 @@
 
     <select id="listAll" resultType="com.lmxdawn.wallet.entity.Coin">
         SELECT id,`name`,coin_name,symbol,`precision`
-        FROM coin
+        FROM `coin`
         <where>
             status = 1
         </where>
@@ -31,7 +31,7 @@
 
     <select id="listByIdIn" resultType="com.lmxdawn.wallet.entity.Coin">
         SELECT id,`name`,coin_name,symbol,`precision`
-        FROM coin
+        FROM `coin`
         where `id` in
         <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
             #{id}

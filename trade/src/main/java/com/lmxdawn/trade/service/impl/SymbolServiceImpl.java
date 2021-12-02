@@ -28,6 +28,10 @@ public class SymbolServiceImpl implements SymbolService {
 
         List<Symbol> symbols = symbolDao.listAll();
 
+        if (symbols.size() == 0) {
+            return new ArrayList<>();
+        }
+
         Set<Long> coinIdSet = new HashSet<>();
         symbols.forEach(v -> {
             coinIdSet.add(v.getTradeCoinId());

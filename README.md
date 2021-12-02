@@ -1,5 +1,5 @@
 # 工程简介
-> IM聊天项目
+> 交易所项目
 
 # 下载-打包
 
@@ -45,7 +45,7 @@ nohup java -jar -Dspring.profiles.active=prod user/target/user-0.0.1-SNAPSHOT.ja
 
 > dubbo 做微服务的调用
 
-> seata 做微服务的分布式事务
+> Seata 做微服务的分布式事务，操作目录 `script/seata` [安装步骤](https://segmentfault.com/a/1190000039403317)
 
 > 使用 jwt 做dubbo服务间的鉴权
 
@@ -62,6 +62,8 @@ nohup java -jar -Dspring.profiles.active=prod user/target/user-0.0.1-SNAPSHOT.ja
 > Redis 3
 
 > MySQL 5.7
+
+> Seata 1.3.0
 
 # 其它
 

@@ -14,6 +14,7 @@ import com.lmxdawn.trade.req.EntrustOrderListPageReq;
 import com.lmxdawn.trade.res.EntrustOrderRes;
 import com.lmxdawn.trade.service.EntrustOrderService;
 import com.lmxdawn.trade.util.PageUtils;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,10 +106,14 @@ public class EntrustOrderServiceImpl implements EntrustOrderService {
     }
 
     // 执行分布式事务
+    @GlobalTransactional
     protected boolean commitCreate(EntrustOrderCreateReq req, BigDecimal bigMoney) {
 
         // 冻结余额
-        memberCoinDubboService.frozenBalance(req.getMemberId(), req.getCoinId(), bigMoney.doubleValue());
+        boolean b = memberCoinDubboService.frozenBalance(req.getMemberId(), req.getCoinId(), bigMoney.doubleValue());
+        if (!b) {
+            throw new RuntimeException();
+        }
 
         EntrustOrder entrustOrder = new EntrustOrder();
         BeanUtils.copyProperties(req, entrustOrder);

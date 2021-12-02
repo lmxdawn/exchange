@@ -15,7 +15,7 @@ import java.util.List;
 
 @Api(tags = "交易对")
 @RestController
-@RequestMapping("/entrust-order")
+@RequestMapping("/symbol-order")
 public class SymbolController {
 
     @Autowired

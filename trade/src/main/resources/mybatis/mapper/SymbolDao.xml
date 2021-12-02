@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.lmxdawn.market.dao.SymbolDao">
+<mapper namespace="com.lmxdawn.trade.dao.SymbolDao">
 
     <select id="listPageDubbo" parameterType="com.lmxdawn.dubboapi.req.trade.SymbolQueryDubboReq" resultType="com.lmxdawn.dubboapi.res.trade.SymbolDubboRes">
         SELECT id,trade_coin_id,coin_id,fee,fee_precision,trade_total_precision,trade_price_precision,trade_amount_precision,sort,status,create_time,modified_time
@@ -20,7 +20,7 @@
         ASC
     </select>
 
-    <select id="listAll" resultType="com.lmxdawn.market.entity.Symbol">
+    <select id="listAll" resultType="com.lmxdawn.trade.entity.Symbol">
         SELECT id,trade_coin_id,coin_id,fee,fee_precision,trade_total_precision,trade_price_precision,trade_amount_precision,status
         FROM `symbol`
         <where>
@@ -29,7 +29,7 @@
         ORDER BY `sort` ASC
     </select>
 
-    <select id="findByTidAndCid" resultType="com.lmxdawn.market.entity.Symbol">
+    <select id="findByTidAndCid" resultType="com.lmxdawn.trade.entity.Symbol">
         SELECT id,fee,fee_precision,trade_total_precision,trade_price_precision,trade_amount_precision
         FROM `symbol`
         <where>
@@ -39,7 +39,7 @@
         limit 1
     </select>
 
-    <insert id="insert" keyProperty="id" parameterType="com.lmxdawn.market.entity.Symbol">
+    <insert id="insert" keyProperty="id" parameterType="com.lmxdawn.trade.entity.Symbol">
         INSERT INTO `symbol`(trade_coin_id,coin_id,fee,fee_precision,trade_total_precision,trade_price_precision,trade_amount_precision,sort,status,create_time,modified_time)
         VALUES
         (#{tradeCoinId},
@@ -55,7 +55,7 @@
          #{modifiedTime})
     </insert>
 
-    <update id="update" parameterType="com.lmxdawn.market.entity.Symbol">
+    <update id="update" parameterType="com.lmxdawn.trade.entity.Symbol">
         UPDATE `symbol`
         <trim prefix="set" suffixOverrides=",">
             <if test="tradeCoinId != null">`trade_coin_id`=#{tradeCoinId},</if>
