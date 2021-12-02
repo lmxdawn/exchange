@@ -2,6 +2,7 @@ package com.lmxdawn.user.dao;
 
 import com.lmxdawn.user.entity.MemberCoin;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -18,7 +19,8 @@ public interface MemberCoinDao {
      * 查询
      * @return
      */
-    MemberCoin findByMemberIdAndCoinId(Long memberId, Long coinId);
+    MemberCoin findByMemberIdAndCoinId(@Param("memberId") Long memberId,
+                                       @Param("coinId") Long coinId);
 
     /**
      * 插入

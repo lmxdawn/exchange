@@ -62,7 +62,7 @@ public class MemberCoinDubboServiceImpl implements MemberCoinDubboService {
 
         boolean b = memberCoinService.frozenBalance(memberId, coinId, money);
 
-        return false;
+        return true;
     }
 
 
