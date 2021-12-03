@@ -30,6 +30,7 @@
         <spring-cloud.version>2020.0.3</spring-cloud.version>
         <springfox-boot.version>3.0.0</springfox-boot.version>
         <druid.version>1.2.6</druid.version>
+        <seata.version>1.4.2</seata.version>
         <mybatis.version>2.2.0</mybatis.version>
         <pagehelper.version>5.2.1</pagehelper.version>
         <jjwt.version>0.9.1</jjwt.version>
@@ -43,6 +44,20 @@
 
     <dependencyManagement>
         <dependencies>
+
+            <!-- Seata 分布式事务，放最前面为了覆盖掉 com.alibaba.cloud 的版本-->
+            <dependency>
+                <groupId>io.seata</groupId>
+                <artifactId>seata-spring-boot-starter</artifactId>
+                <version>${seata.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.alibaba</groupId>
+                        <artifactId>druid</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
@@ -117,6 +132,7 @@
                 <artifactId>fastjson</artifactId>
                 <version>${fastjson.version}</version>
             </dependency>
+
 
             <!-- 引入Swagger3依赖 -->
             <dependency>
