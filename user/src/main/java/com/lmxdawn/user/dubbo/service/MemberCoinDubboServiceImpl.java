@@ -1,5 +1,6 @@
 package com.lmxdawn.user.dubbo.service;
 
+import com.lmxdawn.dubboapi.res.user.MemberCoinSimpleDubboRes;
 import com.lmxdawn.dubboapi.service.user.MemberCoinDubboService;
 import com.lmxdawn.user.dao.MemberCoinDao;
 import com.lmxdawn.user.dao.MemberDao;
@@ -7,6 +8,7 @@ import com.lmxdawn.user.entity.Member;
 import com.lmxdawn.user.entity.MemberCoin;
 import com.lmxdawn.user.service.MemberCoinService;
 import org.apache.dubbo.config.annotation.DubboService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -58,11 +60,19 @@ public class MemberCoinDubboServiceImpl implements MemberCoinDubboService {
     }
 
     @Override
+    public MemberCoinSimpleDubboRes balance(Long memberId, Long coinId) {
+        MemberCoin byMemberIdCoinId = memberCoinService.findByMemberIdCoinId(memberId, coinId);
+        MemberCoinSimpleDubboRes res = new MemberCoinSimpleDubboRes();
+        if (byMemberIdCoinId == null) {
+            return null;
+        }
+        BeanUtils.copyProperties(byMemberIdCoinId, res);
+        return res;
+    }
+
+    @Override
     public boolean frozenBalance(Long memberId, Long coinId, double money) {
-
-        boolean b = memberCoinService.frozenBalance(memberId, coinId, money);
-
-        return true;
+        return memberCoinService.frozenBalance(memberId, coinId, money);
     }
 
 

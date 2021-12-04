@@ -39,7 +39,10 @@ public class EntrustOrderCreateReq {
     @ApiModelProperty(value = "价格（如果是市价则为空）")
     private Double price;
 
-    @ApiModelProperty(value = "价格（如果是市价则为空）")
+    @ApiModelProperty(value = "数量")
     @NotNull(message = "数量不能为空")
     private Double amount;
+
+    @ApiModelProperty(value = "实际交易金额", hidden = true)
+    private Double money;
 }

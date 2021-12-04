@@ -17,7 +17,8 @@ public enum ResultEnum {
     DATA_CHANGE(6, "数据没有任何更改"),
     DATA_REPEAT(7, "数据已存在"),
 
-    SYMBOL_NOT(70001, "交易对不存在"),
+    BALANCE_NOT(70001, "钱包余额不足"),
+    SYMBOL_NOT(70002, "交易对不存在"),
 
     ;
 

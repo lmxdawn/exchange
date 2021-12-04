@@ -86,14 +86,6 @@ public class MemberCoinServiceImpl implements MemberCoinService {
 
     @Override
     public boolean frozenBalance(Long memberId, Long coinId, double money) {
-        MemberCoin byMemberIdCoinId = findByMemberIdCoinId(memberId, coinId);
-        Double balance = byMemberIdCoinId.getBalance();
-        BigDecimal bigBalance = new BigDecimal(balance);
-        BigDecimal bigMoney = new BigDecimal(money);
-        // 余额不足
-        if (bigMoney.compareTo(bigBalance) > 0) {
-            return false;
-        }
         MemberCoin memberCoinFrozen = new MemberCoin();
         memberCoinFrozen.setMemberId(memberId);
         memberCoinFrozen.setCoinId(coinId);

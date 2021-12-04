@@ -31,6 +31,7 @@
         <springfox-boot.version>3.0.0</springfox-boot.version>
         <druid.version>1.2.6</druid.version>
         <seata.version>1.4.2</seata.version>
+        <mysql.version>8.0.22</mysql.version>
         <mybatis.version>2.2.0</mybatis.version>
         <pagehelper.version>5.2.1</pagehelper.version>
         <jjwt.version>0.9.1</jjwt.version>
@@ -44,20 +45,6 @@
 
     <dependencyManagement>
         <dependencies>
-
-            <!-- Seata 分布式事务，放最前面为了覆盖掉 com.alibaba.cloud 的版本-->
-            <dependency>
-                <groupId>io.seata</groupId>
-                <artifactId>seata-spring-boot-starter</artifactId>
-                <version>${seata.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>com.alibaba</groupId>
-                        <artifactId>druid</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
@@ -107,6 +94,12 @@
                 <version>${druid.version}</version>
             </dependency>
 
+            <!--MySQL 指定8.0.22，不然seata对Date类型的会抛异常 https://github.com/seata/seata/issues/3620 -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.version}</version>
+            </dependency>
             <!--mybatis -->
             <dependency>
                 <groupId>org.mybatis.spring.boot</groupId>
@@ -119,6 +112,14 @@
                 <artifactId>pagehelper</artifactId>
                 <version>${pagehelper.version}</version>
             </dependency>
+
+            <!-- Seata 分布式事务-->
+            <dependency>
+                <groupId>io.seata</groupId>
+                <artifactId>seata-spring-boot-starter</artifactId>
+                <version>${seata.version}</version>
+            </dependency>
+
             <!--JWT-->
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>

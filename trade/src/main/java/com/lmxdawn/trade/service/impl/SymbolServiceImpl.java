@@ -51,4 +51,9 @@ public class SymbolServiceImpl implements SymbolService {
 
         return collect;
     }
+
+    @Override
+    public Symbol findByTidAndCid(Long tradeCoinId, Long coinId) {
+        return symbolDao.findByTidAndCid(tradeCoinId, coinId);
+    }
 }

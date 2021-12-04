@@ -75,62 +75,30 @@ public class EntrustOrderServiceImpl implements EntrustOrderService {
     }
 
     @Override
+    @GlobalTransactional
     public boolean create(EntrustOrderCreateReq req) {
         boolean insert;
         // 如果是限价
         if (req.getType() == 1) {
-
-            // 获取交易对配置
-            Symbol byTidAndCid = symbolDao.findByTidAndCid(req.getTradeCoinId(), req.getCoinId());
-            if (byTidAndCid == null) {
-                throw new JsonException(ResultEnum.SYMBOL_NOT);
+            // 冻结余额
+            boolean b = memberCoinDubboService.frozenBalance(req.getMemberId(), req.getCoinId(), req.getMoney());
+            if (!b) {
+                throw new RuntimeException("创建委托订单失败，用户余额不足");
             }
-            // 交易对精度
-            Integer tradeTotalPrecision = byTidAndCid.getTradeTotalPrecision();
-
-            BigDecimal bigPrice = new BigDecimal(req.getPrice() + "");
-            BigDecimal bigAmount = new BigDecimal(req.getAmount() + "");
-            BigDecimal bigMoney = bigAmount.multiply(bigPrice).setScale(tradeTotalPrecision, BigDecimal.ROUND_HALF_DOWN);
-            // 事务的创建
-            insert = commitCreate(req, bigMoney);
-
         } else {
             req.setPrice(0.00);
-            EntrustOrder entrustOrder = new EntrustOrder();
-            BeanUtils.copyProperties(req, entrustOrder);
-            entrustOrder.setAmountComplete((double) 0);
-            entrustOrder.setStatus(1);
-            entrustOrder.setCreateTime(new Date());
-            entrustOrder.setModifiedTime(new Date());
-            insert = entrustOrderDao.insert(entrustOrder);
-        }
-
-        return insert;
-    }
-
-    // 执行分布式事务
-    @GlobalTransactional
-    public boolean commitCreate(EntrustOrderCreateReq req, BigDecimal bigMoney) {
-        log.info("globalTransactional begin, Xid:{}", RootContext.getXID());
-        // 冻结余额
-        boolean b = memberCoinDubboService.frozenBalance(req.getMemberId(), req.getCoinId(), bigMoney.doubleValue());
-        // if (!b) {
-        //     throw new RuntimeException();
-        // }
-
-        if (b) {
-            throw new RuntimeException("事务回滚");
         }
 
         EntrustOrder entrustOrder = new EntrustOrder();
         BeanUtils.copyProperties(req, entrustOrder);
+        System.out.println(entrustOrder);
         entrustOrder.setAmountComplete((double) 0);
         entrustOrder.setStatus(1);
         entrustOrder.setCreateTime(new Date());
         entrustOrder.setModifiedTime(new Date());
+        insert = entrustOrderDao.insert(entrustOrder);
 
-
-        return entrustOrderDao.insert(entrustOrder);
+        return insert;
     }
 
 
