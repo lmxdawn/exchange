@@ -77,26 +77,20 @@ public class EntrustOrderServiceImpl implements EntrustOrderService {
     @Override
     @GlobalTransactional
     public boolean create(EntrustOrderCreateReq req) {
-        boolean insert;
-        // 如果是限价
-        if (req.getType() == 1) {
-            // 冻结余额
-            boolean b = memberCoinDubboService.frozenBalance(req.getMemberId(), req.getCoinId(), req.getTotal());
-            if (!b) {
-                throw new RuntimeException("创建委托订单失败，用户余额不足");
-            }
-        } else {
-            req.setPrice(0.00);
+
+        // 冻结余额
+        boolean b = memberCoinDubboService.frozenBalance(req.getMemberId(), req.getFrozenCoinId(), req.getFrozenMoney());
+        if (!b) {
+            throw new RuntimeException("创建委托订单失败，用户余额不足");
         }
 
         EntrustOrder entrustOrder = new EntrustOrder();
         BeanUtils.copyProperties(req, entrustOrder);
-        System.out.println(entrustOrder);
         entrustOrder.setAmountComplete((double) 0);
         entrustOrder.setStatus(1);
         entrustOrder.setCreateTime(new Date());
         entrustOrder.setModifiedTime(new Date());
-        insert = entrustOrderDao.insert(entrustOrder);
+        boolean insert = entrustOrderDao.insert(entrustOrder);
 
         return insert;
     }

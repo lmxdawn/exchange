@@ -19,10 +19,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -39,7 +36,7 @@ public class EntrustOrderController {
 
     @Autowired
     private SymbolService symbolService;
-    
+
     @DubboReference
     private MemberCoinDubboService memberCoinDubboService;
 
@@ -67,9 +64,9 @@ public class EntrustOrderController {
     @ApiOperation(value = "发起委托")
     @PostMapping("/create")
     @LoginAuthAnnotation
-    public BaseRes create(@Valid EntrustOrderCreateReq req,
-                                   BindingResult bindingResult,
-                                   HttpServletRequest request) {
+    public BaseRes create(@RequestBody @Valid EntrustOrderCreateReq req,
+                          BindingResult bindingResult,
+                          HttpServletRequest request) {
 
         if (bindingResult.hasErrors()) {
             return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, bindingResult.getFieldError().getDefaultMessage());
@@ -97,24 +94,47 @@ public class EntrustOrderController {
         Integer tradeTotalPrecision = byTidAndCid.getTradeTotalPrecision();
         BigDecimal bigPrice = new BigDecimal(req.getPrice() + "");
         BigDecimal bigAmount = new BigDecimal(req.getAmount() + "");
+        BigDecimal bigTotal = new BigDecimal(req.getTotal() + "");
 
-        BigDecimal bigMoney = bigAmount.multiply(bigPrice).setScale(tradeTotalPrecision, BigDecimal.ROUND_HALF_DOWN);
+        BigDecimal bigMoney = BigDecimal.ZERO;
 
         Integer direction = req.getDirection();
 
-        // 支付的币种
-        Long byCoinId = tradeCoinId;
-        // 买入
+        // 冻结的币种
+        Long frozenCoinId = tradeCoinId;
         if (direction == 1) {
-            byCoinId = coinId;
+            // 买入
+            frozenCoinId = coinId;
             // 限价
             if (type == 1) {
-                req.setTotal(bigMoney.doubleValue());
+                req.setTotal(0.00);
+                bigMoney = bigAmount.multiply(bigPrice).setScale(tradeTotalPrecision, BigDecimal.ROUND_HALF_DOWN);
+            } else {
+                // 市价
+                if (bigTotal.compareTo(BigDecimal.ZERO) <= 0) {
+                    // 市价买入订单必须输入交易额
+                    return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, "请输入交易额");
+                }
+                req.setAmount(0.00);
+                req.setPrice(0.00);
+                bigMoney = bigTotal;
             }
+        } else {
+            // 卖出
+            req.setTotal(0.00);
+            if (type == 2) {
+                // 市价
+                req.setPrice(0.00);
+            }
+            bigMoney = bigAmount;
+        }
+
+        if (bigMoney.compareTo(BigDecimal.ZERO) <= 0) {
+            return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, "请输入交易额");
         }
 
         // 判断账户余额是否充足
-        MemberCoinSimpleDubboRes memberCoin = memberCoinDubboService.balance(req.getMemberId(), byCoinId);
+        MemberCoinSimpleDubboRes memberCoin = memberCoinDubboService.balance(req.getMemberId(), frozenCoinId);
         if (memberCoin == null) {
             throw new JsonException(ResultEnum.BALANCE_NOT);
         }
@@ -125,6 +145,8 @@ public class EntrustOrderController {
             throw new JsonException(ResultEnum.BALANCE_NOT);
         }
 
+        req.setFrozenMoney(bigMoney.doubleValue());
+        req.setFrozenCoinId(frozenCoinId);
         // 创建订单，并且调用服务冻结金额
         entrustOrderService.create(req);
 

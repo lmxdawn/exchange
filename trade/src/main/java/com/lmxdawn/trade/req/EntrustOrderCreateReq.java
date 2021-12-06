@@ -43,6 +43,13 @@ public class EntrustOrderCreateReq {
     @NotNull(message = "数量不能为空")
     private Double amount;
 
-    @ApiModelProperty(value = "实际交易金额", hidden = true)
+    @ApiModelProperty(value = "交易金额")
+    @NotNull(message = "交易金额不能为空")
     private Double total;
+
+    @ApiModelProperty(value = "支付的币种", hidden = true)
+    private Long frozenCoinId;
+
+    @ApiModelProperty(value = "冻结的金额", hidden = true)
+    private Double frozenMoney;
 }
