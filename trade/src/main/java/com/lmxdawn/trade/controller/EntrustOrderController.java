@@ -85,34 +85,44 @@ public class EntrustOrderController {
             return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, "限价类型的订单价格不能为空");
         }
 
-        // 支付的币种
         Long tradeCoinId = req.getTradeCoinId();
-        Long byCoinId = req.getCoinId();
-        // 如果是限价
-        if (req.getType() == 1) {
-            // 查询币种精度
-            Symbol byTidAndCid = symbolService.findByTidAndCid(tradeCoinId, byCoinId);
-            if (byTidAndCid == null) {
-                throw new JsonException(ResultEnum.SYMBOL_NOT);
-            }
-            // 交易对精度
-            Integer tradeTotalPrecision = byTidAndCid.getTradeTotalPrecision();
-            BigDecimal bigPrice = new BigDecimal(req.getPrice() + "");
-            BigDecimal bigAmount = new BigDecimal(req.getAmount() + "");
-            BigDecimal bigMoney = bigAmount.multiply(bigPrice).setScale(tradeTotalPrecision, BigDecimal.ROUND_HALF_DOWN);
+        Long coinId = req.getCoinId();
 
-            // 判断账户余额是否充足
-            MemberCoinSimpleDubboRes memberCoin = memberCoinDubboService.balance(req.getMemberId(), byCoinId);
-            if (memberCoin == null) {
-                throw new JsonException(ResultEnum.BALANCE_NOT);
+        // 查询交易对精度
+        Symbol byTidAndCid = symbolService.findByTidAndCid(tradeCoinId, coinId);
+        if (byTidAndCid == null) {
+            throw new JsonException(ResultEnum.SYMBOL_NOT);
+        }
+        // 交易对精度
+        Integer tradeTotalPrecision = byTidAndCid.getTradeTotalPrecision();
+        BigDecimal bigPrice = new BigDecimal(req.getPrice() + "");
+        BigDecimal bigAmount = new BigDecimal(req.getAmount() + "");
+
+        BigDecimal bigMoney = bigAmount.multiply(bigPrice).setScale(tradeTotalPrecision, BigDecimal.ROUND_HALF_DOWN);
+
+        Integer direction = req.getDirection();
+
+        // 支付的币种
+        Long byCoinId = tradeCoinId;
+        // 买入
+        if (direction == 1) {
+            byCoinId = coinId;
+            // 限价
+            if (type == 1) {
+                req.setTotal(bigMoney.doubleValue());
             }
-            Double balance = memberCoin.getBalance();
-            BigDecimal bigBalance = new BigDecimal(balance);
-            // 余额不足
-            if (bigMoney.compareTo(bigBalance) > 0) {
-                throw new JsonException(ResultEnum.BALANCE_NOT);
-            }
-            req.setMoney(bigMoney.doubleValue());
+        }
+
+        // 判断账户余额是否充足
+        MemberCoinSimpleDubboRes memberCoin = memberCoinDubboService.balance(req.getMemberId(), byCoinId);
+        if (memberCoin == null) {
+            throw new JsonException(ResultEnum.BALANCE_NOT);
+        }
+        Double balance = memberCoin.getBalance();
+        BigDecimal bigBalance = new BigDecimal(balance);
+        // 余额不足
+        if (bigMoney.compareTo(bigBalance) > 0) {
+            throw new JsonException(ResultEnum.BALANCE_NOT);
         }
 
         // 创建订单，并且调用服务冻结金额

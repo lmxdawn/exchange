@@ -53,6 +53,11 @@ public class EntrustOrder {
 	private Double amountComplete;
 
 	/**
+	 * 交易额
+	 */
+	private Double total;
+
+	/**
 	 * 状态（1：未完成，2：已完成）
 	 */
 	private Integer status;

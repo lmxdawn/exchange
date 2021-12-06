@@ -44,5 +44,5 @@ public class EntrustOrderCreateReq {
     private Double amount;
 
     @ApiModelProperty(value = "实际交易金额", hidden = true)
-    private Double money;
+    private Double total;
 }

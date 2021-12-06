@@ -4,7 +4,7 @@
 <mapper namespace="com.lmxdawn.trade.dao.EntrustOrderDao">
 
     <select id="listPageByMemberId" parameterType="com.lmxdawn.trade.req.EntrustOrderListPageReq" resultType="com.lmxdawn.trade.entity.EntrustOrder">
-        SELECT member_id,trade_coin_id,coin_id,`type`,direction,price,amount,amount_complete,status,create_time,modified_time
+        SELECT member_id,trade_coin_id,coin_id,`type`,direction,price,amount,amount_complete,total,status,create_time,modified_time
         FROM `entrust_order`
         <where>
             member_id = #{memberId}
@@ -26,7 +26,7 @@
     </select>
 
     <insert id="insert" keyProperty="id" parameterType="com.lmxdawn.trade.entity.EntrustOrder">
-        INSERT INTO `entrust_order`(member_id,trade_coin_id,coin_id,`type`,direction,price,amount,amount_complete,status,create_time,modified_time)
+        INSERT INTO `entrust_order`(member_id,trade_coin_id,coin_id,`type`,direction,price,amount,amount_complete,total,status,create_time,modified_time)
         VALUES
         (#{memberId},
          #{tradeCoinId},
@@ -36,6 +36,7 @@
          #{price},
          #{amount},
          #{amountComplete},
+         #{total},
          #{status},
          #{createTime},
          #{modifiedTime})
@@ -52,6 +53,7 @@
             <if test="price != null">`price`=#{price},</if>
             <if test="amount != null">`amount`=#{amount},</if>
             <if test="amountComplete != null">`amount_complete`=#{amountComplete},</if>
+            <if test="total != null">`total`=#{total},</if>
             <if test="status != null">`status`=#{status},</if>
             <if test="createTime != null">`create_time`=#{createTime},</if>
             <if test="modifiedTime != null">`modified_time`=#{modifiedTime},</if>

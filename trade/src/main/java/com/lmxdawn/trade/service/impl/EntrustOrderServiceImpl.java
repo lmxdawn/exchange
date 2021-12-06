@@ -81,7 +81,7 @@ public class EntrustOrderServiceImpl implements EntrustOrderService {
         // 如果是限价
         if (req.getType() == 1) {
             // 冻结余额
-            boolean b = memberCoinDubboService.frozenBalance(req.getMemberId(), req.getCoinId(), req.getMoney());
+            boolean b = memberCoinDubboService.frozenBalance(req.getMemberId(), req.getCoinId(), req.getTotal());
             if (!b) {
                 throw new RuntimeException("创建委托订单失败，用户余额不足");
             }
