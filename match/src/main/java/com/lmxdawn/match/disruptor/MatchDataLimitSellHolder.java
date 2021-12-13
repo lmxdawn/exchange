@@ -44,6 +44,8 @@ public class MatchDataLimitSellHolder {
                 BigDecimal bigAmount = BigDecimal.valueOf(market.getAmount());
                 // 撮合明细
                 MatchDetailMq matchDetailMq = new MatchDetailMq();
+                matchDetailMq.setTradeCoinId(tradeCoinId);
+                matchDetailMq.setCoinId(coinId);
                 matchDetailMq.setId(buy.getId());
                 matchDetailMq.setMatchId(market.getId());
                 matchDetailMq.setMemberId(buy.getMemberId());
@@ -55,6 +57,8 @@ public class MatchDataLimitSellHolder {
                 matchDetailMq.setPrice(buyPrice.doubleValue());
                 matchDetailMq.setIsComplete(0);
                 matchDetailMq.setMatchIsComplete(0);
+                matchDetailMq.setIsRobot(buy.getIsRobot());
+                matchDetailMq.setMatchIsRobot(market.getIsRobot());
                 // 成交量
                 BigDecimal completeAmount = bigAmount;
                 // 订单相等
@@ -107,6 +111,8 @@ public class MatchDataLimitSellHolder {
                     BigDecimal bigAmount = BigDecimal.valueOf(matchEvent.getAmount());
                     // 撮合明细
                     MatchDetailMq matchDetailMq = new MatchDetailMq();
+                    matchDetailMq.setTradeCoinId(tradeCoinId);
+                    matchDetailMq.setCoinId(coinId);
                     matchDetailMq.setId(buy.getId());
                     matchDetailMq.setMatchId(matchEvent.getId());
                     matchDetailMq.setMemberId(buy.getMemberId());
@@ -118,6 +124,8 @@ public class MatchDataLimitSellHolder {
                     matchDetailMq.setPrice(matchEvent.getPrice());
                     matchDetailMq.setIsComplete(0);
                     matchDetailMq.setMatchIsComplete(0);
+                    matchDetailMq.setIsRobot(buy.getIsRobot());
+                    matchDetailMq.setMatchIsRobot(matchEvent.getIsRobot());
                     // 成交量
                     BigDecimal completeAmount = bigAmount;
                     // 订单数量相等

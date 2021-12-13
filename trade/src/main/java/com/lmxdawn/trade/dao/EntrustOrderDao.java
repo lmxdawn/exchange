@@ -16,6 +16,12 @@ public interface EntrustOrderDao {
     List<EntrustOrder> listPageByMemberId(EntrustOrderListPageReq req);
 
     /**
+     * 查询
+     * @return
+     */
+    List<EntrustOrder> listByIdIn(List<Long> ids);
+
+    /**
      * 插入
      * @return
      */
@@ -26,5 +32,11 @@ public interface EntrustOrderDao {
      * @return
      */
     boolean update(EntrustOrder entrustOrder);
+
+    /**
+     * 增加
+     * @return
+     */
+    boolean incr(EntrustOrder entrustOrder);
 
 }

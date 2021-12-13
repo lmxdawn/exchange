@@ -25,8 +25,17 @@
         limit #{offset},#{limit}
     </select>
 
+    <select id="listByIdIn" resultType="com.lmxdawn.trade.entity.EntrustOrder">
+        SELECT `id`,`amount`,`amount_complete`,`total`,`total_complete`
+        FROM `entrust_order`
+        where `id` in
+        <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
     <insert id="insert" keyProperty="id" parameterType="com.lmxdawn.trade.entity.EntrustOrder">
-        INSERT INTO `entrust_order`(member_id,trade_coin_id,coin_id,`type`,direction,price,amount,amount_complete,total,status,create_time,modified_time)
+        INSERT INTO `entrust_order`(member_id,trade_coin_id,coin_id,`type`,direction,price,amount,amount_complete,total,total_complete,status,create_time,modified_time)
         VALUES
         (#{memberId},
          #{tradeCoinId},
@@ -37,6 +46,7 @@
          #{amount},
          #{amountComplete},
          #{total},
+         #{totalComplete},
          #{status},
          #{createTime},
          #{modifiedTime})
@@ -54,11 +64,24 @@
             <if test="amount != null">`amount`=#{amount},</if>
             <if test="amountComplete != null">`amount_complete`=#{amountComplete},</if>
             <if test="total != null">`total`=#{total},</if>
+            <if test="totalComplete != null">`total_complete`=#{totalComplete},</if>
             <if test="status != null">`status`=#{status},</if>
             <if test="createTime != null">`create_time`=#{createTime},</if>
             <if test="modifiedTime != null">`modified_time`=#{modifiedTime},</if>
         </trim>
         WHERE `id` = #{id}
+    </update>
+
+    <update id="incr" parameterType="com.lmxdawn.trade.entity.EntrustOrder">
+        UPDATE `entrust_order`
+        <trim prefix="set" suffixOverrides=",">
+            <if test="amount != null">`amount_complete`= amount_complete + #{amount},</if>
+            <if test="totalComplete != null">`total_complete`= total_complete + #{totalComplete},</if>
+            <if test="status == 2">`status`=2,</if>
+        </trim>
+        WHERE `id` = #{id}
+        and amount_complete = #{amountComplete}
+        <if test="status == 2">and `status` = 1</if>
     </update>
 
 </mapper>

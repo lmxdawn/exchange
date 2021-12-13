@@ -47,4 +47,9 @@ public class MatchEvent {
      * 交易量精度
      */
     private Integer tradeAmountPrecision;
+
+    /**
+     * 是否是机器人（0：否，1：是）
+     */
+    private Integer isRobot;
 }

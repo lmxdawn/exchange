@@ -13,10 +13,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Consumer;
 
+/**
+ * 监听创建委托订单
+ */
 @Service
 public class EntrustOrderStream {
 

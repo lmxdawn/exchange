@@ -1,5 +1,6 @@
 package com.lmxdawn.dubboapi.service.user;
 
+import com.lmxdawn.dubboapi.req.user.MemberCoinMatchDubboReq;
 import com.lmxdawn.dubboapi.res.user.MemberCoinSimpleDubboRes;
 
 /**
@@ -15,5 +16,8 @@ public interface MemberCoinDubboService {
 
     // 冻结余额
     boolean frozenBalance(Long memberId, Long coinId, double money);
+
+    // 撮合更新余额
+    boolean matchBalance(MemberCoinMatchDubboReq req);
 
 }

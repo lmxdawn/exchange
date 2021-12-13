@@ -1,7 +1,6 @@
 package com.lmxdawn.trade.entity;
 
 import lombok.Data;
-
 import java.util.Date;
 
 @Data
@@ -56,6 +55,11 @@ public class EntrustOrder {
 	 * 交易额
 	 */
 	private Double total;
+
+	/**
+	 * 已完成的交易额
+	 */
+	private Double totalComplete;
 
 	/**
 	 * 状态（1：未完成，2：已完成）

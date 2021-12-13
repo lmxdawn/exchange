@@ -6,15 +6,11 @@ import com.lmxdawn.dubboapi.service.wallet.CoinDubboService;
 import com.lmxdawn.trade.dao.EntrustOrderDao;
 import com.lmxdawn.trade.dao.SymbolDao;
 import com.lmxdawn.trade.entity.EntrustOrder;
-import com.lmxdawn.trade.entity.Symbol;
-import com.lmxdawn.trade.enums.ResultEnum;
-import com.lmxdawn.trade.exception.JsonException;
 import com.lmxdawn.trade.req.EntrustOrderCreateReq;
 import com.lmxdawn.trade.req.EntrustOrderListPageReq;
 import com.lmxdawn.trade.res.EntrustOrderRes;
 import com.lmxdawn.trade.service.EntrustOrderService;
 import com.lmxdawn.trade.util.PageUtils;
-import io.seata.core.context.RootContext;
 import io.seata.spring.annotation.GlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
@@ -22,7 +18,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -86,7 +81,8 @@ public class EntrustOrderServiceImpl implements EntrustOrderService {
 
         EntrustOrder entrustOrder = new EntrustOrder();
         BeanUtils.copyProperties(req, entrustOrder);
-        entrustOrder.setAmountComplete((double) 0);
+        entrustOrder.setAmountComplete(0.00);
+        entrustOrder.setTotalComplete(0.00);
         entrustOrder.setStatus(1);
         entrustOrder.setCreateTime(new Date());
         entrustOrder.setModifiedTime(new Date());

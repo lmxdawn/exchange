@@ -1,5 +1,6 @@
 package com.lmxdawn.user.dubbo.service;
 
+import com.lmxdawn.dubboapi.req.user.MemberCoinMatchDubboReq;
 import com.lmxdawn.dubboapi.res.user.MemberCoinSimpleDubboRes;
 import com.lmxdawn.dubboapi.service.user.MemberCoinDubboService;
 import com.lmxdawn.user.dao.MemberCoinDao;
@@ -73,6 +74,45 @@ public class MemberCoinDubboServiceImpl implements MemberCoinDubboService {
     @Override
     public boolean frozenBalance(Long memberId, Long coinId, double money) {
         return memberCoinService.frozenBalance(memberId, coinId, money);
+    }
+
+    @Override
+    public boolean matchBalance(MemberCoinMatchDubboReq req) {
+
+        Long tradeCoinId = req.getTradeCoinId(); // 交易币种
+        Long coinId = req.getCoinId(); // 计价币种
+        Long buyMemberId = req.getBuyMemberId();
+        Double buyMoney = req.getBuyMoney();
+        Double buyUnfrozenMoney = req.getBuyUnfrozenMoney();
+        Long sellMemberId = req.getSellMemberId();
+        Double sellUnfrozenMoney = req.getSellUnfrozenMoney();
+
+        // 增加买入
+        MemberCoin buyIncr = new MemberCoin();
+        buyIncr.setMemberId(buyMemberId);
+        buyIncr.setCoinId(tradeCoinId);
+        buyIncr.setBalance(buyMoney);
+        boolean b = memberCoinDao.incrBalance(buyIncr);
+        if (!b) {
+            return false;
+        }
+
+        // 解冻买入
+        MemberCoin buyUnfrozen = new MemberCoin();
+        buyUnfrozen.setMemberId(buyMemberId);
+        buyUnfrozen.setCoinId(coinId);
+        buyUnfrozen.setFrozenBalance(buyUnfrozenMoney);
+        boolean unfrozen = memberCoinDao.unfrozen(buyUnfrozen);
+        if (!unfrozen) {
+            return false;
+        }
+
+        // 解冻卖出
+        MemberCoin sellUnfrozen = new MemberCoin();
+        sellUnfrozen.setMemberId(sellMemberId);
+        sellUnfrozen.setCoinId(tradeCoinId);
+        sellUnfrozen.setFrozenBalance(sellUnfrozenMoney);
+        return memberCoinDao.unfrozen(sellUnfrozen);
     }
 
 

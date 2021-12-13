@@ -45,6 +45,8 @@ public class MatchDataLimitBuyHolder {
                 BigDecimal bigAmount = buyTotal.divide(sellPrice, tradeAmountPrecision, BigDecimal.ROUND_DOWN);
                 // 撮合明细
                 MatchDetailMq matchDetailMq = new MatchDetailMq();
+                matchDetailMq.setTradeCoinId(tradeCoinId);
+                matchDetailMq.setCoinId(coinId);
                 matchDetailMq.setId(sell.getId());
                 matchDetailMq.setMatchId(market.getId());
                 matchDetailMq.setMemberId(sell.getMemberId());
@@ -56,6 +58,8 @@ public class MatchDataLimitBuyHolder {
                 matchDetailMq.setPrice(sellPrice.doubleValue());
                 matchDetailMq.setIsComplete(0);
                 matchDetailMq.setMatchIsComplete(0);
+                matchDetailMq.setIsRobot(sell.getIsRobot());
+                matchDetailMq.setMatchIsRobot(market.getIsRobot());
                 // 成交量
                 BigDecimal completeAmount = bigAmount;
                 // 订单数量相等
@@ -104,6 +108,8 @@ public class MatchDataLimitBuyHolder {
                     BigDecimal bigAmount = BigDecimal.valueOf(matchEvent.getAmount());
                     // 撮合明细
                     MatchDetailMq matchDetailMq = new MatchDetailMq();
+                    matchDetailMq.setTradeCoinId(tradeCoinId);
+                    matchDetailMq.setCoinId(coinId);
                     matchDetailMq.setId(sell.getId());
                     matchDetailMq.setMatchId(matchEvent.getId());
                     matchDetailMq.setMemberId(sell.getMemberId());
@@ -115,6 +121,8 @@ public class MatchDataLimitBuyHolder {
                     matchDetailMq.setPrice(matchEvent.getPrice());
                     matchDetailMq.setIsComplete(0);
                     matchDetailMq.setMatchIsComplete(0);
+                    matchDetailMq.setIsRobot(sell.getIsRobot());
+                    matchDetailMq.setMatchIsRobot(matchEvent.getIsRobot());
                     // 成交量
                     BigDecimal completeAmount = bigAmount;
                     // 订单数量相等

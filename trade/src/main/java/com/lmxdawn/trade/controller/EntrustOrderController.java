@@ -161,6 +161,7 @@ public class EntrustOrderController {
         EntrustOrderMq entrustOrderMq = new EntrustOrderMq();
         BeanUtils.copyProperties(req, entrustOrderMq);
         entrustOrderMq.setId(id);
+        entrustOrderMq.setIsRobot(0);
         streamBridge.send(MqTopicConstant.ENTRUST_ORDER_TOPIC, entrustOrderMq);
 
         return ResultVOUtils.success();

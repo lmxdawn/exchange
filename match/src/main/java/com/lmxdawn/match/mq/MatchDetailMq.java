@@ -9,6 +9,16 @@ import lombok.Data;
 public class MatchDetailMq {
 
     /**
+     * 交易币种ID
+     */
+    private Long tradeCoinId;
+
+    /**
+     * 计价币种ID
+     */
+    private Long coinId;
+
+    /**
      * 订单号
      */
     private Long id;
@@ -67,5 +77,15 @@ public class MatchDetailMq {
      * 对手单是否完成（0：否，1：是）
      */
     private Integer matchIsComplete;
+
+    /**
+     * 是否是机器人（0：否，1：是）
+     */
+    private Integer isRobot;
+
+    /**
+     * 对手单是否是机器人（0：否，1：是）
+     */
+    private Integer matchIsRobot;
 
 }
