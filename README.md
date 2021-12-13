@@ -36,6 +36,8 @@ nohup java -jar -Dspring.profiles.active=prod user/target/user-0.0.1-SNAPSHOT.ja
 
 > trade：交易 9007
 
+> match：撮合 9008
+
 # Swagger
 
 > gateway的方式访问swagger，gateway启动后访问： `http://ip:prot/swagger-ui/index.html`
@@ -64,6 +66,8 @@ nohup java -jar -Dspring.profiles.active=prod user/target/user-0.0.1-SNAPSHOT.ja
 > MySQL 5.7
 
 > Seata 1.3.0
+
+> Disruptor 3.4.4  高效的内存队列，为了多线程操作变量时并发问题，用这个可以不用锁
 
 # 其它
 

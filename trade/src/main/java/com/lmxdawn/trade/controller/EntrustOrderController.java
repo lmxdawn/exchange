@@ -3,9 +3,11 @@ package com.lmxdawn.trade.controller;
 import com.lmxdawn.dubboapi.res.user.MemberCoinSimpleDubboRes;
 import com.lmxdawn.dubboapi.service.user.MemberCoinDubboService;
 import com.lmxdawn.trade.annotation.LoginAuthAnnotation;
+import com.lmxdawn.trade.constant.MqTopicConstant;
 import com.lmxdawn.trade.entity.Symbol;
 import com.lmxdawn.trade.enums.ResultEnum;
 import com.lmxdawn.trade.exception.JsonException;
+import com.lmxdawn.trade.mq.EntrustOrderMq;
 import com.lmxdawn.trade.req.EntrustOrderCreateReq;
 import com.lmxdawn.trade.req.EntrustOrderListPageReq;
 import com.lmxdawn.trade.res.BaseRes;
@@ -17,7 +19,9 @@ import com.lmxdawn.trade.util.ResultVOUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +40,9 @@ public class EntrustOrderController {
 
     @Autowired
     private SymbolService symbolService;
+
+    @Autowired
+    private StreamBridge streamBridge;
 
     @DubboReference
     private MemberCoinDubboService memberCoinDubboService;
@@ -149,6 +156,11 @@ public class EntrustOrderController {
         req.setFrozenCoinId(frozenCoinId);
         // 创建订单，并且调用服务冻结金额
         entrustOrderService.create(req);
+
+        // 加入撮合队列
+        EntrustOrderMq entrustOrderMq = new EntrustOrderMq();
+        BeanUtils.copyProperties(req, entrustOrderMq);
+        streamBridge.send(MqTopicConstant.ENTRUST_ORDER_TOPIC, entrustOrderMq);
 
         return ResultVOUtils.success();
     }

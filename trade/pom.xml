@@ -120,6 +120,12 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
 
+        <!-- 消息队列-->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-stream-rocketmq</artifactId>
+        </dependency>
+
         <!--        测试-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

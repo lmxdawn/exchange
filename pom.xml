@@ -15,6 +15,7 @@
         <module>other</module>
         <module>market</module>
         <module>trade</module>
+        <module>match</module>
     </modules>
     <name>parent</name>
     <description>交易所项目</description>
@@ -40,6 +41,7 @@
         <okhttp.version>3.8.1</okhttp.version>
         <apache-commons.version>3.12.0</apache-commons.version>
         <huaweicloud-obs.version>3.21.8</huaweicloud-obs.version>
+        <disruptor.version>3.4.4</disruptor.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
     </properties>
 
@@ -169,6 +171,14 @@
                 <groupId>com.huaweicloud</groupId>
                 <artifactId>esdk-obs-java-bundle</artifactId>
                 <version>${huaweicloud-obs.version}</version>
+            </dependency>
+
+
+            <!-- 高性能队列 Disruptor -->
+            <dependency>
+                <groupId>com.lmax</groupId>
+                <artifactId>disruptor</artifactId>
+                <version>${disruptor.version}</version>
             </dependency>
 
         </dependencies>

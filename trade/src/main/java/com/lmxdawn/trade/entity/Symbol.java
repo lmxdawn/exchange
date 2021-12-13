@@ -43,7 +43,7 @@ public class Symbol {
 	private Integer tradePricePrecision;
 
 	/**
-	 * 买入量精度
+	 * 交易量精度
 	 */
 	private Integer tradeAmountPrecision;
 

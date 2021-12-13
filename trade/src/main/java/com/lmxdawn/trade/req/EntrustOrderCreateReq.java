@@ -52,4 +52,7 @@ public class EntrustOrderCreateReq {
 
     @ApiModelProperty(value = "冻结的金额", hidden = true)
     private Double frozenMoney;
+
+    @ApiModelProperty(value = "交易额精度", hidden = true)
+    private Integer tradeTotalPrecision;
 }

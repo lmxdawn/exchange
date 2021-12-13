@@ -9,13 +9,12 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>market</artifactId>
+    <artifactId>match</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
-
     <dependencies>
         <!-- common -->
         <dependency>
@@ -90,6 +89,13 @@
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-dubbo</artifactId>
         </dependency>
+
+        <!-- Seata 分布式事务-->
+        <dependency>
+            <groupId>io.seata</groupId>
+            <artifactId>seata-spring-boot-starter</artifactId>
+        </dependency>
+
         <!-- 引入Swagger3依赖 -->
         <dependency>
             <groupId>io.springfox</groupId>
@@ -120,6 +126,12 @@
             <artifactId>spring-cloud-starter-stream-rocketmq</artifactId>
         </dependency>
 
+        <!-- 高性能队列 Disruptor -->
+        <dependency>
+            <groupId>com.lmax</groupId>
+            <artifactId>disruptor</artifactId>
+        </dependency>
+
         <!--        测试-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -142,5 +154,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
