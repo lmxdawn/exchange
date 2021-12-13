@@ -2,8 +2,10 @@ package com.lmxdawn.dubboapi.req.match;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class MatchEventDubboReq {
+public class MatchEventDubboReq implements Serializable {
 
     /**
      * 订单号
