@@ -170,12 +170,16 @@ public class MatchDataLimitSellHolder {
         // 如果是限价
         if (type == 1) {
             if (buyAmount.compareTo(BigDecimal.ZERO) > 0) {
+                System.out.println("剩余没有撮合1");
+                System.out.println(buyAmount);
                 buy.setAmount(buyAmount.doubleValue());
                 // 限价，压入卖单
                 MatchDataLimitBuyHolder.put(buy);
             }
         } else {
             if (buyTotal.compareTo(BigDecimal.ZERO) > 0) {
+                System.out.println("剩余没有撮合2");
+                System.out.println(buyTotal);
                 buy.setTotal(buyTotal.doubleValue());
                 // 市价，压入未完成的市价买单
                 MatchDataMarketBuyHolder.add(buy);

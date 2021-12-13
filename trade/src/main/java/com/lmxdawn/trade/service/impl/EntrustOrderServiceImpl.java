@@ -76,7 +76,7 @@ public class EntrustOrderServiceImpl implements EntrustOrderService {
 
     @Override
     @GlobalTransactional
-    public boolean create(EntrustOrderCreateReq req) {
+    public Long create(EntrustOrderCreateReq req) {
 
         // 冻结余额
         boolean b = memberCoinDubboService.frozenBalance(req.getMemberId(), req.getFrozenCoinId(), req.getFrozenMoney());
@@ -92,7 +92,7 @@ public class EntrustOrderServiceImpl implements EntrustOrderService {
         entrustOrder.setModifiedTime(new Date());
         boolean insert = entrustOrderDao.insert(entrustOrder);
 
-        return insert;
+        return entrustOrder.getId();
     }
 
 

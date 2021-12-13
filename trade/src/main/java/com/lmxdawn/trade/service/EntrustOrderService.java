@@ -10,6 +10,6 @@ public interface EntrustOrderService {
 
     List<EntrustOrderRes> listPage(EntrustOrderListPageReq req);
 
-    boolean create(EntrustOrderCreateReq req);
+    Long create(EntrustOrderCreateReq req);
 
 }

@@ -5,6 +5,9 @@ import lombok.Data;
 @Data
 public class EntrustOrderMq {
 
+    // 订单ID
+    private Long id;
+
     // 用户ID
     private Long memberId;
 

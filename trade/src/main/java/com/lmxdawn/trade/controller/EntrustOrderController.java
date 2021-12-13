@@ -155,11 +155,12 @@ public class EntrustOrderController {
         req.setFrozenMoney(bigMoney.doubleValue());
         req.setFrozenCoinId(frozenCoinId);
         // 创建订单，并且调用服务冻结金额
-        entrustOrderService.create(req);
+        Long id = entrustOrderService.create(req);
 
         // 加入撮合队列
         EntrustOrderMq entrustOrderMq = new EntrustOrderMq();
         BeanUtils.copyProperties(req, entrustOrderMq);
+        entrustOrderMq.setId(id);
         streamBridge.send(MqTopicConstant.ENTRUST_ORDER_TOPIC, entrustOrderMq);
 
         return ResultVOUtils.success();
