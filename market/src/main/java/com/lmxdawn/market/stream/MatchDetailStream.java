@@ -45,6 +45,7 @@ public class MatchDetailStream {
 
             Long tradeCoinId = matchDetailMq.getTradeCoinId();
             Long coinId = matchDetailMq.getCoinId();
+            Long symbol = Long.valueOf(tradeCoinId.toString() + coinId.toString());
             Long id = matchDetailMq.getId();
             Long matchId = matchDetailMq.getMatchId();
             Long memberId = matchDetailMq.getMemberId();
@@ -147,8 +148,9 @@ public class MatchDetailStream {
 
             // 减少撮合订单的深度
             String key = matchDirection == 1 ? CacheConstant.BUY_DEPTH : CacheConstant.SELL_DEPTH;
+            key = String.format(key, symbol);
             String infoKey = matchDirection == 1 ? CacheConstant.BUY_DEPTH_INFO : CacheConstant.SELL_DEPTH_INFO;
-            String amountKey = String.format(infoKey, price);
+            String amountKey = String.format(infoKey, symbol, price);
             Double increment = redisTemplate.opsForValue().increment(amountKey, -amount.doubleValue());
             if (increment == null || increment <= 0) {
                 redisTemplate.opsForValue().decrement(amountKey);
@@ -159,7 +161,7 @@ public class MatchDetailStream {
             List<DepthVo> depthVoList = new ArrayList<>();
             if (depthPriceList != null) {
                 for (String depthPrice : depthPriceList) {
-                    String depthAmountKey = String.format(infoKey, depthPrice);
+                    String depthAmountKey = String.format(infoKey, symbol, depthPrice);
                     String depthAmountStr = redisTemplate.opsForValue().get(depthAmountKey);
                     DepthVo depthVo = new DepthVo();
                     depthVo.setPrice(Double.parseDouble(depthPrice));
