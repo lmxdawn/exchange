@@ -1,0 +1,17 @@
+package com.lmxdawn.market.ws;
+
+import lombok.Data;
+
+@Data
+public class MatchVo {
+
+    // 交易币种ID
+    private Long tradeCoinId;
+
+    // 计价币种ID
+    private Long coinId;
+
+    // 价格
+    private Double price;
+
+}

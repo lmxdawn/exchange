@@ -16,6 +16,8 @@
         <module>market</module>
         <module>trade</module>
         <module>match</module>
+        <module>ws</module>
+        <module>ws-route</module>
     </modules>
     <name>parent</name>
     <description>交易所项目</description>
@@ -42,6 +44,7 @@
         <apache-commons.version>3.12.0</apache-commons.version>
         <huaweicloud-obs.version>3.21.8</huaweicloud-obs.version>
         <disruptor.version>3.4.4</disruptor.version>
+        <netty.version>4.1.71.Final</netty.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
     </properties>
 
@@ -179,6 +182,13 @@
                 <groupId>com.lmax</groupId>
                 <artifactId>disruptor</artifactId>
                 <version>${disruptor.version}</version>
+            </dependency>
+
+            <!--netty-->
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-all</artifactId>
+                <version>${netty.version}</version>
             </dependency>
 
         </dependencies>

@@ -1,5 +1,6 @@
 package com.lmxdawn.market.stream;
 
+import com.alibaba.fastjson.JSON;
 import com.lmxdawn.dubboapi.req.match.MatchEventDubboReq;
 import com.lmxdawn.dubboapi.req.trade.EntrustOrderMatchDubboReq;
 import com.lmxdawn.dubboapi.req.user.MemberCoinMatchDubboReq;
@@ -7,14 +8,18 @@ import com.lmxdawn.dubboapi.res.trade.EntrustOrderMatchDubboRes;
 import com.lmxdawn.dubboapi.service.match.MatchDubboService;
 import com.lmxdawn.dubboapi.service.trade.EntrustOrderDubboService;
 import com.lmxdawn.market.constant.CacheConstant;
+import com.lmxdawn.market.constant.MqTopicConstant;
 import com.lmxdawn.market.mq.EntrustOrderMq;
 import com.lmxdawn.market.mq.MatchDetailMq;
+import com.lmxdawn.market.mq.WsMarketMq;
 import com.lmxdawn.market.service.MatchService;
+import com.lmxdawn.market.ws.DataVo;
 import com.lmxdawn.market.ws.DepthVo;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -31,6 +36,9 @@ public class MatchDetailStream {
 
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
+
+    @Autowired
+    private StreamBridge streamBridge;
 
     @DubboReference
     private EntrustOrderDubboService entrustOrderDubboService;
@@ -178,8 +186,16 @@ public class MatchDetailStream {
             }
 
             // 推送 ws 深度行情
-            System.out.println(depthVoList);
-
+            DataVo dataVo = new DataVo();
+            dataVo.setDepthVoList(depthVoList);
+            WsMarketMq wsMarketMq = new WsMarketMq();
+            wsMarketMq.setMemberId(memberId);
+            wsMarketMq.setOrderId(id);
+            wsMarketMq.setMatchMemberId(matchMemberId);
+            wsMarketMq.setMatchOrderId(matchId);
+            wsMarketMq.setData(JSON.toJSONString(dataVo));
+            // 推送 ws 深度行情
+            streamBridge.send(MqTopicConstant.WS_MARKET_TOPIC, wsMarketMq);
 
         };
 
