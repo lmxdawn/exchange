@@ -32,6 +32,7 @@ public class WsMarketStream {
                 String url = portMap.getUrl();
                 String httpPort = portMap.getHttpPort();
                 url = "http://" + url + ":" + httpPort + "/push/market";
+                // TODO 需要实现多线程调用
                 OkHttpUtil.postJson(url, JSON.toJSONString(wsMarketMq));
             }
 
