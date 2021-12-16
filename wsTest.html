@@ -24,7 +24,7 @@
     let token
     let memberId
     let wsId
-    let type = 1
+    let type = 2
 
     function post(url, jsonObj, callback) {
         var xhr = new XMLHttpRequest;
@@ -48,7 +48,7 @@
             if (resToken.code === 0) {
                 // 登录成功
                 token = resToken.data.token
-                type = 2
+                type = 1
             }
             post(wsLoginUrl, {token: token}, res => {
                 console.log(res)
@@ -71,7 +71,6 @@
                     socket.onopen = function (ev) {
                         var rt = document.getElementById("responseText");
                         rt.value = "连接开启了.."
-
                         let obj1 = {
                             type: type,
                             memberId: memberId,
