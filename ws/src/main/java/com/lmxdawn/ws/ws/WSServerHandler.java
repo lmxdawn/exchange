@@ -63,6 +63,7 @@ public class WSServerHandler extends SimpleChannelInboundHandler<TextWebSocketFr
             // 读空闲
             if (idleStateEvent.state() == IdleState.READER_IDLE) {
                 // 关闭用户的连接
+                log.info("心跳超时");
                 userOffline(ctx);
             }
         }

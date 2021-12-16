@@ -81,7 +81,9 @@
                         setInterval(() => {
                             let obj = {
                                 type: 0,
+                                data: new Date(),
                             }
+                            console.log(obj)
                             socket.send(JSON.stringify(obj))
                         }, 2000)
                     }
