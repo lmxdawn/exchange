@@ -22,10 +22,10 @@ public class WsMarketStream {
      * 监听行情推送消息
      */
     @Bean
-    public Consumer<WsMarketMq> wsPush() {
+    public Consumer<WsMarketMq> wsMarket() {
 
         return wsMarketMq -> {
-
+            System.out.println(wsMarketMq);
             Map<String, LoadBalancingServiceImpl.PortMap> serverMap = loadBalancingService.getServerMap();
             for (Map.Entry<String, LoadBalancingServiceImpl.PortMap> next : serverMap.entrySet()) {
                 LoadBalancingServiceImpl.PortMap portMap = next.getValue();
