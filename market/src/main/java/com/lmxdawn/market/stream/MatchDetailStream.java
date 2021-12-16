@@ -15,6 +15,7 @@ import com.lmxdawn.market.mq.WsMarketMq;
 import com.lmxdawn.market.service.MatchService;
 import com.lmxdawn.market.ws.DataVo;
 import com.lmxdawn.market.ws.DepthVo;
+import com.lmxdawn.market.ws.MatchVo;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.BeanUtils;
@@ -187,7 +188,15 @@ public class MatchDetailStream {
 
             // 推送 ws 深度行情
             DataVo dataVo = new DataVo();
+            // 设置行情深度
             dataVo.setDepthVoList(depthVoList);
+            // 设置撮合信息
+            MatchVo matchVo = new MatchVo();
+            matchVo.setTradeCoinId(tradeCoinId);
+            matchVo.setCoinId(coinId);
+            matchVo.setPrice(price.doubleValue());
+            dataVo.setMatchVo(matchVo);
+            // 组装ws数据
             WsMarketMq wsMarketMq = new WsMarketMq();
             wsMarketMq.setMemberId(memberId);
             wsMarketMq.setOrderId(id);
