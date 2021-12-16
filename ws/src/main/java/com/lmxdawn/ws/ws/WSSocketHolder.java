@@ -42,9 +42,6 @@ public class WSSocketHolder {
     }
 
     public static String remove(Channel channel) {
-        if (channel.hasAttr(AttributeKey.valueOf(KEY_ID))) {
-            System.out.println(channel.attr(AttributeKey.valueOf(KEY_ID)));
-        }
         String id = channel.hasAttr(AttributeKey.valueOf(KEY_ID)) ? (String) channel.attr(AttributeKey.valueOf(KEY_ID)).get() : "";
         String wsId = channel.hasAttr(AttributeKey.valueOf(KEY_WS_ID)) ? (String) channel.attr(AttributeKey.valueOf(KEY_WS_ID)).get() : "";
         if (StringUtils.isBlank(id) || StringUtils.isBlank(wsId)) {
