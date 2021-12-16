@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="renderer" content="webkit">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-touch-fullscreen" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="Author" content="Anles">
+    <title>websocket案例测试</title>
+</head>
+<body>
+<script>
+
+    // let token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOjF9.0eNTeq2GYzOhxGeNLj8pmozE-F4cGeuWn8Wx97fAhFo"
+    var socket;
+    let loginUrl = "/user/login/byPwd"
+    let wsLoginUrl = "/ws-route/connection/login"
+    let msgUrl = "/user/user-friend/msg"
+    let token
+    let memberId
+    let wsId
+    let type = 1
+
+    function post(url, jsonObj, callback) {
+        var xhr = new XMLHttpRequest;
+        xhr.open('POST', 'http://127.0.0.1:9001' + url);
+        xhr.setRequestHeader('content-type', 'application/json');
+        xhr.setRequestHeader('x-token', token);
+        var stringData = JSON.stringify(jsonObj);
+        xhr.send(stringData);
+        xhr.onreadystatechange = function () {
+            //complete
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                callback(JSON.parse(xhr.responseText))
+            } else {
+                //请求失败的回调函数
+                console.log('保存失败');
+            }
+        }
+    }
+    function login(tel, pwd) {
+        post(loginUrl, {tel: tel, pwd: pwd}, resToken => {
+            if (resToken.code === 0) {
+                // 登录成功
+                token = resToken.data.token
+                type = 2
+            }
+            post(wsLoginUrl, {token: token}, res => {
+                console.log(res)
+                if (res.code !== 0) {
+                    alert(res.message)
+                    return false
+                }
+                memberId = res.data.memberId
+                //判断当前浏览器是否支持websocket
+                if (window.WebSocket) {
+                    //go on
+                    socket = new WebSocket(`ws://${res.data.url}:${res.data.wsPort}/ws`);
+                    //相当于channelReado, ev 收到服务器端回送的消息
+                    socket.onmessage = function (ev) {
+                        var rt = document.getElementById("responseText");
+                        rt.value = rt.value + "\n" + ev.data;
+                    }
+
+                    //相当于连接开启(感知到连接开启)
+                    socket.onopen = function (ev) {
+                        var rt = document.getElementById("responseText");
+                        rt.value = "连接开启了.."
+
+                        let obj1 = {
+                            type: type,
+                            memberId: memberId,
+                            data: token,
+                        }
+                        socket.send(JSON.stringify(obj1))
+
+                        setInterval(() => {
+                            let obj = {
+                                type: 0,
+                            }
+                            socket.send(JSON.stringify(obj))
+                        }, 2000)
+                    }
+
+                    //相当于连接关闭(感知到连接关闭)
+                    socket.onclose = function (ev) {
+
+                        var rt = document.getElementById("responseText");
+                        rt.value = rt.value + "\n" + "连接关闭了.."
+                    }
+                } else {
+                    alert("当前浏览器不支持websocket")
+                }
+            })
+        })
+    }
+
+    function msg(message, receiveId) {
+        post(msgUrl, {msgType: 1, msgContent: message, receiveId: receiveId}, res => {
+
+        })
+    }
+
+
+</script>
+<form onsubmit="return false">
+    <input type="input" name="tel" value="15213230873" placeholder="手机号"></br>
+    <input type="input" name="pwd" value="admin" placeholder="密码"></br>
+    <input type="button" value="登录" onclick="login(this.form.tel.value, this.form.pwd.value)"></br></br>
+    <input type="input" name="receiveId" placeholder="接收者ID"></br>
+    <textarea name="message" style="height: 300px; width: 300px"></textarea>
+    <input type="button" value="发送消息" onclick="msg(this.form.message.value, this.form.receiveId.value)">
+    <textarea id="responseText" style="height: 300px; width: 300px"></textarea>
+    <input type="button" value="清空内容" onclick="document.getElementById('responseText').value=''">
+</form>
+</body>
+</html>

@@ -19,6 +19,7 @@ public class LoadBalancingServiceImpl implements LoadBalancingService {
     @Override
     public Map<String, PortMap> getServerMap() {
         List<ServiceInstance> instances = discoveryClient.getInstances("service-ws");
+
         // 负载均衡
         // 重建一个Map，避免服务器的上下线导致的并发问题
         Map<String, PortMap> serverMap = new HashMap<>();

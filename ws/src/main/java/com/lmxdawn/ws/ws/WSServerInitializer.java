@@ -28,7 +28,7 @@ public class WSServerInitializer extends ChannelInitializer<SocketChannel> {
         // WebSocket数据压缩
         pipeline.addLast(new WebSocketServerCompressionHandler());
         // 协议包长度限制
-        pipeline.addLast(new WebSocketServerProtocolHandler("/wsroute", null, true));
+        pipeline.addLast(new WebSocketServerProtocolHandler("/ws", null, true));
 
         // 自定义handler，处理业务逻辑
         pipeline.addLast(new WSServerHandler());

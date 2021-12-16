@@ -26,8 +26,8 @@ public class WSSocketHolder {
         String wsId = oldWsId;
         if (StringUtils.isBlank(oldWsId) || stringChannelMap.containsKey(oldWsId)) {
             wsId = UUID.randomUUID().toString();
-            channel.attr(AttributeKey.newInstance(KEY_ID)).set(id);
-            channel.attr(AttributeKey.newInstance(KEY_WS_ID)).set(wsId);
+            channel.attr(AttributeKey.valueOf(KEY_ID)).set(id);
+            channel.attr(AttributeKey.valueOf(KEY_WS_ID)).set(wsId);
             stringChannelMap.put(wsId, channel);
         }
         return wsId;
@@ -42,8 +42,14 @@ public class WSSocketHolder {
     }
 
     public static String remove(Channel channel) {
-        String id = (String) channel.attr(AttributeKey.newInstance(KEY_ID)).get();
-        String wsId = (String) channel.attr(AttributeKey.newInstance(KEY_WS_ID)).get();
+        if (channel.hasAttr(AttributeKey.valueOf(KEY_ID))) {
+            System.out.println(channel.attr(AttributeKey.valueOf(KEY_ID)));
+        }
+        String id = channel.hasAttr(AttributeKey.valueOf(KEY_ID)) ? (String) channel.attr(AttributeKey.valueOf(KEY_ID)).get() : "";
+        String wsId = channel.hasAttr(AttributeKey.valueOf(KEY_WS_ID)) ? (String) channel.attr(AttributeKey.valueOf(KEY_WS_ID)).get() : "";
+        if (StringUtils.isBlank(id) || StringUtils.isBlank(wsId)) {
+            return "";
+        }
         Map<String, Channel> stringChannelMap = CHANNEL_MAP.get(id);
         int size = stringChannelMap != null ? stringChannelMap.size() : 0;
         if (size > 0) {
@@ -52,6 +58,7 @@ public class WSSocketHolder {
             if (remove != null && size == 1) {
                 CHANNEL_MAP.remove(id);
             }
+            return id;
         }
 
         return "";

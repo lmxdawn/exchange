@@ -89,6 +89,7 @@ public class WSServerHandler extends SimpleChannelInboundHandler<TextWebSocketFr
      */
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) {
+        log.info("接收消息：{}", msg.text());
         WSBaseReq wsBaseReq = JSON.parseObject(msg.text(), WSBaseReq.class);
         Integer type = wsBaseReq.getType();
         String memberId = wsBaseReq.getMemberId();
@@ -126,6 +127,10 @@ public class WSServerHandler extends SimpleChannelInboundHandler<TextWebSocketFr
      * 游客登录
      */
     private void touristLogin(ChannelHandlerContext ctx, String memberId, String oldWsId, String token) {
+        if (StringUtils.isBlank(memberId)) {
+            ctx.channel().close();
+            return;
+        }
         // 加入 map 中
         String wsId = WSSocketHolder.put(memberId, oldWsId, ctx.channel());
         WSBaseRes wsBaseRes = new WSBaseRes();
@@ -140,6 +145,10 @@ public class WSServerHandler extends SimpleChannelInboundHandler<TextWebSocketFr
      * 用户登录
      */
     private void userLogin(ChannelHandlerContext ctx, String memberId, String oldWsId, String token) {
+        if (StringUtils.isBlank(memberId)) {
+            ctx.channel().close();
+            return;
+        }
         Long login = null;
         if (!StringUtils.isBlank(token)) {
             login = wsServerHandler.userLoginService.Login(token);

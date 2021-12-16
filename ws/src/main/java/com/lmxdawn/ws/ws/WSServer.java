@@ -37,7 +37,6 @@ public class WSServer {
      */
     @PostConstruct
     public void start() throws InterruptedException {
-
         ServerBootstrap bootstrap = new ServerBootstrap()
                 .group(boss, work)
                 .channel(NioServerSocketChannel.class)
@@ -48,7 +47,7 @@ public class WSServer {
 
         ChannelFuture future = bootstrap.bind().sync();
         if (future.isSuccess()) {
-            log.info("启动 ws server 成功");
+            log.info("启动 ws server 成功，端口号：{}", wsPort);
         }
     }
 
