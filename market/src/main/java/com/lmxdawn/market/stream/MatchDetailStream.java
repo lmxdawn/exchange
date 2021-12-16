@@ -195,6 +195,7 @@ public class MatchDetailStream {
             matchVo.setTradeCoinId(tradeCoinId);
             matchVo.setCoinId(coinId);
             matchVo.setPrice(price.doubleValue());
+            matchVo.setAmount(amount.doubleValue());
             dataVo.setMatchVo(matchVo);
             // 组装ws数据
             WsMarketMq wsMarketMq = new WsMarketMq();

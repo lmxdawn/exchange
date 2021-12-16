@@ -11,6 +11,9 @@ public class MatchVo {
     // 计价币种ID
     private Long coinId;
 
+    // 数量
+    private Double amount;
+
     // 价格
     private Double price;
 
