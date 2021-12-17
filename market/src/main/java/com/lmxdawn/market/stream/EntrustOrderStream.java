@@ -48,6 +48,8 @@ public class EntrustOrderStream {
 
             Long symbol = Long.valueOf(entrustOrderMq.getTradeCoinId().toString() + entrustOrderMq.getCoinId().toString());
             // 保存深度图行情
+            Long tradeCoinId = entrustOrderMq.getTradeCoinId();
+            Long coinId = entrustOrderMq.getCoinId();
             Double price = entrustOrderMq.getPrice();
             Double amount = entrustOrderMq.getAmount();
             Integer type = entrustOrderMq.getType();
@@ -72,7 +74,7 @@ public class EntrustOrderStream {
                     depthVo.setPrice(Double.parseDouble(depthPrice));
                     double depthAmount = !StringUtils.isBlank(depthAmountStr) ? Double.parseDouble(depthAmountStr) : 0.00;
                     if (depthAmount <= 0) {
-                        redisTemplate.opsForValue().decrement(depthAmountKey);
+                        redisTemplate.delete(depthAmountKey);
                         redisTemplate.opsForZSet().remove(key, depthPrice);
                         continue;
                     }
@@ -83,7 +85,13 @@ public class EntrustOrderStream {
             }
 
             DataVo dataVo = new DataVo();
-            dataVo.setDepthVoList(depthVoList);
+            dataVo.setTradeCoinId(tradeCoinId);
+            dataVo.setCoinId(coinId);
+            if (direction == 1) {
+                dataVo.setBuyDepthVoList(depthVoList);
+            } else {
+                dataVo.setSellDepthVoList(depthVoList);
+            }
             WsMarketMq wsMarketMq = new WsMarketMq();
             wsMarketMq.setData(JSON.toJSONString(dataVo));
             // 推送 ws 深度行情

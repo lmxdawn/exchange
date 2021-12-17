@@ -23,7 +23,7 @@ public class WsRouteServiceImpl implements WsRouteService {
     @Override
     public ConnectionInfoRes connectionLogin(String memberId) {
 
-        String key = String.format(CacheConstant.WS_ROUTE_UID, memberId);
+        String key = String.format(CacheConstant.WS_ROUTE_MEMBER_ID, memberId);
         String value = redisTemplate.opsForValue().get(key);
         if (!StringUtils.isBlank(value)) {
             return JSON.parseObject(value, ConnectionInfoRes.class);

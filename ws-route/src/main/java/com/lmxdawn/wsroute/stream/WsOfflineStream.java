@@ -29,7 +29,7 @@ public class WsOfflineStream {
 
             log.info("用户下线：{}", memberId);
 
-            String key = String.format(CacheConstant.WS_ROUTE_UID, memberId);
+            String key = String.format(CacheConstant.WS_ROUTE_MEMBER_ID, memberId);
 
             redisTemplate.delete(key);
 

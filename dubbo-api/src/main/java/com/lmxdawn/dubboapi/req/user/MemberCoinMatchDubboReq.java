@@ -41,6 +41,11 @@ public class MemberCoinMatchDubboReq implements Serializable {
     private Long sellMemberId;
 
     /**
+     * 卖出得到的总额
+     */
+    private Double sellMoney;
+
+    /**
      * 卖出的总额
      */
     private Double sellUnfrozenMoney;

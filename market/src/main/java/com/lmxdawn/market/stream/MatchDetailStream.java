@@ -111,6 +111,7 @@ public class MatchDetailStream {
                         } else {
                             // 卖出，解冻余额
                             memberCoinMatchDubboReq.setSellMemberId(memberId);
+                            memberCoinMatchDubboReq.setSellMoney(completeMoney.doubleValue());
                             memberCoinMatchDubboReq.setSellUnfrozenMoney(amount.doubleValue());
                         }
                         entrustOrderMatchDubboReq.setId(id);
@@ -137,6 +138,7 @@ public class MatchDetailStream {
                         } else {
                             // 卖出，解冻余额
                             memberCoinMatchDubboReq.setSellMemberId(matchMemberId);
+                            memberCoinMatchDubboReq.setSellMoney(completeMoney.doubleValue());
                             memberCoinMatchDubboReq.setSellUnfrozenMoney(amount.doubleValue());
                         }
 
@@ -155,41 +157,90 @@ public class MatchDetailStream {
                 }
             }
 
-            // 减少撮合订单的深度
-            String key = matchDirection == 1 ? CacheConstant.BUY_DEPTH : CacheConstant.SELL_DEPTH;
-            key = String.format(key, symbol);
-            String infoKey = matchDirection == 1 ? CacheConstant.BUY_DEPTH_INFO : CacheConstant.SELL_DEPTH_INFO;
-            String amountKey = String.format(infoKey, symbol, price);
-            Double increment = redisTemplate.opsForValue().increment(amountKey, -amount.doubleValue());
-            if (increment == null || increment <= 0) {
-                redisTemplate.opsForValue().decrement(amountKey);
-                redisTemplate.opsForZSet().remove(key, price.toString());
-            }
-
-            Set<String> depthPriceList = redisTemplate.opsForZSet().range(key, 0, 100);
-            List<DepthVo> depthVoList = new ArrayList<>();
-            if (depthPriceList != null) {
-                for (String depthPrice : depthPriceList) {
-                    String depthAmountKey = String.format(infoKey, symbol, depthPrice);
-                    String depthAmountStr = redisTemplate.opsForValue().get(depthAmountKey);
-                    DepthVo depthVo = new DepthVo();
-                    depthVo.setPrice(Double.parseDouble(depthPrice));
-                    double depthAmount = !StringUtils.isBlank(depthAmountStr) ? Double.parseDouble(depthAmountStr) : 0.00;
-                    if (depthAmount <= 0) {
-                        redisTemplate.opsForValue().decrement(depthAmountKey);
-                        redisTemplate.opsForZSet().remove(key, depthPrice);
-                        continue;
-                    }
-                    depthVo.setAmount(depthAmount);
-                    depthVoList.add(depthVo);
+            // ws 推送的data数据
+            DataVo dataVo = new DataVo();
+            dataVo.setTradeCoinId(tradeCoinId);
+            dataVo.setCoinId(coinId);
+            // 如果订单是限价，修改深度图
+            if (type == 1) {
+                String key = direction == 1 ? CacheConstant.BUY_DEPTH : CacheConstant.SELL_DEPTH;
+                key = String.format(key, symbol);
+                String infoKey = direction == 1 ? CacheConstant.BUY_DEPTH_INFO : CacheConstant.SELL_DEPTH_INFO;
+                String amountKey = String.format(infoKey, symbol, price);
+                Double increment = redisTemplate.opsForValue().increment(amountKey, -amount.doubleValue());
+                if (increment == null || increment <= 0) {
+                    redisTemplate.delete(amountKey);
+                    redisTemplate.opsForZSet().remove(key, price.toString());
                 }
 
+                Set<String> depthPriceList = redisTemplate.opsForZSet().range(key, 0, 100);
+                List<DepthVo> depthVoList = new ArrayList<>();
+                if (depthPriceList != null) {
+                    for (String depthPrice : depthPriceList) {
+                        String depthAmountKey = String.format(infoKey, symbol, depthPrice);
+                        String depthAmountStr = redisTemplate.opsForValue().get(depthAmountKey);
+                        DepthVo depthVo = new DepthVo();
+                        depthVo.setPrice(Double.parseDouble(depthPrice));
+                        double depthAmount = !StringUtils.isBlank(depthAmountStr) ? Double.parseDouble(depthAmountStr) : 0.00;
+                        if (depthAmount <= 0) {
+                            redisTemplate.delete(depthAmountKey);
+                            redisTemplate.opsForZSet().remove(key, depthPrice);
+                            continue;
+                        }
+                        depthVo.setAmount(depthAmount);
+                        depthVoList.add(depthVo);
+                    }
+
+                    // 买入
+                    if (direction == 1) {
+                        dataVo.setBuyDepthVoList(depthVoList);
+                    } else {
+                        dataVo.setSellDepthVoList(depthVoList);
+                    }
+
+                }
             }
 
+            // 如果对手单是限价
+            if (matchType == 1) {
+                String matchKey = matchDirection == 1 ? CacheConstant.BUY_DEPTH : CacheConstant.SELL_DEPTH;
+                matchKey = String.format(matchKey, symbol);
+                String matchInfoKey = matchDirection == 1 ? CacheConstant.BUY_DEPTH_INFO : CacheConstant.SELL_DEPTH_INFO;
+                String matchAmountKey = String.format(matchInfoKey, symbol, price);
+                Double matchIncrement = redisTemplate.opsForValue().increment(matchAmountKey, -amount.doubleValue());
+                if (matchIncrement == null || matchIncrement <= 0) {
+                    redisTemplate.delete(matchAmountKey);
+                    redisTemplate.opsForZSet().remove(matchKey, price.toString());
+                }
+                Set<String> matchDepthPriceList = redisTemplate.opsForZSet().range(matchKey, 0, 100);
+                List<DepthVo> matchDepthVoList = new ArrayList<>();
+                if (matchDepthPriceList != null) {
+                    for (String depthPrice : matchDepthPriceList) {
+                        String depthAmountKey = String.format(matchInfoKey, symbol, depthPrice);
+                        String depthAmountStr = redisTemplate.opsForValue().get(depthAmountKey);
+                        DepthVo depthVo = new DepthVo();
+                        depthVo.setPrice(Double.parseDouble(depthPrice));
+                        double depthAmount = !StringUtils.isBlank(depthAmountStr) ? Double.parseDouble(depthAmountStr) : 0.00;
+                        if (depthAmount <= 0) {
+                            redisTemplate.delete(depthAmountKey);
+                            redisTemplate.opsForZSet().remove(matchKey, depthPrice);
+                            continue;
+                        }
+                        depthVo.setAmount(depthAmount);
+                        matchDepthVoList.add(depthVo);
+                    }
+
+                    // 买入
+                    if (matchDirection == 1) {
+                        dataVo.setBuyDepthVoList(matchDepthVoList);
+                    } else {
+                        dataVo.setSellDepthVoList(matchDepthVoList);
+                    }
+                }
+            }
+
+
             // 推送 ws 深度行情
-            DataVo dataVo = new DataVo();
-            // 设置行情深度
-            dataVo.setDepthVoList(depthVoList);
             // 设置撮合信息
             MatchVo matchVo = new MatchVo();
             matchVo.setTradeCoinId(tradeCoinId);

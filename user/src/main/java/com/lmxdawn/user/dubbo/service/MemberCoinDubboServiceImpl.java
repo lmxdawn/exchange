@@ -85,6 +85,7 @@ public class MemberCoinDubboServiceImpl implements MemberCoinDubboService {
         Double buyMoney = req.getBuyMoney();
         Double buyUnfrozenMoney = req.getBuyUnfrozenMoney();
         Long sellMemberId = req.getSellMemberId();
+        Double sellMoney = req.getSellMoney();
         Double sellUnfrozenMoney = req.getSellUnfrozenMoney();
 
         // 增加买入
@@ -104,6 +105,16 @@ public class MemberCoinDubboServiceImpl implements MemberCoinDubboService {
         buyUnfrozen.setFrozenBalance(buyUnfrozenMoney);
         boolean unfrozen = memberCoinDao.unfrozen(buyUnfrozen);
         if (!unfrozen) {
+            return false;
+        }
+
+        // 增加卖出
+        MemberCoin sellIncr = new MemberCoin();
+        sellIncr.setMemberId(sellMemberId);
+        sellIncr.setCoinId(coinId);
+        sellIncr.setBalance(sellMoney);
+        boolean b1 = memberCoinDao.incrBalance(sellIncr);
+        if (!b1) {
             return false;
         }
 
