@@ -46,6 +46,26 @@ public class MatchEventDubboReq implements Serializable {
     private Double total;
 
     /**
+     * 买入手续费率
+     */
+    private Double buyFee;
+
+    /**
+     * 买入手续费精度
+     */
+    private Integer buyFeePrecision;
+
+    /**
+     * 卖出手续费率
+     */
+    private Double sellFee;
+
+    /**
+     * 卖出手续费精度
+     */
+    private Integer sellFeePrecision;
+
+    /**
      * 交易量精度
      */
     private Integer tradeAmountPrecision;

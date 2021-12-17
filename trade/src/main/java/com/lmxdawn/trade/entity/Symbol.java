@@ -1,7 +1,6 @@
 package com.lmxdawn.trade.entity;
 
 import lombok.Data;
-
 import java.util.Date;
 
 @Data
@@ -23,14 +22,34 @@ public class Symbol {
 	private Long coinId;
 
 	/**
-	 * 手续费率
+	 * 买入手续费率
 	 */
-	private Double fee;
+	private Double buyFee;
 
 	/**
-	 * 手续费精度
+	 * 买入手续费精度
 	 */
-	private Integer feePrecision;
+	private Integer buyFeePrecision;
+
+	/**
+	 * 卖出手续费率
+	 */
+	private Double sellFee;
+
+	/**
+	 * 卖出手续费精度
+	 */
+	private Integer sellFeePrecision;
+
+	/**
+	 * 最低交易数量
+	 */
+	private Double minAmount;
+
+	/**
+	 * 最低交易额
+	 */
+	private Double minTotal;
 
 	/**
 	 * 交易额精度

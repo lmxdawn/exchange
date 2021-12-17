@@ -4,7 +4,7 @@
 <mapper namespace="com.lmxdawn.trade.dao.SymbolDao">
 
     <select id="listPageDubbo" parameterType="com.lmxdawn.dubboapi.req.trade.SymbolQueryDubboReq" resultType="com.lmxdawn.dubboapi.res.trade.SymbolDubboRes">
-        SELECT id,trade_coin_id,coin_id,fee,fee_precision,trade_total_precision,trade_price_precision,trade_amount_precision,sort,status,create_time,modified_time
+        SELECT id,trade_coin_id,coin_id,buy_fee,buy_fee_precision,sell_fee,sell_fee_precision,min_amount,min_total,trade_total_precision,trade_price_precision,trade_amount_precision,sort,status,create_time,modified_time
         FROM `symbol`
         <where>
             <choose>
@@ -21,7 +21,7 @@
     </select>
 
     <select id="listAll" resultType="com.lmxdawn.trade.entity.Symbol">
-        SELECT id,trade_coin_id,coin_id,fee,fee_precision,trade_total_precision,trade_price_precision,trade_amount_precision,status
+        SELECT id,trade_coin_id,coin_id,buy_fee,buy_fee_precision,sell_fee,sell_fee_precision,min_amount,min_total,trade_total_precision,trade_price_precision,trade_amount_precision,status
         FROM `symbol`
         <where>
             status = 1
@@ -30,7 +30,7 @@
     </select>
 
     <select id="findByTidAndCid" resultType="com.lmxdawn.trade.entity.Symbol">
-        SELECT id,fee,fee_precision,trade_total_precision,trade_price_precision,trade_amount_precision
+        SELECT id,buy_fee,buy_fee_precision,sell_fee,sell_fee_precision,min_amount,min_total,trade_total_precision,trade_price_precision,trade_amount_precision
         FROM `symbol`
         <where>
             trade_coin_id = #{tradeCoinId}
@@ -40,12 +40,16 @@
     </select>
 
     <insert id="insert" keyProperty="id" parameterType="com.lmxdawn.trade.entity.Symbol">
-        INSERT INTO `symbol`(trade_coin_id,coin_id,fee,fee_precision,trade_total_precision,trade_price_precision,trade_amount_precision,sort,status,create_time,modified_time)
+        INSERT INTO `symbol`(trade_coin_id,coin_id,buy_fee,buy_fee_precision,sell_fee,sell_fee_precision,min_amount,min_total,trade_total_precision,trade_price_precision,trade_amount_precision,sort,status,create_time,modified_time)
         VALUES
         (#{tradeCoinId},
          #{coinId},
-         #{fee},
-         #{feePrecision},
+         #{buyFee},
+         #{buyFeePrecision},
+         #{sellFee},
+         #{sellFeePrecision},
+         #{minAmount},
+         #{minTotal},
          #{tradeTotalPrecision},
          #{tradePricePrecision},
          #{tradeAmountPrecision},
@@ -60,8 +64,12 @@
         <trim prefix="set" suffixOverrides=",">
             <if test="tradeCoinId != null">`trade_coin_id`=#{tradeCoinId},</if>
             <if test="coinId != null">`coin_id`=#{coinId},</if>
-            <if test="fee != null">`fee`=#{fee},</if>
-            <if test="feePrecision != null">`fee_precision`=#{feePrecision},</if>
+            <if test="buyFee != null">`buy_fee`=#{buyFee},</if>
+            <if test="buyFeePrecision != null">`buy_fee_precision`=#{buyFeePrecision},</if>
+            <if test="sellFee != null">`sell_fee`=#{sellFee},</if>
+            <if test="sellFeePrecision != null">`sell_fee_precision`=#{sellFeePrecision},</if>
+            <if test="minAmount != null">`min_amount`=#{minAmount},</if>
+            <if test="minTotal != null">`min_total`=#{minTotal},</if>
             <if test="tradeTotalPrecision != null">`trade_total_precision`=#{tradeTotalPrecision},</if>
             <if test="tradePricePrecision != null">`trade_price_precision`=#{tradePricePrecision},</if>
             <if test="tradeAmountPrecision != null">`trade_amount_precision`=#{tradeAmountPrecision},</if>

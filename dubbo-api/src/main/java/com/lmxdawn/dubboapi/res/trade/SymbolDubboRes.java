@@ -19,11 +19,23 @@ public class SymbolDubboRes implements Serializable {
     @ApiModelProperty(value = "计价币种ID")
     private Long coinId;
 
-    @ApiModelProperty(value = "手续费率")
-    private Double fee;
+    @ApiModelProperty(value = "买入手续费率")
+    private Double buyFee;
 
-    @ApiModelProperty(value = "手续费精度")
-    private Integer feePrecision;
+    @ApiModelProperty(value = "买入手续费精度")
+    private Integer buyFeePrecision;
+
+    @ApiModelProperty(value = "卖出手续费率")
+    private Double sellFee;
+
+    @ApiModelProperty(value = "卖出手续费精度")
+    private Integer sellFeePrecision;
+
+    @ApiModelProperty(value = "最低交易数量")
+    private Double minAmount;
+
+    @ApiModelProperty(value = "最低交易额")
+    private Double minTotal;
 
     @ApiModelProperty(value = "交易额精度")
     private Integer tradeTotalPrecision;

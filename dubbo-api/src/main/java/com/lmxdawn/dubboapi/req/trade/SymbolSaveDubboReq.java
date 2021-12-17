@@ -30,13 +30,31 @@ public class SymbolSaveDubboReq implements Serializable {
     @Min(value = 1, message = "计价币种格式错误")
     private Long coinId;
 
-    @ApiModelProperty(value = "手续费率")
-    @Min(value = 0, message = "手续费率格式错误")
-    private Double fee = 0.00;
+    @ApiModelProperty(value = "买入手续费率")
+    @Min(value = 0, message = "买入手续费率格式错误")
+    @Max(value = 1, message = "买入手续费率格式错误")
+    private Double buyFee = 0.00;
 
-    @ApiModelProperty(value = "手续费精度")
-    @Min(value = 0, message = "手续费精度格式错误")
-    private Integer feePrecision;
+    @ApiModelProperty(value = "买入手续费精度")
+    @Min(value = 0, message = "买入手续费精度格式错误")
+    private Integer buyFeePrecision;
+
+    @ApiModelProperty(value = "卖出手续费率")
+    @Min(value = 0, message = "卖出手续费率格式错误")
+    @Max(value = 1, message = "卖出手续费率格式错误")
+    private Double sellFee = 0.00;
+
+    @ApiModelProperty(value = "卖出手续费精度")
+    @Min(value = 0, message = "卖出手续费精度格式错误")
+    private Integer sellFeePrecision;
+
+    @ApiModelProperty(value = "最低交易数量")
+    @Min(value = 0, message = "最低交易数量格式错误")
+    private Double minAmount;
+
+    @ApiModelProperty(value = "最低交易额")
+    @Min(value = 0, message = "最低交易额格式错误")
+    private Double minTotal;
 
     @ApiModelProperty(value = "交易额精度")
     @Min(value = 0, message = "交易额精度格式错误")

@@ -31,6 +31,11 @@ public class MemberCoinMatchDubboReq implements Serializable {
     private Double buyMoney;
 
     /**
+     * 买入的手续费
+     */
+    private Double buyMoneyFee;
+
+    /**
      * 买入的解冻总额
      */
     private Double buyUnfrozenMoney;
@@ -44,6 +49,11 @@ public class MemberCoinMatchDubboReq implements Serializable {
      * 卖出得到的总额
      */
     private Double sellMoney;
+
+    /**
+     * 卖出的手续费
+     */
+    private Double sellMoneyFee;
 
     /**
      * 卖出的总额

@@ -32,6 +32,10 @@ public class MatchDataLimitSellHolder {
         Long tradeCoinId = buy.getTradeCoinId();
         Long coinId = buy.getCoinId();
         Long symbol = Long.valueOf(tradeCoinId.toString() + coinId.toString());
+        Double buyFee = buy.getBuyFee();
+        Integer buyFeePrecision = buy.getBuyFeePrecision();
+        Double sellFee = buy.getSellFee();
+        Integer sellFeePrecision = buy.getSellFeePrecision();
 
         List<MatchDetailMq> matchDetailMqList = new ArrayList<>();
 
@@ -59,6 +63,10 @@ public class MatchDataLimitSellHolder {
                 matchDetailMq.setMatchIsComplete(0);
                 matchDetailMq.setIsRobot(buy.getIsRobot());
                 matchDetailMq.setMatchIsRobot(market.getIsRobot());
+                matchDetailMq.setBuyFee(buyFee);
+                matchDetailMq.setBuyFeePrecision(buyFeePrecision);
+                matchDetailMq.setSellFee(sellFee);
+                matchDetailMq.setSellFeePrecision(sellFeePrecision);
                 // 成交量
                 BigDecimal completeAmount = bigAmount;
                 // 订单相等
@@ -126,6 +134,10 @@ public class MatchDataLimitSellHolder {
                     matchDetailMq.setMatchIsComplete(0);
                     matchDetailMq.setIsRobot(buy.getIsRobot());
                     matchDetailMq.setMatchIsRobot(matchEvent.getIsRobot());
+                    matchDetailMq.setBuyFee(buyFee);
+                    matchDetailMq.setBuyFeePrecision(buyFeePrecision);
+                    matchDetailMq.setSellFee(sellFee);
+                    matchDetailMq.setSellFeePrecision(sellFeePrecision);
                     // 成交量
                     BigDecimal completeAmount = bigAmount;
                     // 订单数量相等

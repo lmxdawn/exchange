@@ -69,6 +69,10 @@ public class MatchDetailStream {
             BigDecimal amount = BigDecimal.valueOf(matchDetailMq.getAmount());
             Integer isComplete = matchDetailMq.getIsComplete();
             Integer matchIsComplete = matchDetailMq.getMatchIsComplete();
+            BigDecimal bigBuyFee = BigDecimal.valueOf(matchDetailMq.getBuyFee());
+            Integer buyFeePrecision = matchDetailMq.getBuyFeePrecision();
+            BigDecimal bigSellFee = BigDecimal.valueOf(matchDetailMq.getSellFee());
+            Integer sellFeePrecision = matchDetailMq.getSellFeePrecision();
 
             BigDecimal completeMoney = amount.multiply(price);
 
@@ -105,13 +109,21 @@ public class MatchDetailStream {
                         }
                         // 买入，则增加余额
                         if (direction == 1) {
+                            // 计算手续费
+                            BigDecimal bigBuyFeeMoney = amount.multiply(bigSellFee).setScale(sellFeePrecision, BigDecimal.ROUND_DOWN);
+                            BigDecimal buyMoney = amount.compareTo(bigBuyFeeMoney) > 0 ? amount.subtract(bigBuyFeeMoney) : amount;
                             memberCoinMatchDubboReq.setBuyMemberId(memberId);
-                            memberCoinMatchDubboReq.setBuyMoney(amount.doubleValue());
+                            memberCoinMatchDubboReq.setBuyMoney(buyMoney.doubleValue());
+                            memberCoinMatchDubboReq.setBuyMoneyFee(bigBuyFeeMoney.doubleValue());
                             memberCoinMatchDubboReq.setBuyUnfrozenMoney(completeMoney.doubleValue());
                         } else {
-                            // 卖出，解冻余额
+                            // 卖出，增加余额
+                            // 计算手续费
+                            BigDecimal bigSellFeeMoney = completeMoney.multiply(bigBuyFee).setScale(buyFeePrecision, BigDecimal.ROUND_DOWN);
+                            BigDecimal sellMoney = completeMoney.compareTo(bigSellFeeMoney) > 0 ? completeMoney.subtract(bigSellFeeMoney) : amount;
                             memberCoinMatchDubboReq.setSellMemberId(memberId);
-                            memberCoinMatchDubboReq.setSellMoney(completeMoney.doubleValue());
+                            memberCoinMatchDubboReq.setSellMoney(sellMoney.doubleValue());
+                            memberCoinMatchDubboReq.setSellMoneyFee(bigSellFeeMoney.doubleValue());
                             memberCoinMatchDubboReq.setSellUnfrozenMoney(amount.doubleValue());
                         }
                         entrustOrderMatchDubboReq.setId(id);
@@ -132,13 +144,21 @@ public class MatchDetailStream {
                         }
                         // 买入，则增加余额
                         if (matchDirection == 1) {
-                            memberCoinMatchDubboReq.setBuyMemberId(matchMemberId);
-                            memberCoinMatchDubboReq.setBuyMoney(amount.doubleValue());
+                            // 计算手续费
+                            BigDecimal bigBuyFeeMoney = amount.multiply(bigSellFee).setScale(sellFeePrecision, BigDecimal.ROUND_DOWN);
+                            BigDecimal buyMoney = amount.compareTo(bigBuyFeeMoney) > 0 ? amount.subtract(bigBuyFeeMoney) : amount;
+                            memberCoinMatchDubboReq.setBuyMemberId(memberId);
+                            memberCoinMatchDubboReq.setBuyMoney(buyMoney.doubleValue());
+                            memberCoinMatchDubboReq.setBuyMoneyFee(bigBuyFeeMoney.doubleValue());
                             memberCoinMatchDubboReq.setBuyUnfrozenMoney(completeMoney.doubleValue());
                         } else {
                             // 卖出，解冻余额
-                            memberCoinMatchDubboReq.setSellMemberId(matchMemberId);
-                            memberCoinMatchDubboReq.setSellMoney(completeMoney.doubleValue());
+                            // 计算手续费
+                            BigDecimal bigSellFeeMoney = completeMoney.multiply(bigBuyFee).setScale(buyFeePrecision, BigDecimal.ROUND_DOWN);
+                            BigDecimal sellMoney = completeMoney.compareTo(bigSellFeeMoney) > 0 ? completeMoney.subtract(bigSellFeeMoney) : amount;
+                            memberCoinMatchDubboReq.setSellMemberId(memberId);
+                            memberCoinMatchDubboReq.setSellMoney(sellMoney.doubleValue());
+                            memberCoinMatchDubboReq.setSellMoneyFee(bigSellFeeMoney.doubleValue());
                             memberCoinMatchDubboReq.setSellUnfrozenMoney(amount.doubleValue());
                         }
 

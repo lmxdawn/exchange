@@ -98,6 +98,8 @@ public class EntrustOrderController {
             throw new JsonException(ResultEnum.SYMBOL_NOT);
         }
         // 交易对精度
+        BigDecimal bigMinAmount = BigDecimal.valueOf(byTidAndCid.getMinAmount());
+        BigDecimal bigMinTotal = BigDecimal.valueOf(byTidAndCid.getMinTotal());
         Integer tradeAmountPrecision = byTidAndCid.getTradeAmountPrecision();
         Integer tradeTotalPrecision = byTidAndCid.getTradeTotalPrecision();
         BigDecimal bigPrice = new BigDecimal(req.getPrice() + "");
@@ -117,6 +119,9 @@ public class EntrustOrderController {
             if (type == 1) {
                 req.setTotal(0.00);
                 bigMoney = bigAmount.multiply(bigPrice).setScale(tradeTotalPrecision, BigDecimal.ROUND_HALF_DOWN);
+                if (bigAmount.compareTo(bigMinAmount) < 0) {
+                    return ResultVOUtils.error(ResultEnum.MIN_AMOUNT);
+                }
             } else {
                 // 市价
                 if (bigTotal.compareTo(BigDecimal.ZERO) <= 0) {
@@ -126,6 +131,9 @@ public class EntrustOrderController {
                 req.setAmount(0.00);
                 req.setPrice(0.00);
                 bigMoney = bigTotal;
+                if (bigMoney.compareTo(bigMinTotal) < 0) {
+                    return ResultVOUtils.error(ResultEnum.MIN_TOTAL);
+                }
             }
         } else {
             // 卖出
@@ -135,6 +143,9 @@ public class EntrustOrderController {
                 req.setPrice(0.00);
             }
             bigMoney = bigAmount;
+            if (bigAmount.compareTo(bigMinAmount) < 0) {
+                return ResultVOUtils.error(ResultEnum.MIN_AMOUNT);
+            }
         }
 
         if (bigMoney.compareTo(BigDecimal.ZERO) <= 0) {
