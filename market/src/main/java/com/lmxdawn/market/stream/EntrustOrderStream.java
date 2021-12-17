@@ -62,40 +62,40 @@ public class EntrustOrderStream {
                 // 行情深度处理
                 redisTemplate.opsForZSet().add(key, price.toString(), price);
                 redisTemplate.opsForValue().increment(String.format(infoKey, symbol, price),amount);
-            }
 
-            Set<String> depthPriceList = redisTemplate.opsForZSet().range(key, 0, 100);
-            List<DepthVo> depthVoList = new ArrayList<>();
-            if (depthPriceList != null) {
-                for (String depthPrice : depthPriceList) {
-                    String depthAmountKey = String.format(infoKey, symbol, depthPrice);
-                    String depthAmountStr = redisTemplate.opsForValue().get(depthAmountKey);
-                    DepthVo depthVo = new DepthVo();
-                    depthVo.setPrice(Double.parseDouble(depthPrice));
-                    double depthAmount = !StringUtils.isBlank(depthAmountStr) ? Double.parseDouble(depthAmountStr) : 0.00;
-                    if (depthAmount <= 0) {
-                        redisTemplate.delete(depthAmountKey);
-                        redisTemplate.opsForZSet().remove(key, depthPrice);
-                        continue;
+                Set<String> depthPriceList = redisTemplate.opsForZSet().range(key, 0, 100);
+                List<DepthVo> depthVoList = new ArrayList<>();
+                if (depthPriceList != null) {
+                    for (String depthPrice : depthPriceList) {
+                        String depthAmountKey = String.format(infoKey, symbol, depthPrice);
+                        String depthAmountStr = redisTemplate.opsForValue().get(depthAmountKey);
+                        DepthVo depthVo = new DepthVo();
+                        depthVo.setPrice(Double.parseDouble(depthPrice));
+                        double depthAmount = !StringUtils.isBlank(depthAmountStr) ? Double.parseDouble(depthAmountStr) : 0.00;
+                        if (depthAmount <= 0) {
+                            redisTemplate.delete(depthAmountKey);
+                            redisTemplate.opsForZSet().remove(key, depthPrice);
+                            continue;
+                        }
+                        depthVo.setAmount(depthAmount);
+                        depthVoList.add(depthVo);
                     }
-                    depthVo.setAmount(depthAmount);
-                    depthVoList.add(depthVo);
+
                 }
 
+                DataVo dataVo = new DataVo();
+                dataVo.setTradeCoinId(tradeCoinId);
+                dataVo.setCoinId(coinId);
+                if (direction == 1) {
+                    dataVo.setBuyDepthVoList(depthVoList);
+                } else {
+                    dataVo.setSellDepthVoList(depthVoList);
+                }
+                WsMarketMq wsMarketMq = new WsMarketMq();
+                wsMarketMq.setData(JSON.toJSONString(dataVo));
+                // 推送 ws 深度行情
+                streamBridge.send(MqTopicConstant.WS_MARKET_TOPIC, wsMarketMq);
             }
-
-            DataVo dataVo = new DataVo();
-            dataVo.setTradeCoinId(tradeCoinId);
-            dataVo.setCoinId(coinId);
-            if (direction == 1) {
-                dataVo.setBuyDepthVoList(depthVoList);
-            } else {
-                dataVo.setSellDepthVoList(depthVoList);
-            }
-            WsMarketMq wsMarketMq = new WsMarketMq();
-            wsMarketMq.setData(JSON.toJSONString(dataVo));
-            // 推送 ws 深度行情
-            streamBridge.send(MqTopicConstant.WS_MARKET_TOPIC, wsMarketMq);
 
         };
 

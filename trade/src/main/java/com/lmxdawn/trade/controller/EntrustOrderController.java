@@ -98,6 +98,7 @@ public class EntrustOrderController {
             throw new JsonException(ResultEnum.SYMBOL_NOT);
         }
         // 交易对精度
+        Integer tradeAmountPrecision = byTidAndCid.getTradeAmountPrecision();
         Integer tradeTotalPrecision = byTidAndCid.getTradeTotalPrecision();
         BigDecimal bigPrice = new BigDecimal(req.getPrice() + "");
         BigDecimal bigAmount = new BigDecimal(req.getAmount() + "");
@@ -162,6 +163,7 @@ public class EntrustOrderController {
         BeanUtils.copyProperties(req, entrustOrderMq);
         entrustOrderMq.setId(id);
         entrustOrderMq.setIsRobot(0);
+        entrustOrderMq.setTradeAmountPrecision(tradeAmountPrecision);
         streamBridge.send(MqTopicConstant.ENTRUST_ORDER_TOPIC, entrustOrderMq);
 
         return ResultVOUtils.success();

@@ -33,7 +33,7 @@ public class EntrustOrderMq {
     private Double total;
 
     // 交易额精度
-    private Integer tradeTotalPrecision;
+    private Integer tradeAmountPrecision;
 
     // 是否是机器人（0：否，1：是）
     private Integer isRobot;
