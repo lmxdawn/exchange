@@ -37,6 +37,11 @@ public class MemberBill {
 	private Double money;
 
 	/**
+	 * 手续费
+	 */
+	private Double fee;
+
+	/**
 	 * 备注
 	 */
 	private String remark;

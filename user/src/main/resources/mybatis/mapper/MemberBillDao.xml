@@ -23,13 +23,14 @@
     </select>
 
     <insert id="insert" keyProperty="id" parameterType="com.lmxdawn.user.entity.MemberBill">
-        INSERT INTO `member_bill`(member_id,coin_id,`category`,`type`,money,remark,create_date,create_time,modified_time)
+        INSERT INTO `member_bill`(member_id,coin_id,`category`,`type`,money,fee,remark,create_date,create_time,modified_time)
         VALUES
         (#{memberId},
          #{coinId},
          #{category},
          #{type},
          #{money},
+         #{fee},
          #{remark},
          #{createDate},
          #{createTime},
@@ -38,7 +39,7 @@
 
     <insert id="insertBatch" keyProperty="id" parameterType="java.util.List">
         INSERT INTO
-        `member_bill`(member_id,coin_id,`category`,`type`,money,remark,create_date,create_time,modified_time)
+        `member_bill`(member_id,coin_id,`category`,`type`,money,fee,remark,create_date,create_time,modified_time)
         VALUES
         <foreach collection="list" item="item" index="index" separator=",">
             (#{item.memberId},
@@ -46,6 +47,7 @@
             #{item.category},
             #{item.type},
             #{item.money},
+            #{item.fee},
             #{item.remark},
             #{item.createDate},
             #{item.createTime},
