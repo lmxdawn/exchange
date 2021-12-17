@@ -51,8 +51,6 @@ public class MatchDetailStream {
     public Consumer<MatchDetailMq> matchDetail() {
 
         return matchDetailMq -> {
-            System.out.println("撮合数据");
-            System.out.println(matchDetailMq);
             Long tradeCoinId = matchDetailMq.getTradeCoinId();
             Long coinId = matchDetailMq.getCoinId();
             Long symbol = Long.valueOf(tradeCoinId.toString() + coinId.toString());
@@ -237,7 +235,6 @@ public class MatchDetailStream {
                 String matchInfoKey = matchDirection == 1 ? CacheConstant.BUY_DEPTH_INFO : CacheConstant.SELL_DEPTH_INFO;
                 String matchAmountKey = String.format(matchInfoKey, symbol, price);
                 Long matchIncrement = redisTemplate.opsForValue().increment(matchAmountKey, -amount.multiply(bigPow).longValue());
-                System.out.println("减量：" + matchIncrement);
                 if (matchIncrement == null || matchIncrement <= 0) {
                     redisTemplate.delete(matchAmountKey);
                     redisTemplate.opsForZSet().remove(matchKey, price.toString());
