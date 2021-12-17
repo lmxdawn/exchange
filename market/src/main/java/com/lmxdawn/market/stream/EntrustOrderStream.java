@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -51,9 +52,13 @@ public class EntrustOrderStream {
             Long tradeCoinId = entrustOrderMq.getTradeCoinId();
             Long coinId = entrustOrderMq.getCoinId();
             Double price = entrustOrderMq.getPrice();
-            Double amount = entrustOrderMq.getAmount();
+            BigDecimal bigAmount = BigDecimal.valueOf(entrustOrderMq.getAmount());
             Integer type = entrustOrderMq.getType();
             Integer direction = entrustOrderMq.getDirection();
+            Integer tradeAmountPrecision = entrustOrderMq.getTradeAmountPrecision();
+            // 放大倍数，不然有精度问题
+            BigDecimal bigPow = BigDecimal.valueOf(Math.pow(10.0, tradeAmountPrecision));
+
             String key = direction == 1 ? CacheConstant.BUY_DEPTH : CacheConstant.SELL_DEPTH;
             key = String.format(key, symbol);
             String infoKey = direction == 1 ? CacheConstant.BUY_DEPTH_INFO : CacheConstant.SELL_DEPTH_INFO;
@@ -61,7 +66,7 @@ public class EntrustOrderStream {
             if (type == 1) {
                 // 行情深度处理
                 redisTemplate.opsForZSet().add(key, price.toString(), price);
-                redisTemplate.opsForValue().increment(String.format(infoKey, symbol, price),amount);
+                Long increment = redisTemplate.opsForValue().increment(String.format(infoKey, symbol, price), bigAmount.multiply(bigPow).longValue());
 
                 Set<String> depthPriceList = redisTemplate.opsForZSet().range(key, 0, 100);
                 List<DepthVo> depthVoList = new ArrayList<>();
@@ -71,13 +76,13 @@ public class EntrustOrderStream {
                         String depthAmountStr = redisTemplate.opsForValue().get(depthAmountKey);
                         DepthVo depthVo = new DepthVo();
                         depthVo.setPrice(Double.parseDouble(depthPrice));
-                        double depthAmount = !StringUtils.isBlank(depthAmountStr) ? Double.parseDouble(depthAmountStr) : 0.00;
-                        if (depthAmount <= 0) {
+                        BigDecimal depthAmount = !StringUtils.isBlank(depthAmountStr) ? BigDecimal.valueOf(Long.parseLong(depthAmountStr)) : BigDecimal.ZERO;
+                        if (depthAmount.compareTo(BigDecimal.ZERO) <= 0) {
                             redisTemplate.delete(depthAmountKey);
                             redisTemplate.opsForZSet().remove(key, depthPrice);
                             continue;
                         }
-                        depthVo.setAmount(depthAmount);
+                        depthVo.setAmount(depthAmount.divide(bigPow, tradeAmountPrecision,BigDecimal.ROUND_DOWN).doubleValue());
                         depthVoList.add(depthVo);
                     }
 

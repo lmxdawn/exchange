@@ -62,6 +62,11 @@ public class EntrustOrder {
 	private Double totalComplete;
 
 	/**
+	 * 总的手续费
+	 */
+	private Double totalFee;
+
+	/**
 	 * 状态（1：未完成，2：已完成）
 	 */
 	private Integer status;

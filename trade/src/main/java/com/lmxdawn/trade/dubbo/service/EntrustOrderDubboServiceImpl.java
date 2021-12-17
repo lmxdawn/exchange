@@ -46,6 +46,7 @@ public class EntrustOrderDubboServiceImpl implements EntrustOrderDubboService {
         entrustOrder.setAmountComplete(req.getAmountComplete());
         entrustOrder.setAmount(req.getAmount());
         entrustOrder.setTotalComplete(req.getTotal());
+        entrustOrder.setTotalFee(req.getFee());
         if (req.getStatus() != null && req.getStatus() == 2) {
             entrustOrder.setStatus(2);
         } else {
@@ -62,6 +63,7 @@ public class EntrustOrderDubboServiceImpl implements EntrustOrderDubboService {
         matchEntrustOrder.setAmountComplete(req.getMatchAmountComplete());
         matchEntrustOrder.setAmount(req.getMatchAmount());
         matchEntrustOrder.setTotalComplete(req.getMatchTotal());
+        matchEntrustOrder.setTotalFee(req.getMatchFee());
         if (req.getMatchStatus() != null && req.getMatchStatus() == 2) {
             matchEntrustOrder.setStatus(2);
         } else {

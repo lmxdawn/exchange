@@ -67,6 +67,7 @@ public class MatchDataLimitSellHolder {
                 matchDetailMq.setBuyFeePrecision(buyFeePrecision);
                 matchDetailMq.setSellFee(sellFee);
                 matchDetailMq.setSellFeePrecision(sellFeePrecision);
+                matchDetailMq.setTradeAmountPrecision(tradeAmountPrecision);
                 // 成交量
                 BigDecimal completeAmount = bigAmount;
                 // 订单相等
@@ -138,6 +139,7 @@ public class MatchDataLimitSellHolder {
                     matchDetailMq.setBuyFeePrecision(buyFeePrecision);
                     matchDetailMq.setSellFee(sellFee);
                     matchDetailMq.setSellFeePrecision(sellFeePrecision);
+                    matchDetailMq.setTradeAmountPrecision(tradeAmountPrecision);
                     // 成交量
                     BigDecimal completeAmount = bigAmount;
                     // 订单数量相等

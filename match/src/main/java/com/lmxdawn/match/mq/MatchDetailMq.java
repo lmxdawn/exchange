@@ -108,5 +108,10 @@ public class MatchDetailMq {
      */
     private Integer sellFeePrecision;
 
+    /**
+     * 交易量精度
+     */
+    private Integer tradeAmountPrecision;
+
 
 }

@@ -169,11 +169,20 @@ public class EntrustOrderController {
         // 创建订单，并且调用服务冻结金额
         Long id = entrustOrderService.create(req);
 
+        Double buyFee = byTidAndCid.getBuyFee();
+        Integer buyFeePrecision = byTidAndCid.getBuyFeePrecision();
+        Double sellFee = byTidAndCid.getSellFee();
+        Integer sellFeePrecision = byTidAndCid.getSellFeePrecision();
+
         // 加入撮合队列
         EntrustOrderMq entrustOrderMq = new EntrustOrderMq();
         BeanUtils.copyProperties(req, entrustOrderMq);
         entrustOrderMq.setId(id);
         entrustOrderMq.setIsRobot(0);
+        entrustOrderMq.setBuyFee(buyFee);
+        entrustOrderMq.setBuyFeePrecision(buyFeePrecision);
+        entrustOrderMq.setSellFee(sellFee);
+        entrustOrderMq.setSellFeePrecision(sellFeePrecision);
         entrustOrderMq.setTradeAmountPrecision(tradeAmountPrecision);
         streamBridge.send(MqTopicConstant.ENTRUST_ORDER_TOPIC, entrustOrderMq);
 

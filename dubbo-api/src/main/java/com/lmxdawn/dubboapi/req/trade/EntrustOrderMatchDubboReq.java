@@ -31,6 +31,11 @@ public class EntrustOrderMatchDubboReq implements Serializable {
     private Double total;
 
     /**
+     * 手续费
+     */
+    private Double fee;
+
+    /**
      * 状态（1：未完成，2：已完成）
      */
     private Integer status;
@@ -54,6 +59,11 @@ public class EntrustOrderMatchDubboReq implements Serializable {
      * 对手单成交额
      */
     private Double matchTotal;
+
+    /**
+     * 对手单手续费
+     */
+    private Double matchFee;
 
     /**
      * 对手单状态（1：未完成，2：已完成）

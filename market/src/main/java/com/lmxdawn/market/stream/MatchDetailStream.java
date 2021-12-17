@@ -51,7 +51,8 @@ public class MatchDetailStream {
     public Consumer<MatchDetailMq> matchDetail() {
 
         return matchDetailMq -> {
-
+            System.out.println("撮合数据");
+            System.out.println(matchDetailMq);
             Long tradeCoinId = matchDetailMq.getTradeCoinId();
             Long coinId = matchDetailMq.getCoinId();
             Long symbol = Long.valueOf(tradeCoinId.toString() + coinId.toString());
@@ -73,6 +74,7 @@ public class MatchDetailStream {
             Integer buyFeePrecision = matchDetailMq.getBuyFeePrecision();
             BigDecimal bigSellFee = BigDecimal.valueOf(matchDetailMq.getSellFee());
             Integer sellFeePrecision = matchDetailMq.getSellFeePrecision();
+            Integer tradeAmountPrecision = matchDetailMq.getTradeAmountPrecision();
 
             BigDecimal completeMoney = amount.multiply(price);
 
@@ -107,29 +109,32 @@ public class MatchDetailStream {
                             // 成交额 = 交易额 - 已完成的交易额
                             completeMoney = bigTotal.subtract(bigTotalComplete);
                         }
-                        // 买入，则增加余额
+                        // 手续费
+                        BigDecimal bigFeeMoney = BigDecimal.ZERO;
+                        // 买入，增加余额
                         if (direction == 1) {
                             // 计算手续费
-                            BigDecimal bigBuyFeeMoney = amount.multiply(bigSellFee).setScale(sellFeePrecision, BigDecimal.ROUND_DOWN);
-                            BigDecimal buyMoney = amount.compareTo(bigBuyFeeMoney) > 0 ? amount.subtract(bigBuyFeeMoney) : amount;
+                            bigFeeMoney = amount.multiply(bigSellFee).setScale(sellFeePrecision, BigDecimal.ROUND_DOWN);
+                            BigDecimal buyMoney = amount.compareTo(bigFeeMoney) > 0 ? amount.subtract(bigFeeMoney) : amount;
                             memberCoinMatchDubboReq.setBuyMemberId(memberId);
                             memberCoinMatchDubboReq.setBuyMoney(buyMoney.doubleValue());
-                            memberCoinMatchDubboReq.setBuyMoneyFee(bigBuyFeeMoney.doubleValue());
+                            memberCoinMatchDubboReq.setBuyMoneyFee(bigFeeMoney.doubleValue());
                             memberCoinMatchDubboReq.setBuyUnfrozenMoney(completeMoney.doubleValue());
                         } else {
                             // 卖出，增加余额
                             // 计算手续费
-                            BigDecimal bigSellFeeMoney = completeMoney.multiply(bigBuyFee).setScale(buyFeePrecision, BigDecimal.ROUND_DOWN);
-                            BigDecimal sellMoney = completeMoney.compareTo(bigSellFeeMoney) > 0 ? completeMoney.subtract(bigSellFeeMoney) : amount;
+                            bigFeeMoney = completeMoney.multiply(bigBuyFee).setScale(buyFeePrecision, BigDecimal.ROUND_DOWN);
+                            BigDecimal sellMoney = completeMoney.compareTo(bigFeeMoney) > 0 ? completeMoney.subtract(bigFeeMoney) : amount;
                             memberCoinMatchDubboReq.setSellMemberId(memberId);
                             memberCoinMatchDubboReq.setSellMoney(sellMoney.doubleValue());
-                            memberCoinMatchDubboReq.setSellMoneyFee(bigSellFeeMoney.doubleValue());
+                            memberCoinMatchDubboReq.setSellMoneyFee(bigFeeMoney.doubleValue());
                             memberCoinMatchDubboReq.setSellUnfrozenMoney(amount.doubleValue());
                         }
                         entrustOrderMatchDubboReq.setId(id);
                         entrustOrderMatchDubboReq.setAmountComplete(entrustOrder.getAmountComplete());
                         entrustOrderMatchDubboReq.setAmount(amount.doubleValue());
                         entrustOrderMatchDubboReq.setTotal(completeMoney.doubleValue());
+                        entrustOrderMatchDubboReq.setFee(bigFeeMoney.doubleValue());
                         entrustOrderMatchDubboReq.setStatus(isComplete == 1 ? 2 : 1);
                     }
                     // 对手单
@@ -142,23 +147,25 @@ public class MatchDetailStream {
                             // 成交额 = 交易额 - 已完成的交易额
                             completeMoney = bigTotal.subtract(bigTotalComplete);
                         }
+                        // 手续费
+                        BigDecimal bigFeeMoney = BigDecimal.ZERO;
                         // 买入，则增加余额
                         if (matchDirection == 1) {
                             // 计算手续费
-                            BigDecimal bigBuyFeeMoney = amount.multiply(bigSellFee).setScale(sellFeePrecision, BigDecimal.ROUND_DOWN);
-                            BigDecimal buyMoney = amount.compareTo(bigBuyFeeMoney) > 0 ? amount.subtract(bigBuyFeeMoney) : amount;
+                            bigFeeMoney = amount.multiply(bigSellFee).setScale(sellFeePrecision, BigDecimal.ROUND_DOWN);
+                            BigDecimal buyMoney = amount.compareTo(bigFeeMoney) > 0 ? amount.subtract(bigFeeMoney) : amount;
                             memberCoinMatchDubboReq.setBuyMemberId(memberId);
                             memberCoinMatchDubboReq.setBuyMoney(buyMoney.doubleValue());
-                            memberCoinMatchDubboReq.setBuyMoneyFee(bigBuyFeeMoney.doubleValue());
+                            memberCoinMatchDubboReq.setBuyMoneyFee(bigFeeMoney.doubleValue());
                             memberCoinMatchDubboReq.setBuyUnfrozenMoney(completeMoney.doubleValue());
                         } else {
                             // 卖出，解冻余额
                             // 计算手续费
-                            BigDecimal bigSellFeeMoney = completeMoney.multiply(bigBuyFee).setScale(buyFeePrecision, BigDecimal.ROUND_DOWN);
-                            BigDecimal sellMoney = completeMoney.compareTo(bigSellFeeMoney) > 0 ? completeMoney.subtract(bigSellFeeMoney) : amount;
+                            bigFeeMoney = completeMoney.multiply(bigBuyFee).setScale(buyFeePrecision, BigDecimal.ROUND_DOWN);
+                            BigDecimal sellMoney = completeMoney.compareTo(bigFeeMoney) > 0 ? completeMoney.subtract(bigFeeMoney) : amount;
                             memberCoinMatchDubboReq.setSellMemberId(memberId);
                             memberCoinMatchDubboReq.setSellMoney(sellMoney.doubleValue());
-                            memberCoinMatchDubboReq.setSellMoneyFee(bigSellFeeMoney.doubleValue());
+                            memberCoinMatchDubboReq.setSellMoneyFee(bigFeeMoney.doubleValue());
                             memberCoinMatchDubboReq.setSellUnfrozenMoney(amount.doubleValue());
                         }
 
@@ -166,6 +173,7 @@ public class MatchDetailStream {
                         entrustOrderMatchDubboReq.setMatchAmountComplete(matchEntrustOrder.getAmountComplete());
                         entrustOrderMatchDubboReq.setMatchAmount(amount.doubleValue());
                         entrustOrderMatchDubboReq.setMatchTotal(completeMoney.doubleValue());
+                        entrustOrderMatchDubboReq.setMatchFee(bigFeeMoney.doubleValue());
                         entrustOrderMatchDubboReq.setMatchStatus(matchIsComplete == 1 ? 2 : 1);
                     }
 
@@ -176,7 +184,8 @@ public class MatchDetailStream {
                     }
                 }
             }
-
+            // 放大倍数，不然有精度问题
+            BigDecimal bigPow = BigDecimal.valueOf(Math.pow(10.0, tradeAmountPrecision));
             // ws 推送的data数据
             DataVo dataVo = new DataVo();
             dataVo.setTradeCoinId(tradeCoinId);
@@ -187,7 +196,7 @@ public class MatchDetailStream {
                 key = String.format(key, symbol);
                 String infoKey = direction == 1 ? CacheConstant.BUY_DEPTH_INFO : CacheConstant.SELL_DEPTH_INFO;
                 String amountKey = String.format(infoKey, symbol, price);
-                Double increment = redisTemplate.opsForValue().increment(amountKey, -amount.doubleValue());
+                Long increment = redisTemplate.opsForValue().increment(amountKey, -amount.multiply(bigPow).longValue());
                 if (increment == null || increment <= 0) {
                     redisTemplate.delete(amountKey);
                     redisTemplate.opsForZSet().remove(key, price.toString());
@@ -201,13 +210,13 @@ public class MatchDetailStream {
                         String depthAmountStr = redisTemplate.opsForValue().get(depthAmountKey);
                         DepthVo depthVo = new DepthVo();
                         depthVo.setPrice(Double.parseDouble(depthPrice));
-                        double depthAmount = !StringUtils.isBlank(depthAmountStr) ? Double.parseDouble(depthAmountStr) : 0.00;
-                        if (depthAmount <= 0) {
+                        BigDecimal depthAmount = !StringUtils.isBlank(depthAmountStr) ? BigDecimal.valueOf(Long.parseLong(depthAmountStr)) : BigDecimal.ZERO;
+                        if (depthAmount.compareTo(BigDecimal.ZERO) <= 0) {
                             redisTemplate.delete(depthAmountKey);
                             redisTemplate.opsForZSet().remove(key, depthPrice);
                             continue;
                         }
-                        depthVo.setAmount(depthAmount);
+                        depthVo.setAmount(depthAmount.divide(bigPow, tradeAmountPrecision,BigDecimal.ROUND_DOWN).doubleValue());
                         depthVoList.add(depthVo);
                     }
 
@@ -227,7 +236,8 @@ public class MatchDetailStream {
                 matchKey = String.format(matchKey, symbol);
                 String matchInfoKey = matchDirection == 1 ? CacheConstant.BUY_DEPTH_INFO : CacheConstant.SELL_DEPTH_INFO;
                 String matchAmountKey = String.format(matchInfoKey, symbol, price);
-                Double matchIncrement = redisTemplate.opsForValue().increment(matchAmountKey, -amount.doubleValue());
+                Long matchIncrement = redisTemplate.opsForValue().increment(matchAmountKey, -amount.multiply(bigPow).longValue());
+                System.out.println("减量：" + matchIncrement);
                 if (matchIncrement == null || matchIncrement <= 0) {
                     redisTemplate.delete(matchAmountKey);
                     redisTemplate.opsForZSet().remove(matchKey, price.toString());
@@ -240,13 +250,13 @@ public class MatchDetailStream {
                         String depthAmountStr = redisTemplate.opsForValue().get(depthAmountKey);
                         DepthVo depthVo = new DepthVo();
                         depthVo.setPrice(Double.parseDouble(depthPrice));
-                        double depthAmount = !StringUtils.isBlank(depthAmountStr) ? Double.parseDouble(depthAmountStr) : 0.00;
-                        if (depthAmount <= 0) {
+                        BigDecimal depthAmount = !StringUtils.isBlank(depthAmountStr) ? BigDecimal.valueOf(Long.parseLong(depthAmountStr)) : BigDecimal.ZERO;
+                        if (depthAmount.compareTo(BigDecimal.ZERO) <= 0) {
                             redisTemplate.delete(depthAmountKey);
                             redisTemplate.opsForZSet().remove(matchKey, depthPrice);
                             continue;
                         }
-                        depthVo.setAmount(depthAmount);
+                        depthVo.setAmount(depthAmount.divide(bigPow, tradeAmountPrecision,BigDecimal.ROUND_DOWN).doubleValue());
                         matchDepthVoList.add(depthVo);
                     }
 
