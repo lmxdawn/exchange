@@ -17,7 +17,7 @@ public enum ResultEnum {
     DATA_CHANGE(6, "数据没有任何更改"),
     DATA_REPEAT(7, "数据已存在"),
 
-    OTHER_SMS_ERR(20000, "短信发送失败"),
+    OTHER_SMS_ERR(30000, "短信发送失败"),
 
     ;
 
