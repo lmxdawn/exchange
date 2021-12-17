@@ -270,8 +270,6 @@ public class MatchDetailStream {
             // 推送 ws 深度行情
             // 设置撮合信息
             MatchVo matchVo = new MatchVo();
-            matchVo.setTradeCoinId(tradeCoinId);
-            matchVo.setCoinId(coinId);
             matchVo.setPrice(price.doubleValue());
             matchVo.setAmount(amount.doubleValue());
             dataVo.setMatchVo(matchVo);
