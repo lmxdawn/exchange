@@ -17,8 +17,8 @@ public enum ResultEnum {
     DATA_CHANGE(6, "数据没有任何更改"),
     DATA_REPEAT(7, "数据已存在"),
 
-    USER_LOGIN_PWD_ERR(10000, "密码错误"), // 密码错误
-    USER_REGISTER_TEL_EXISTS(10002, "手机号已存在"), // 手机号已存在
+    USER_LOGIN_PWD_ERR(10000, "密码错误"),
+    USER_REGISTER_TEL_EXISTS(10002, "手机号已存在"),
 
     ;
 
