@@ -17,12 +17,6 @@ public class SymbolRes {
     @ApiModelProperty(value = "计价币种")
     private CoinSimpleDubboRes coin;
 
-    @ApiModelProperty(value = "手续费率")
-    private Double fee;
-
-    @ApiModelProperty(value = "手续费精度")
-    private Integer feePrecision;
-
     @ApiModelProperty(value = "交易额精度")
     private Integer tradeTotalPrecision;
 
@@ -31,4 +25,16 @@ public class SymbolRes {
 
     @ApiModelProperty(value = "买入量精度")
     private Integer tradeAmountPrecision;
+
+    @ApiModelProperty(value = "最新价格")
+    private Double price;
+
+    @ApiModelProperty(value = "(24h)之前的价格")
+    private Double price24;
+
+    @ApiModelProperty(value = "(24h)涨跌幅")
+    private Double rate24;
+
+    @ApiModelProperty(value = "(24h)交易额")
+    private Double tradeTotal24;
 }

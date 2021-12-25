@@ -1,10 +1,10 @@
 package com.lmxdawn.trade.controller;
 
 import com.lmxdawn.trade.enums.ResultEnum;
-import com.lmxdawn.trade.req.SymbolListPageReq;
+import com.lmxdawn.trade.req.UsdtRateReadReq;
 import com.lmxdawn.trade.res.BaseRes;
-import com.lmxdawn.trade.res.SymbolRes;
-import com.lmxdawn.trade.service.SymbolService;
+import com.lmxdawn.trade.res.UsdtRateRes;
+import com.lmxdawn.trade.service.UsdtRateService;
 import com.lmxdawn.trade.util.ResultVOUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -17,28 +17,37 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.List;
 
-@Api(tags = "交易对")
+@Api(tags = "usdt汇率")
 @RestController
-@RequestMapping("/symbol")
-public class SymbolController {
+@RequestMapping("/usdt-rate")
+public class UsdtRateController {
 
     @Autowired
-    private SymbolService symbolService;
+    private UsdtRateService usdtRateService;
 
-    @ApiOperation(value = "交易对列表")
+    @ApiOperation(value = "usdt汇率列表")
     @GetMapping("/list")
-    public BaseRes<SymbolRes> list(@Valid SymbolListPageReq req,
-                                   BindingResult bindingResult) {
+    public BaseRes<UsdtRateRes> list() {
+
+
+        List<UsdtRateRes> list = usdtRateService.listAll();
+
+        return ResultVOUtils.success(list);
+    }
+
+    @ApiOperation(value = "usdt汇率详情")
+    @GetMapping("/read")
+    public BaseRes<UsdtRateRes> read(@Valid UsdtRateReadReq req,
+                                     BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, bindingResult.getFieldError().getDefaultMessage());
         }
 
 
-        List<SymbolRes> symbolRes = symbolService.listPage(req);
+        UsdtRateRes read = usdtRateService.read(req.getName());
 
-        return ResultVOUtils.success(symbolRes);
+        return ResultVOUtils.success(read);
     }
-
 
 }

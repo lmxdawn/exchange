@@ -21,16 +21,16 @@
     </select>
 
     <select id="listAll" resultType="com.lmxdawn.wallet.entity.Coin">
-        SELECT id,`name`,coin_name,symbol,`precision`
+        SELECT id,`name`,coin_name,symbol,`precision`,usdt_price
         FROM `coin`
         <where>
-            status = 1
+            status = 2
         </where>
         ORDER BY `sort` ASC
     </select>
 
     <select id="listByIdIn" resultType="com.lmxdawn.wallet.entity.Coin">
-        SELECT id,`name`,coin_name,symbol,`precision`
+        SELECT id,`name`,coin_name,symbol,`precision`,usdt_price
         FROM `coin`
         where `id` in
         <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
@@ -76,6 +76,7 @@
             <if test="coinName != null">`coin_name`=#{coinName},</if>
             <if test="symbol != null">`symbol`=#{symbol},</if>
             <if test="precision != null">`precision`=#{precision},</if>
+            <if test="usdtPrice != null">`usdt_price`=#{usdtPrice},</if>
             <if test="sort != null">`sort`=#{sort},</if>
             <if test="status != null">`status`=#{status},</if>
             <if test="modifiedTime != null">`modified_time`=#{modifiedTime},</if>

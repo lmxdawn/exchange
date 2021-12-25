@@ -67,6 +67,21 @@ public class Symbol {
 	private Integer tradeAmountPrecision;
 
 	/**
+	 * 最新价格
+	 */
+	private Double price;
+
+	/**
+	 * (24h)之前的价格
+	 */
+	private Double price24;
+
+	/**
+	 * (24h)交易额
+	 */
+	private Double tradeTotal24;
+
+	/**
 	 * 排序（升序）
 	 */
 	private Integer sort;

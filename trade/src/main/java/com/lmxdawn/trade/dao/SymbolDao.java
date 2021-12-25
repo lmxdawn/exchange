@@ -3,6 +3,7 @@ package com.lmxdawn.trade.dao;
 import com.lmxdawn.dubboapi.req.trade.SymbolQueryDubboReq;
 import com.lmxdawn.dubboapi.res.trade.SymbolDubboRes;
 import com.lmxdawn.trade.entity.Symbol;
+import com.lmxdawn.trade.req.SymbolListPageReq;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -21,7 +22,13 @@ public interface SymbolDao {
      * 查询
      * @return
      */
-    List<Symbol> listAll();
+    List<Symbol> listPage(SymbolListPageReq req);
+
+    /**
+     * 查询
+     * @return
+     */
+    List<Symbol> listByIdIn(List<Long> ids);
 
     /**
      * 查询

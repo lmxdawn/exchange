@@ -4,8 +4,11 @@ import com.lmxdawn.dubboapi.res.wallet.CoinSimpleDubboRes;
 import com.lmxdawn.dubboapi.service.wallet.CoinDubboService;
 import com.lmxdawn.trade.dao.SymbolDao;
 import com.lmxdawn.trade.entity.Symbol;
+import com.lmxdawn.trade.req.SymbolListPageReq;
 import com.lmxdawn.trade.res.SymbolRes;
 import com.lmxdawn.trade.service.SymbolService;
+import com.lmxdawn.trade.util.PageUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +27,33 @@ public class SymbolServiceImpl implements SymbolService {
     private CoinDubboService coinDubboService;
 
     @Override
-    public List<SymbolRes> listAll() {
+    public List<SymbolRes> listPage(SymbolListPageReq req) {
 
-        List<Symbol> symbols = symbolDao.listAll();
+        List<Symbol> symbols = new ArrayList<>();
+        Long coinId = req.getCoinId();
+        if (coinId == null || coinId == 0) {
+            String collect = req.getCollect();
+            List<Long> ids = new ArrayList<>();
+            if (!StringUtils.isBlank(collect)) {
+                String[] split = collect.split(",");
+                for (String c : split) {
+                    if (!StringUtils.isBlank(c)) {
+                        ids.add(Long.valueOf(c));
+                    }
+                }
+            }
+            if (ids.size() > 0) {
+                symbols = symbolDao.listByIdIn(ids);
+            }
+
+        } else {
+            Integer page = req.getPage();
+            Integer limit = req.getLimit();
+            Integer offset = PageUtils.createOffset(page, limit);
+            req.setOffset(offset);
+            symbols = symbolDao.listPage(req);
+        }
+
 
         if (symbols.size() == 0) {
             return new ArrayList<>();

@@ -1,40 +1,35 @@
-package com.lmxdawn.wallet.entity;
+package com.lmxdawn.trade.entity;
 
 import lombok.Data;
 import java.util.Date;
 
 @Data
-public class Coin {
+public class UsdtRate {
 
 	/**
-	 * 币种ID自增
+	 * 自增ID
 	 */
 	private Long id;
 
 	/**
-	 * 币种别名
+	 * 名称
 	 */
 	private String name;
 
 	/**
-	 * 币种全称
-	 */
-	private String coinName;
-
-	/**
-	 * 币种单位
+	 * 符号
 	 */
 	private String symbol;
 
 	/**
-	 * 币种精度
+	 * USDT汇率
 	 */
-	private Integer precision;
+	private Double price;
 
 	/**
-	 * USDT价格
+	 * 精度
 	 */
-	private Double usdtPrice;
+	private Integer precision;
 
 	/**
 	 * 排序（升序）

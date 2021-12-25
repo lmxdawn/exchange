@@ -20,17 +20,28 @@
         ASC
     </select>
 
-    <select id="listAll" resultType="com.lmxdawn.trade.entity.Symbol">
-        SELECT id,trade_coin_id,coin_id,buy_fee,buy_fee_precision,sell_fee,sell_fee_precision,min_amount,min_total,trade_total_precision,trade_price_precision,trade_amount_precision,status
+    <select id="listPage" parameterType="com.lmxdawn.trade.req.SymbolListPageReq" resultType="com.lmxdawn.trade.entity.Symbol">
+        SELECT id,trade_coin_id,coin_id,buy_fee,buy_fee_precision,sell_fee,sell_fee_precision,min_amount,min_total,trade_total_precision,trade_price_precision,trade_amount_precision,price,price_24,trade_total_24,status
         FROM `symbol`
         <where>
-            status = 1
+            status = 2
+            and coin_id = #{coinId}
         </where>
         ORDER BY `sort` ASC
+        limit #{offset},#{limit}
+    </select>
+
+    <select id="listByIdIn" resultType="com.lmxdawn.trade.entity.Symbol">
+        SELECT id,trade_coin_id,coin_id,buy_fee,buy_fee_precision,sell_fee,sell_fee_precision,min_amount,min_total,trade_total_precision,trade_price_precision,trade_amount_precision,price,price_24,trade_total_24,status
+        FROM `symbol`
+        where `id` in
+        <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
     </select>
 
     <select id="findByTidAndCid" resultType="com.lmxdawn.trade.entity.Symbol">
-        SELECT id,buy_fee,buy_fee_precision,sell_fee,sell_fee_precision,min_amount,min_total,trade_total_precision,trade_price_precision,trade_amount_precision
+        SELECT id,buy_fee,buy_fee_precision,sell_fee,sell_fee_precision,min_amount,min_total,trade_total_precision,trade_price_precision,trade_amount_precision,price,price_24,trade_total_24
         FROM `symbol`
         <where>
             trade_coin_id = #{tradeCoinId}

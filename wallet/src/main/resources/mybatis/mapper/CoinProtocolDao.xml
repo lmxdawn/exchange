@@ -24,7 +24,7 @@
         SELECT id,`name`,rpc_host,rpc_user,rpc_pwd
         FROM `coin_protocol`
         <where>
-            status = 1
+            status = 2
         </where>
         ORDER BY `sort` ASC
     </select>

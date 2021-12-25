@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.lmxdawn.trade.dao.UsdtRateDao">
+
+    <select id="listPageDubbo" parameterType="com.lmxdawn.dubboapi.req.trade.UsdtRateQueryDubboReq" resultType="com.lmxdawn.dubboapi.res.trade.UsdtRateDubboRes">
+        SELECT id,`name`,symbol,price,`precision`,sort,status,create_time,modified_time
+        FROM `usdt_rate`
+        <where>
+            <choose>
+                <when test="status == 0">
+                    status IN (1,2)
+                </when>
+                <otherwise>
+                    status = #{status}
+                </otherwise>
+            </choose>
+        </where>
+        ORDER BY sort
+        ASC
+    </select>
+
+    <select id="listAll" resultType="com.lmxdawn.trade.entity.UsdtRate">
+        SELECT id,`name`,symbol,price,`precision`
+        FROM `usdt_rate`
+        <where>
+            status = 2
+        </where>
+        ORDER BY `sort` ASC
+    </select>
+
+    <select id="findByName" resultType="com.lmxdawn.trade.entity.UsdtRate">
+        SELECT id,`name`,symbol,price,`precision`
+        FROM `usdt_rate`
+        <where>
+            name = #{name}
+        </where>
+        limit 1
+    </select>
+
+    <insert id="insert" keyProperty="id" parameterType="com.lmxdawn.trade.entity.UsdtRate">
+        INSERT INTO `usdt_rate`(`name`,symbol,price,`precision`,sort,status,create_time,modified_time)
+        VALUES
+        (#{name},
+         #{symbol},
+         #{price},
+         #{buyFee},
+         #{precision},
+         #{sort},
+         #{status},
+         #{createTime},
+         #{modifiedTime})
+    </insert>
+
+    <update id="update" parameterType="com.lmxdawn.trade.entity.UsdtRate">
+        UPDATE `usdt_rate`
+        <trim prefix="set" suffixOverrides=",">
+            <if test="name != null">`name`=#{name},</if>
+            <if test="symbol != null">`symbol`=#{symbol},</if>
+            <if test="price != null">`price`=#{price},</if>
+            <if test="precision != null">`precision`=#{precision},</if>
+            <if test="sort != null">`sort`=#{sort},</if>
+            <if test="status != null">`status`=#{status},</if>
+            <if test="modifiedTime != null">`modified_time`=#{modifiedTime},</if>
+        </trim>
+        WHERE `id` = #{id}
+    </update>
+
+</mapper>
