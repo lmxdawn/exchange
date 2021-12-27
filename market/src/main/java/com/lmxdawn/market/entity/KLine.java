@@ -19,6 +19,10 @@ public class KLine {
 	 */
 	private BigDecimal count = BigDecimal.ZERO;
 	/**
+	 * 价格
+	 */
+	private BigDecimal price = BigDecimal.ZERO;
+	/**
 	 * 本阶段开盘价（前端实际使用上一个的价格）
 	 */
 	private BigDecimal open = BigDecimal.ZERO;
@@ -35,7 +39,7 @@ public class KLine {
 	 */
 	private BigDecimal high = BigDecimal.ZERO;
 	/**
-	 * 以报价币种计量的交易量
+	 * 成交额
 	 */
 	private BigDecimal vol = BigDecimal.ZERO;
 }
