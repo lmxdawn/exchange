@@ -97,6 +97,7 @@ public class KLineServiceImpl implements KLineService {
             Update update = new Update();
             update.set("amount", timeKLine.getAmount());
             update.set("count", timeKLine.getCount());
+            update.set("price", timeKLine.getPrice());
             update.set("open", timeKLine.getOpen());
             update.set("close", timeKLine.getClose());
             update.set("low", timeKLine.getLow());
