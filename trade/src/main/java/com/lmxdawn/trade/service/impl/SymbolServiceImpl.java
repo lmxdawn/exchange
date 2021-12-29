@@ -5,6 +5,7 @@ import com.lmxdawn.dubboapi.service.wallet.CoinDubboService;
 import com.lmxdawn.trade.dao.SymbolDao;
 import com.lmxdawn.trade.entity.Symbol;
 import com.lmxdawn.trade.req.SymbolListPageReq;
+import com.lmxdawn.trade.req.SymbolReadReq;
 import com.lmxdawn.trade.res.SymbolRes;
 import com.lmxdawn.trade.service.SymbolService;
 import com.lmxdawn.trade.util.PageUtils;
@@ -82,5 +83,33 @@ public class SymbolServiceImpl implements SymbolService {
     @Override
     public Symbol findByTidAndCid(Long tradeCoinId, Long coinId) {
         return symbolDao.findByTidAndCid(tradeCoinId, coinId);
+    }
+
+    @Override
+    public SymbolRes read(SymbolReadReq req) {
+
+        Symbol byTidAndCid = findByTidAndCid(req.getTradeCoinId(), req.getCoinId());
+
+        SymbolRes symbolRes = new SymbolRes();
+        if (byTidAndCid == null) {
+            return symbolRes;
+        }
+
+        BeanUtils.copyProperties(byTidAndCid, symbolRes);
+
+        Long tradeCoinId = byTidAndCid.getTradeCoinId();
+        Long coinId = byTidAndCid.getCoinId();
+
+        Set<Long> coinIdSet = new HashSet<>();
+        coinIdSet.add(tradeCoinId);
+        coinIdSet.add(coinId);
+        List<Long> coinIds = new ArrayList<>(coinIdSet);
+
+        Map<Long, CoinSimpleDubboRes> coinMap = coinDubboService.mapByCoinIds(coinIds);
+
+        symbolRes.setTradeCoin(coinMap.get(tradeCoinId));
+        symbolRes.setCoin(coinMap.get(coinId));
+
+        return symbolRes;
     }
 }

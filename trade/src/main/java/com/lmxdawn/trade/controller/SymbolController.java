@@ -1,6 +1,5 @@
 package com.lmxdawn.trade.controller;
 
-import com.lmxdawn.trade.entity.Symbol;
 import com.lmxdawn.trade.enums.ResultEnum;
 import com.lmxdawn.trade.req.SymbolListPageReq;
 import com.lmxdawn.trade.req.SymbolReadReq;
@@ -10,7 +9,6 @@ import com.lmxdawn.trade.service.SymbolService;
 import com.lmxdawn.trade.util.ResultVOUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,14 +50,7 @@ public class SymbolController {
             return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, bindingResult.getFieldError().getDefaultMessage());
         }
 
-
-        Symbol byTidAndCid = symbolService.findByTidAndCid(req.getTradeCoinId(), req.getCoinId());
-        if (byTidAndCid == null) {
-            return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL);
-        }
-
-        SymbolRes symbolRes = new SymbolRes();
-        BeanUtils.copyProperties(byTidAndCid, symbolRes);
+        SymbolRes symbolRes = symbolService.read(req);
 
         return ResultVOUtils.success(symbolRes);
     }
