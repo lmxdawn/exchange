@@ -1,4 +1,4 @@
-package com.lmxdawn.trade.req;
+package com.lmxdawn.market.req;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -7,10 +7,9 @@ import lombok.Data;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-// 查询交易对
 @ApiModel
 @Data
-public class SymbolReadReq {
+public class DepthListReq {
 
     @ApiModelProperty(value = "交易币种ID")
     @NotNull(message = "交易币种ID不能为空")

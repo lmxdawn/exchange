@@ -68,7 +68,7 @@ public class EntrustOrderStream {
                 redisTemplate.opsForZSet().add(key, price.toString(), price);
                 Long increment = redisTemplate.opsForValue().increment(String.format(infoKey, symbol, price), bigAmount.multiply(bigPow).longValue());
 
-                Set<String> depthPriceList = redisTemplate.opsForZSet().range(key, 0, 100);
+                Set<String> depthPriceList = direction == 1 ? redisTemplate.opsForZSet().reverseRange(key, 0, 100) : redisTemplate.opsForZSet().range(key, 0, 100);
                 List<DepthVo> depthVoList = new ArrayList<>();
                 if (depthPriceList != null) {
                     for (String depthPrice : depthPriceList) {
@@ -92,9 +92,9 @@ public class EntrustOrderStream {
                 dataVo.setTradeCoinId(tradeCoinId);
                 dataVo.setCoinId(coinId);
                 if (direction == 1) {
-                    dataVo.setBuyDepthVoList(depthVoList);
+                    dataVo.setBuyList(depthVoList);
                 } else {
-                    dataVo.setSellDepthVoList(depthVoList);
+                    dataVo.setSellList(depthVoList);
                 }
                 WsMarketMq wsMarketMq = new WsMarketMq();
                 wsMarketMq.setData(JSON.toJSONString(dataVo));

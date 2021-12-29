@@ -200,7 +200,7 @@ public class MatchDetailStream {
                     redisTemplate.opsForZSet().remove(key, price.toString());
                 }
 
-                Set<String> depthPriceList = redisTemplate.opsForZSet().range(key, 0, 100);
+                Set<String> depthPriceList = direction == 1 ? redisTemplate.opsForZSet().reverseRange(key, 0, 100) : redisTemplate.opsForZSet().range(key, 0, 100);
                 List<DepthVo> depthVoList = new ArrayList<>();
                 if (depthPriceList != null) {
                     for (String depthPrice : depthPriceList) {
@@ -220,9 +220,9 @@ public class MatchDetailStream {
 
                     // 买入
                     if (direction == 1) {
-                        dataVo.setBuyDepthVoList(depthVoList);
+                        dataVo.setBuyList(depthVoList);
                     } else {
-                        dataVo.setSellDepthVoList(depthVoList);
+                        dataVo.setSellList(depthVoList);
                     }
 
                 }
@@ -239,7 +239,8 @@ public class MatchDetailStream {
                     redisTemplate.delete(matchAmountKey);
                     redisTemplate.opsForZSet().remove(matchKey, price.toString());
                 }
-                Set<String> matchDepthPriceList = redisTemplate.opsForZSet().range(matchKey, 0, 100);
+
+                Set<String> matchDepthPriceList = matchDirection == 1 ? redisTemplate.opsForZSet().reverseRange(matchKey, 0, 100) : redisTemplate.opsForZSet().range(matchKey, 0, 100);
                 List<DepthVo> matchDepthVoList = new ArrayList<>();
                 if (matchDepthPriceList != null) {
                     for (String depthPrice : matchDepthPriceList) {
@@ -259,9 +260,9 @@ public class MatchDetailStream {
 
                     // 买入
                     if (matchDirection == 1) {
-                        dataVo.setBuyDepthVoList(matchDepthVoList);
+                        dataVo.setBuyList(matchDepthVoList);
                     } else {
-                        dataVo.setSellDepthVoList(matchDepthVoList);
+                        dataVo.setSellList(matchDepthVoList);
                     }
                 }
             }
@@ -272,7 +273,7 @@ public class MatchDetailStream {
             MatchVo matchVo = new MatchVo();
             matchVo.setPrice(price.doubleValue());
             matchVo.setAmount(amount.doubleValue());
-            dataVo.setMatchVo(matchVo);
+            dataVo.setMatch(matchVo);
             // 组装ws数据
             WsMarketMq wsMarketMq = new WsMarketMq();
             wsMarketMq.setMemberId(memberId);
