@@ -32,7 +32,7 @@ public class MemberCoin {
 	private Double frozenBalance;
 
 	/**
-	 * 状态（1：正常，2：禁用）
+	 * 状态（1：关闭，2：开启）
 	 */
 	private Integer status;
 

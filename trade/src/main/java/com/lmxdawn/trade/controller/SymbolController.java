@@ -1,13 +1,16 @@
 package com.lmxdawn.trade.controller;
 
+import com.lmxdawn.trade.entity.Symbol;
 import com.lmxdawn.trade.enums.ResultEnum;
 import com.lmxdawn.trade.req.SymbolListPageReq;
+import com.lmxdawn.trade.req.SymbolReadReq;
 import com.lmxdawn.trade.res.BaseRes;
 import com.lmxdawn.trade.res.SymbolRes;
 import com.lmxdawn.trade.service.SymbolService;
 import com.lmxdawn.trade.util.ResultVOUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,8 +30,8 @@ public class SymbolController {
 
     @ApiOperation(value = "交易对列表")
     @GetMapping("/list")
-    public BaseRes<SymbolRes> list(@Valid SymbolListPageReq req,
-                                   BindingResult bindingResult) {
+    public BaseRes<List<SymbolRes>> list(@Valid SymbolListPageReq req,
+                                         BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, bindingResult.getFieldError().getDefaultMessage());
@@ -36,6 +39,27 @@ public class SymbolController {
 
 
         List<SymbolRes> symbolRes = symbolService.listPage(req);
+
+        return ResultVOUtils.success(symbolRes);
+    }
+
+    @ApiOperation(value = "交易对详情")
+    @GetMapping("/read")
+    public BaseRes<SymbolRes> read(@Valid SymbolReadReq req,
+                                   BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, bindingResult.getFieldError().getDefaultMessage());
+        }
+
+
+        Symbol byTidAndCid = symbolService.findByTidAndCid(req.getTradeCoinId(), req.getCoinId());
+        if (byTidAndCid == null) {
+            return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL);
+        }
+
+        SymbolRes symbolRes = new SymbolRes();
+        BeanUtils.copyProperties(byTidAndCid, symbolRes);
 
         return ResultVOUtils.success(symbolRes);
     }

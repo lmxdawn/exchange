@@ -16,6 +16,6 @@ public class MemberCoinSimpleDubboRes implements Serializable {
     @ApiModelProperty(value = "冻结余额")
     private Double frozenBalance;
 
-    @ApiModelProperty(value = "状态（1：正常，2：禁用）")
+    @ApiModelProperty(value = "状态（1：关闭，2：开启）")
     private Integer status;
 }
