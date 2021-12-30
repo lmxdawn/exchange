@@ -19,6 +19,13 @@ public interface MemberCoinDao {
      * 查询
      * @return
      */
+    List<MemberCoin> listByMemberIdCoinIds(@Param("memberId") Long memberId,
+                                           @Param("coinIds") List<Long> coinIds);
+
+    /**
+     * 查询
+     * @return
+     */
     MemberCoin findByMemberIdAndCoinId(@Param("memberId") Long memberId,
                                        @Param("coinId") Long coinId);
 

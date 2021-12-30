@@ -4,9 +4,11 @@ import com.lmxdawn.user.annotation.LoginAuthAnnotation;
 import com.lmxdawn.user.entity.MemberCoin;
 import com.lmxdawn.user.enums.ResultEnum;
 import com.lmxdawn.user.req.MemberCoinBalanceReq;
+import com.lmxdawn.user.req.MemberCoinSymbolBalanceReq;
 import com.lmxdawn.user.res.BaseRes;
 import com.lmxdawn.user.res.MemberCoinBalanceRes;
 import com.lmxdawn.user.res.MemberCoinRes;
+import com.lmxdawn.user.res.MemberCoinSymbolBalanceRes;
 import com.lmxdawn.user.service.MemberCoinService;
 import com.lmxdawn.user.util.ResultVOUtils;
 import io.swagger.annotations.*;
@@ -18,7 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Api(tags = "用户钱包")
 @RestController
@@ -65,6 +69,34 @@ public class MemberCoinController {
         memberCoinBalanceRes.setBalance(balance);
 
         return ResultVOUtils.success(memberCoinBalanceRes);
+    }
+
+    @ApiOperation(value = "获取交易对钱包余额")
+    @GetMapping("symbol-balance")
+    @LoginAuthAnnotation
+    public BaseRes<MemberCoinSymbolBalanceRes> symbolBalance(@Valid MemberCoinSymbolBalanceReq req,
+                                                             BindingResult bindingResult,
+                                                             HttpServletRequest request) {
+        if (bindingResult.hasErrors()) {
+            return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, bindingResult.getFieldError().getDefaultMessage());
+        }
+
+        Long memberId = (Long) request.getAttribute("memberId");
+
+        Long tradeCoinId = req.getTradeCoinId();
+        Long coinId = req.getCoinId();
+
+        List<Long> coinIds = new ArrayList<>();
+        coinIds.add(tradeCoinId);
+        coinIds.add(coinId);
+
+        Map<Long, MemberCoin> memberCoinMap = memberCoinService.mapByMemberIdCoinIds(memberId, coinIds);
+
+        MemberCoinSymbolBalanceRes res = new MemberCoinSymbolBalanceRes();
+        res.setTradeBalance(memberCoinMap.containsKey(tradeCoinId) ? memberCoinMap.get(tradeCoinId).getBalance() : 0.00);
+        res.setBalance(memberCoinMap.containsKey(coinId) ? memberCoinMap.get(coinId).getBalance() : 0.00);
+
+        return ResultVOUtils.success(res);
     }
 
 }

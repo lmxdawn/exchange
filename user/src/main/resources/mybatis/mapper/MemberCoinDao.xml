@@ -11,6 +11,18 @@
         </where>
     </select>
 
+    <select id="listByMemberIdCoinIds" resultType="com.lmxdawn.user.entity.MemberCoin">
+        SELECT coin_id,balance,frozen_balance,status
+        FROM `member_coin`
+        <where>
+            member_id = #{memberId}
+            and coin_id in
+            <foreach collection="coinIds" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </where>
+    </select>
+
     <select id="findByMemberIdAndCoinId" resultType="com.lmxdawn.user.entity.MemberCoin">
         SELECT balance,frozen_balance,status
         FROM `member_coin`

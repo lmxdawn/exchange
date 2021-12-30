@@ -85,6 +85,24 @@ public class MemberCoinServiceImpl implements MemberCoinService {
     }
 
     @Override
+    public Map<Long, MemberCoin> mapByMemberIdCoinIds(Long memberId, List<Long> coinIds) {
+
+        Map<Long, MemberCoin> map = new HashMap<>();
+
+        List<MemberCoin> memberCoins = memberCoinDao.listByMemberIdCoinIds(memberId, coinIds);
+
+        if (memberCoins.size() == 0) {
+            return map;
+        }
+
+        for (MemberCoin v : memberCoins) {
+            map.put(v.getCoinId(), v);
+        }
+
+        return map;
+    }
+
+    @Override
     public boolean frozenBalance(Long memberId, Long coinId, double money) {
         MemberCoin memberCoinFrozen = new MemberCoin();
         memberCoinFrozen.setMemberId(memberId);
