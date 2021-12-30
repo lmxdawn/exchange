@@ -23,8 +23,7 @@ class KLineServiceImplTest {
         Long coinId = 1L;
         BigDecimal price = BigDecimal.valueOf(1.5);
         BigDecimal amount = BigDecimal.valueOf(1);
-        BigDecimal vol = BigDecimal.valueOf(1);
-        kLineService.install(tradeCoinId, coinId, price, amount, vol);
+        kLineService.install(tradeCoinId, coinId, price, amount);
 
     }
 }
