@@ -11,7 +11,7 @@
  Target Server Version : 50734
  File Encoding         : 65001
 
- Date: 17/12/2021 17:37:45
+ Date: 31/12/2021 16:39:13
 */
 
 SET NAMES utf8mb4;
@@ -102,7 +102,7 @@ CREATE TABLE `member_coin`  (
   `coin_id` bigint(20) UNSIGNED NOT NULL COMMENT '币种ID',
   `balance` decimal(26, 18) UNSIGNED NOT NULL COMMENT '可用余额',
   `frozen_balance` decimal(26, 18) UNSIGNED NOT NULL COMMENT '冻结余额',
-  `status` tinyint(3) UNSIGNED NOT NULL COMMENT '状态（1：正常，2：禁用）',
+  `status` tinyint(3) UNSIGNED NOT NULL COMMENT '状态（1：关闭，2：开启）',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `modified_time` datetime NOT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE,
@@ -131,7 +131,7 @@ CREATE TABLE `undo_log`  (
   `ext` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `ux_undo_log`(`xid`, `branch_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 332 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of undo_log

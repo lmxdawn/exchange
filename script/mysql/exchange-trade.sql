@@ -11,7 +11,7 @@
  Target Server Version : 50734
  File Encoding         : 65001
 
- Date: 17/12/2021 17:37:32
+ Date: 31/12/2021 16:39:21
 */
 
 SET NAMES utf8mb4;
@@ -38,17 +38,11 @@ CREATE TABLE `entrust_order`  (
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `modified_time` datetime NOT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 125 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '币币委托订单表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '币币委托订单表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of entrust_order
 -- ----------------------------
-INSERT INTO `entrust_order` VALUES (119, 1, 1, 3, 2, 1, 0.000000000000000000, 0.000000000000000000, 1.800000000000000000, 9.000000000000000000, 9.000000000000000000, 0.000000000000000000, 2, '2021-12-17 16:18:25', '2021-12-17 16:18:25');
-INSERT INTO `entrust_order` VALUES (120, 1, 1, 3, 1, 2, 5.000000000000000000, 2.000000000000000000, 2.000000000000000000, 0.000000000000000000, 10.000000000000000000, 1.000000000000000000, 2, '2021-12-17 16:18:33', '2021-12-17 16:18:33');
-INSERT INTO `entrust_order` VALUES (121, 1, 1, 3, 2, 1, 0.000000000000000000, 0.000000000000000000, 0.200000000000000000, 1.000000000000000000, 1.000000000000000000, 0.000000000000000000, 2, '2021-12-17 16:27:39', '2021-12-17 16:27:39');
-INSERT INTO `entrust_order` VALUES (122, 1, 1, 3, 2, 1, 0.000000000000000000, 0.000000000000000000, 1.800000000000000000, 9.000000000000000000, 9.000000000000000000, 0.000000000000000000, 2, '2021-12-17 17:32:24', '2021-12-17 17:32:24');
-INSERT INTO `entrust_order` VALUES (123, 1, 1, 3, 1, 2, 5.000000000000000000, 2.000000000000000000, 2.000000000000000000, 0.000000000000000000, 10.000000000000000000, 1.000000000000000000, 2, '2021-12-17 17:32:42', '2021-12-17 17:32:42');
-INSERT INTO `entrust_order` VALUES (124, 1, 1, 3, 2, 1, 0.000000000000000000, 0.000000000000000000, 0.200000000000000000, 1.000000000000000000, 1.000000000000000000, 0.000000000000000000, 2, '2021-12-17 17:34:13', '2021-12-17 17:34:13');
 
 -- ----------------------------
 -- Table structure for symbol
@@ -67,18 +61,23 @@ CREATE TABLE `symbol`  (
   `trade_total_precision` int(10) UNSIGNED NOT NULL COMMENT '交易额精度',
   `trade_price_precision` int(10) UNSIGNED NOT NULL COMMENT '价格精度',
   `trade_amount_precision` int(10) UNSIGNED NOT NULL COMMENT '交易量精度',
+  `price` decimal(26, 18) UNSIGNED NOT NULL DEFAULT 0.000000000000000000 COMMENT '最新价格',
+  `price_24` decimal(10, 2) NOT NULL COMMENT '(24h)之前的价格',
+  `trade_total_24` decimal(26, 18) NOT NULL COMMENT '(24h)交易额',
   `sort` int(10) NOT NULL DEFAULT 0 COMMENT '排序（升序）',
   `status` tinyint(3) UNSIGNED NOT NULL COMMENT '状态（1：关闭，2：开启）',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `modified_time` datetime NOT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uk_tcid_cid`(`trade_coin_id`, `coin_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '所有币种符号（交易对）表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '所有币种符号（交易对）表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of symbol
 -- ----------------------------
-INSERT INTO `symbol` VALUES (1, 1, 3, 0.10000000, 2, 0.00000000, 0, 0.000000000000000000, 0.000000000000000000, 4, 3, 2, 0, 2, '2021-12-03 00:06:35', '2021-12-03 00:06:39');
+INSERT INTO `symbol` VALUES (1, 3, 1, 0.10000000, 2, 0.00000000, 0, 0.000000000000000000, 0.000000000000000000, 4, 3, 2, 96.000000000000000000, 23.00, 56221.000000000000000000, 0, 2, '2021-12-03 00:06:35', '2021-12-03 00:06:39');
+INSERT INTO `symbol` VALUES (2, 2, 1, 0.12000000, 4, 0.00000000, 0, 0.000000000000000000, 0.000000000000000000, 4, 2, 2, 52002.669000000000000000, 56932.00, 26545612.000000000000000000, 0, 2, '2021-12-25 11:56:12', '2021-12-25 11:56:17');
+INSERT INTO `symbol` VALUES (3, 3, 2, 0.00000000, 4, 0.00000000, 0, 0.000000000000000000, 0.000000000000000000, 4, 2, 2, 45612.000000000000000000, 45612.00, 46512.000000000000000000, 0, 2, '2021-12-25 14:36:47', '2021-12-25 14:36:51');
 
 -- ----------------------------
 -- Table structure for undo_log
@@ -96,10 +95,33 @@ CREATE TABLE `undo_log`  (
   `ext` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `ux_undo_log`(`xid`, `branch_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 206 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of undo_log
 -- ----------------------------
+
+-- ----------------------------
+-- Table structure for usdt_rate
+-- ----------------------------
+DROP TABLE IF EXISTS `usdt_rate`;
+CREATE TABLE `usdt_rate`  (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '自增ID',
+  `name` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '名称',
+  `symbol` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '符号',
+  `price` decimal(18, 2) NULL DEFAULT NULL COMMENT 'USDT汇率',
+  `precision` int(10) UNSIGNED NOT NULL COMMENT '精度',
+  `sort` int(10) NOT NULL DEFAULT 0 COMMENT '排序（升序）',
+  `status` tinyint(3) UNSIGNED NOT NULL COMMENT '状态（1：关闭，2：开启）',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `modified_time` datetime NOT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `uk_name`(`name`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = 'USDT汇率表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of usdt_rate
+-- ----------------------------
+INSERT INTO `usdt_rate` VALUES (1, 'USD', '$', 1.00, 2, 0, 2, '2021-12-24 19:30:37', '2021-12-24 19:30:40');
 
 SET FOREIGN_KEY_CHECKS = 1;

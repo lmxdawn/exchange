@@ -11,7 +11,7 @@
  Target Server Version : 50734
  File Encoding         : 65001
 
- Date: 17/12/2021 17:37:58
+ Date: 31/12/2021 16:39:06
 */
 
 SET NAMES utf8mb4;
@@ -27,6 +27,7 @@ CREATE TABLE `coin`  (
   `coin_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '币种全称',
   `symbol` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '币种单位',
   `precision` int(11) NOT NULL COMMENT '币种精度',
+  `usdt_price` decimal(26, 10) UNSIGNED NOT NULL COMMENT 'USDT价格',
   `sort` int(10) NOT NULL DEFAULT 0 COMMENT '排序（升序）',
   `status` tinyint(3) UNSIGNED NOT NULL COMMENT '状态（1：关闭，2：开启）',
   `create_time` datetime NOT NULL COMMENT '创建时间',
@@ -38,9 +39,9 @@ CREATE TABLE `coin`  (
 -- ----------------------------
 -- Records of coin
 -- ----------------------------
-INSERT INTO `coin` VALUES (1, 'BTC', 'Bitcoin', 'BTC', 8, 2, 1, '2021-11-28 22:10:42', '2021-11-28 22:18:27');
-INSERT INTO `coin` VALUES (2, 'ETH', 'Ether', 'ETH', 8, 0, 1, '2021-12-06 08:58:20', '2021-12-06 08:58:22');
-INSERT INTO `coin` VALUES (3, 'USDT', 'usdt', 'USDT', 8, 0, 1, '2021-12-06 09:00:11', '2021-12-06 09:00:14');
+INSERT INTO `coin` VALUES (1, 'USDT', 'Usdt', 'USDT', 8, 1.0000000000, 2, 2, '2021-11-28 22:10:42', '2021-11-28 22:18:27');
+INSERT INTO `coin` VALUES (2, 'BTC', 'Bitcoin', 'BTC', 8, 51006.7000000000, 0, 2, '2021-12-06 08:58:20', '2021-12-06 08:58:22');
+INSERT INTO `coin` VALUES (3, 'ETH', 'Ether', 'ETH', 8, 4052.3700000000, 0, 2, '2021-12-06 09:00:11', '2021-12-06 09:00:14');
 
 -- ----------------------------
 -- Table structure for coin_conf
@@ -88,12 +89,14 @@ CREATE TABLE `coin_protocol`  (
   `modified_time` datetime NOT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `uk_name`(`name`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '币种协议表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '币种协议表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of coin_protocol
 -- ----------------------------
-INSERT INTO `coin_protocol` VALUES (1, 'BTC', 'string', 'string', '11', 2, 1, '2021-11-28 22:17:24', '2021-11-28 22:20:08');
+INSERT INTO `coin_protocol` VALUES (1, 'USDT', 'string', 'string', '11', 2, 2, '2021-11-28 22:17:24', '2021-11-28 22:20:08');
+INSERT INTO `coin_protocol` VALUES (2, 'BTC', 'string', 'string', '11', 2, 2, '2021-11-28 22:17:24', '2021-11-28 22:20:08');
+INSERT INTO `coin_protocol` VALUES (3, 'ETH', 'string', 'string', '11', 2, 2, '2021-11-28 22:17:24', '2021-11-28 22:20:08');
 
 -- ----------------------------
 -- Table structure for undo_log
