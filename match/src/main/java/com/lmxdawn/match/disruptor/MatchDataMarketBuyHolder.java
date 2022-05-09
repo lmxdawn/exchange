@@ -16,16 +16,16 @@ public class MatchDataMarketBuyHolder {
     public static void add(MatchEvent event) {
         Long tradeCoinId = event.getTradeCoinId();
         Long coinId = event.getCoinId();
-        Long symbol = Long.valueOf(tradeCoinId.toString() + coinId.toString());
-        List<MatchEvent> eventList = DATA.computeIfAbsent(symbol, k -> new ArrayList<>());
+        Long pair = Long.valueOf(tradeCoinId.toString() + coinId.toString());
+        List<MatchEvent> eventList = DATA.computeIfAbsent(pair, k -> new ArrayList<>());
         eventList.add(event);
     }
 
-    public static List<MatchEvent> getList(Long symbol) {
-        if (!DATA.containsKey(symbol)) {
+    public static List<MatchEvent> getList(Long pair) {
+        if (!DATA.containsKey(pair)) {
             return new ArrayList<>();
         }
-        return DATA.get(symbol);
+        return DATA.get(pair);
     }
 
 }

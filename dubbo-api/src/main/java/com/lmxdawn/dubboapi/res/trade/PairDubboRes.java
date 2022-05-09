@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Data
 @ApiModel
-public class SymbolDubboRes implements Serializable {
+public class PairDubboRes implements Serializable {
     @ApiModelProperty(value = "自增ID")
     private Long id;
 

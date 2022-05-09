@@ -16,7 +16,7 @@ import java.io.Serializable;
  */
 @ApiModel
 @Data
-public class SymbolSaveDubboReq implements Serializable {
+public class PairSaveDubboReq implements Serializable {
     @ApiModelProperty(value = "ID，当修改时必传")
     private Long id;
 

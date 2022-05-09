@@ -4,7 +4,7 @@ import com.lmxdawn.dubboapi.res.user.MemberCoinSimpleDubboRes;
 import com.lmxdawn.dubboapi.service.user.MemberCoinDubboService;
 import com.lmxdawn.trade.annotation.LoginAuthAnnotation;
 import com.lmxdawn.trade.constant.MqTopicConstant;
-import com.lmxdawn.trade.entity.Symbol;
+import com.lmxdawn.trade.entity.Pair;
 import com.lmxdawn.trade.enums.ResultEnum;
 import com.lmxdawn.trade.exception.JsonException;
 import com.lmxdawn.trade.mq.EntrustOrderMq;
@@ -14,7 +14,7 @@ import com.lmxdawn.trade.res.BaseRes;
 import com.lmxdawn.trade.res.EchoRes;
 import com.lmxdawn.trade.res.EntrustOrderRes;
 import com.lmxdawn.trade.service.EntrustOrderService;
-import com.lmxdawn.trade.service.SymbolService;
+import com.lmxdawn.trade.service.PairService;
 import com.lmxdawn.trade.util.ResultVOUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -39,7 +39,7 @@ public class EntrustOrderController {
     private EntrustOrderService entrustOrderService;
 
     @Autowired
-    private SymbolService symbolService;
+    private PairService pairService;
 
     @Autowired
     private StreamBridge streamBridge;
@@ -93,9 +93,9 @@ public class EntrustOrderController {
         Long coinId = req.getCoinId();
 
         // 查询交易对精度
-        Symbol byTidAndCid = symbolService.findByTidAndCid(tradeCoinId, coinId);
+        Pair byTidAndCid = pairService.findByTidAndCid(tradeCoinId, coinId);
         if (byTidAndCid == null) {
-            throw new JsonException(ResultEnum.SYMBOL_NOT);
+            throw new JsonException(ResultEnum.PAIR_NOT);
         }
         // 交易对精度
         BigDecimal bigMinAmount = BigDecimal.valueOf(byTidAndCid.getMinAmount());

@@ -30,7 +30,7 @@ public class MatchDataLimitBuyHolder {
         Integer tradeAmountPrecision = sell.getTradeAmountPrecision();
         Long tradeCoinId = sell.getTradeCoinId();
         Long coinId = sell.getCoinId();
-        Long symbol = Long.valueOf(tradeCoinId.toString() + coinId.toString());
+        Long pair = Long.valueOf(tradeCoinId.toString() + coinId.toString());
         Double buyFee = sell.getBuyFee();
         Integer buyFeePrecision = sell.getBuyFeePrecision();
         Double sellFee = sell.getSellFee();
@@ -40,7 +40,7 @@ public class MatchDataLimitBuyHolder {
 
         // 限价，优先去匹配未完成的市价买单
         if (type == 1) {
-            List<MatchEvent> marketList = MatchDataMarketBuyHolder.getList(symbol);
+            List<MatchEvent> marketList = MatchDataMarketBuyHolder.getList(pair);
             Iterator<MatchEvent> marketIterator = marketList.iterator();
             if (marketIterator.hasNext()) {
                 MatchEvent market = marketIterator.next();
@@ -97,7 +97,7 @@ public class MatchDataLimitBuyHolder {
         }
 
         // 匹配撮合
-        Map<BigDecimal, List<MatchEvent>> map = getMap(symbol);
+        Map<BigDecimal, List<MatchEvent>> map = getMap(pair);
         // 判断数量是否还大于0
         if (sellAmount.compareTo(BigDecimal.ZERO) > 0 && map.size() > 0) {
             Iterator<Map.Entry<BigDecimal, List<MatchEvent>>> iterator = map.entrySet().iterator();
@@ -190,10 +190,10 @@ public class MatchDataLimitBuyHolder {
         }
 
         System.out.println(matchDetailMqList);
-        System.out.println(MatchDataLimitBuyHolder.getMap(symbol));
-        System.out.println(MatchDataLimitSellHolder.getMap(symbol));
-        System.out.println(MatchDataMarketBuyHolder.getList(symbol));
-        System.out.println(MatchDataMarketSellHolder.getList(symbol));
+        System.out.println(MatchDataLimitBuyHolder.getMap(pair));
+        System.out.println(MatchDataLimitSellHolder.getMap(pair));
+        System.out.println(MatchDataMarketBuyHolder.getList(pair));
+        System.out.println(MatchDataMarketSellHolder.getList(pair));
 
         return matchDetailMqList;
     }
@@ -205,9 +205,9 @@ public class MatchDataLimitBuyHolder {
         }
         Long tradeCoinId = event.getTradeCoinId();
         Long coinId = event.getCoinId();
-        Long symbol = Long.valueOf(tradeCoinId.toString() + coinId.toString());
+        Long pair = Long.valueOf(tradeCoinId.toString() + coinId.toString());
         // 买单队列价格降序排列
-        TreeMap<BigDecimal, List<MatchEvent>> map = DATA.computeIfAbsent(symbol, k -> new TreeMap<>(Comparator.reverseOrder()));
+        TreeMap<BigDecimal, List<MatchEvent>> map = DATA.computeIfAbsent(pair, k -> new TreeMap<>(Comparator.reverseOrder()));
         Double price = event.getPrice();
         BigDecimal bigPrice = BigDecimal.valueOf(price);
         List<MatchEvent> matchEvents = map.computeIfAbsent(bigPrice, k -> new ArrayList<>());
@@ -215,7 +215,7 @@ public class MatchDataLimitBuyHolder {
         ListIndex listIndex = new ListIndex();
         listIndex.setPrice(bigPrice);
         listIndex.setIndex(index);
-        listIndex.setSymbol(symbol);
+        listIndex.setPair(pair);
         LIST_INDEX_DATA.put(id, listIndex);
         matchEvents.add(event);
         map.put(bigPrice, matchEvents);
@@ -228,8 +228,8 @@ public class MatchDataLimitBuyHolder {
         }
 
         ListIndex listIndex = LIST_INDEX_DATA.get(id);
-        Long symbol = listIndex.getSymbol();
-        TreeMap<BigDecimal, List<MatchEvent>> map = DATA.get(symbol);
+        Long pair = listIndex.getPair();
+        TreeMap<BigDecimal, List<MatchEvent>> map = DATA.get(pair);
         if (map == null) {
             return null;
         }
@@ -247,8 +247,8 @@ public class MatchDataLimitBuyHolder {
         return DATA;
     }
 
-    public static Map<BigDecimal, List<MatchEvent>> getMap(Long symbol) {
-        return DATA.computeIfAbsent(symbol, k -> new TreeMap<>());
+    public static Map<BigDecimal, List<MatchEvent>> getMap(Long pair) {
+        return DATA.computeIfAbsent(pair, k -> new TreeMap<>());
     }
 
     public static void remove(Long id) {
@@ -257,8 +257,8 @@ public class MatchDataLimitBuyHolder {
         }
 
         ListIndex listIndex = LIST_INDEX_DATA.get(id);
-        Long symbol = listIndex.getSymbol();
-        TreeMap<BigDecimal, List<MatchEvent>> map = DATA.get(symbol);
+        Long pair = listIndex.getPair();
+        TreeMap<BigDecimal, List<MatchEvent>> map = DATA.get(pair);
         if (map == null) {
             return;
         }
@@ -279,7 +279,7 @@ public class MatchDataLimitBuyHolder {
     private static class ListIndex {
         BigDecimal price;
         int index;
-        Long symbol;
+        Long pair;
     }
 
 }

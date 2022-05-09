@@ -1,11 +1,11 @@
 package com.lmxdawn.trade.controller;
 
 import com.lmxdawn.trade.enums.ResultEnum;
-import com.lmxdawn.trade.req.SymbolListPageReq;
-import com.lmxdawn.trade.req.SymbolReadReq;
+import com.lmxdawn.trade.req.PairListPageReq;
+import com.lmxdawn.trade.req.PairReadReq;
 import com.lmxdawn.trade.res.BaseRes;
-import com.lmxdawn.trade.res.SymbolRes;
-import com.lmxdawn.trade.service.SymbolService;
+import com.lmxdawn.trade.res.PairRes;
+import com.lmxdawn.trade.service.PairService;
 import com.lmxdawn.trade.util.ResultVOUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -20,39 +20,39 @@ import java.util.List;
 
 @Api(tags = "交易对")
 @RestController
-@RequestMapping("/symbol")
-public class SymbolController {
+@RequestMapping("/pair")
+public class PairController {
 
     @Autowired
-    private SymbolService symbolService;
+    private PairService pairService;
 
     @ApiOperation(value = "交易对列表")
     @GetMapping("/list")
-    public BaseRes<List<SymbolRes>> list(@Valid SymbolListPageReq req,
-                                         BindingResult bindingResult) {
+    public BaseRes<List<PairRes>> list(@Valid PairListPageReq req,
+                                       BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, bindingResult.getFieldError().getDefaultMessage());
         }
 
 
-        List<SymbolRes> symbolRes = symbolService.listPage(req);
+        List<PairRes> pairRes = pairService.listPage(req);
 
-        return ResultVOUtils.success(symbolRes);
+        return ResultVOUtils.success(pairRes);
     }
 
     @ApiOperation(value = "交易对详情")
     @GetMapping("/read")
-    public BaseRes<SymbolRes> read(@Valid SymbolReadReq req,
-                                   BindingResult bindingResult) {
+    public BaseRes<PairRes> read(@Valid PairReadReq req,
+                                 BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, bindingResult.getFieldError().getDefaultMessage());
         }
 
-        SymbolRes symbolRes = symbolService.read(req);
+        PairRes pairRes = pairService.read(req);
 
-        return ResultVOUtils.success(symbolRes);
+        return ResultVOUtils.success(pairRes);
     }
 
 

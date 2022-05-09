@@ -4,11 +4,11 @@ import com.lmxdawn.user.annotation.LoginAuthAnnotation;
 import com.lmxdawn.user.entity.MemberCoin;
 import com.lmxdawn.user.enums.ResultEnum;
 import com.lmxdawn.user.req.MemberCoinBalanceReq;
-import com.lmxdawn.user.req.MemberCoinSymbolBalanceReq;
+import com.lmxdawn.user.req.MemberCoinPairBalanceReq;
 import com.lmxdawn.user.res.BaseRes;
 import com.lmxdawn.user.res.MemberCoinBalanceRes;
 import com.lmxdawn.user.res.MemberCoinRes;
-import com.lmxdawn.user.res.MemberCoinSymbolBalanceRes;
+import com.lmxdawn.user.res.MemberCoinPairBalanceRes;
 import com.lmxdawn.user.service.MemberCoinService;
 import com.lmxdawn.user.util.ResultVOUtils;
 import io.swagger.annotations.*;
@@ -72,11 +72,11 @@ public class MemberCoinController {
     }
 
     @ApiOperation(value = "获取交易对钱包余额")
-    @GetMapping("symbol-balance")
+    @GetMapping("pair-balance")
     @LoginAuthAnnotation
-    public BaseRes<MemberCoinSymbolBalanceRes> symbolBalance(@Valid MemberCoinSymbolBalanceReq req,
-                                                             BindingResult bindingResult,
-                                                             HttpServletRequest request) {
+    public BaseRes<MemberCoinPairBalanceRes> pairBalance(@Valid MemberCoinPairBalanceReq req,
+                                                         BindingResult bindingResult,
+                                                         HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
             return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, bindingResult.getFieldError().getDefaultMessage());
         }
@@ -92,7 +92,7 @@ public class MemberCoinController {
 
         Map<Long, MemberCoin> memberCoinMap = memberCoinService.mapByMemberIdCoinIds(memberId, coinIds);
 
-        MemberCoinSymbolBalanceRes res = new MemberCoinSymbolBalanceRes();
+        MemberCoinPairBalanceRes res = new MemberCoinPairBalanceRes();
         res.setTradeBalance(memberCoinMap.containsKey(tradeCoinId) ? memberCoinMap.get(tradeCoinId).getBalance() : 0.00);
         res.setBalance(memberCoinMap.containsKey(coinId) ? memberCoinMap.get(coinId).getBalance() : 0.00);
 

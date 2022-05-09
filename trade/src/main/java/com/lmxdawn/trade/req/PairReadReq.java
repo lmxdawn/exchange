@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 // 查询交易对
 @ApiModel
 @Data
-public class SymbolReadReq {
+public class PairReadReq {
 
     @ApiModelProperty(value = "交易币种ID")
     @NotNull(message = "交易币种ID不能为空")

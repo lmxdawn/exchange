@@ -1,7 +1,7 @@
 package com.lmxdawn.market.controller;
 
-import com.lmxdawn.dubboapi.res.trade.SymbolSimpleDubboRes;
-import com.lmxdawn.dubboapi.service.trade.SymbolDubboService;
+import com.lmxdawn.dubboapi.res.trade.PairSimpleDubboRes;
+import com.lmxdawn.dubboapi.service.trade.PairDubboService;
 import com.lmxdawn.market.constant.CacheConstant;
 import com.lmxdawn.market.enums.ResultEnum;
 import com.lmxdawn.market.req.DepthListReq;
@@ -34,7 +34,7 @@ public class DepthController {
     private RedisTemplate<String, String> redisTemplate;
 
     @DubboReference
-    private SymbolDubboService symbolDubboService;
+    private PairDubboService pairDubboService;
 
     @ApiOperation(value = "深度列表")
     @GetMapping("/list")
@@ -50,7 +50,7 @@ public class DepthController {
 
         DepthListRes depthListRes = new DepthListRes();
 
-        SymbolSimpleDubboRes byTidAndCid = symbolDubboService.findByTidAndCid(tradeCoinId, coinId);
+        PairSimpleDubboRes byTidAndCid = pairDubboService.findByTidAndCid(tradeCoinId, coinId);
         if (byTidAndCid == null) {
             return ResultVOUtils.success(depthListRes);
         }
@@ -60,16 +60,16 @@ public class DepthController {
         // 放大倍数，不然有精度问题
         BigDecimal bigPow = BigDecimal.valueOf(Math.pow(10.0, tradeAmountPrecision));
 
-        Long symbol = Long.valueOf(tradeCoinId.toString() + coinId.toString());
+        Long pair = Long.valueOf(tradeCoinId.toString() + coinId.toString());
 
-        String buyKey = String.format(CacheConstant.BUY_DEPTH, symbol);
+        String buyKey = String.format(CacheConstant.BUY_DEPTH, pair);
         String buyInfoKey =  CacheConstant.BUY_DEPTH_INFO;
         // 买盘，从大到小获取
         Set<String> depthBuyList = redisTemplate.opsForZSet().reverseRange(buyKey, 0, 100);
         List<DepthRes> buyList = new ArrayList<>();
         if (depthBuyList != null) {
             for (String depthPrice : depthBuyList) {
-                String depthAmountKey = String.format(buyInfoKey, symbol, depthPrice);
+                String depthAmountKey = String.format(buyInfoKey, pair, depthPrice);
                 String depthAmountStr = redisTemplate.opsForValue().get(depthAmountKey);
                 DepthRes depthRes = new DepthRes();
                 depthRes.setPrice(Double.parseDouble(depthPrice));
@@ -86,14 +86,14 @@ public class DepthController {
         }
 
         // 卖出盘
-        String sellKey = String.format(CacheConstant.SELL_DEPTH, symbol);
+        String sellKey = String.format(CacheConstant.SELL_DEPTH, pair);
         String sellInfoKey =  CacheConstant.SELL_DEPTH_INFO;
         // 卖盘，从小到大获取
         Set<String> depthSellList = redisTemplate.opsForZSet().range(sellKey, 0, 100);
         List<DepthRes> sellList = new ArrayList<>();
         if (depthSellList != null) {
             for (String depthPrice : depthSellList) {
-                String depthAmountKey = String.format(sellInfoKey, symbol, depthPrice);
+                String depthAmountKey = String.format(sellInfoKey, pair, depthPrice);
                 String depthAmountStr = redisTemplate.opsForValue().get(depthAmountKey);
                 DepthRes depthRes = new DepthRes();
                 depthRes.setPrice(Double.parseDouble(depthPrice));

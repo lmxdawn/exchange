@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @ApiModel
 @Data
-public class SymbolListPageReq extends ListPageReq {
+public class PairListPageReq extends ListPageReq {
 
     @ApiModelProperty(value = "计价币种ID")
     private Long coinId;

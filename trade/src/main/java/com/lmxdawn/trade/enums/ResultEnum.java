@@ -18,7 +18,7 @@ public enum ResultEnum {
     DATA_REPEAT(7, "数据已存在"),
 
     BALANCE_NOT(70001, "钱包余额不足"),
-    SYMBOL_NOT(70002, "交易对不存在"),
+    PAIR_NOT(70002, "交易对不存在"),
     MIN_AMOUNT(70003, "不能小于最低交易量"),
     MIN_TOTAL(70005, "不能小于最低交易额"),
 

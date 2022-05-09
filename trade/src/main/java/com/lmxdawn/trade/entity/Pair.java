@@ -4,7 +4,7 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class Symbol {
+public class Pair {
 
 	/**
 	 * 自增ID

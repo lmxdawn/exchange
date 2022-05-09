@@ -7,7 +7,7 @@ import lombok.Data;
 
 @ApiModel(value = "委托订单")
 @Data
-public class SymbolRes {
+public class PairRes {
     @ApiModelProperty(value = "自增ID")
     private Long id;
 

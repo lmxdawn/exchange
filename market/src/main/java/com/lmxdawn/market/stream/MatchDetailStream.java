@@ -53,7 +53,7 @@ public class MatchDetailStream {
         return matchDetailMq -> {
             Long tradeCoinId = matchDetailMq.getTradeCoinId();
             Long coinId = matchDetailMq.getCoinId();
-            Long symbol = Long.valueOf(tradeCoinId.toString() + coinId.toString());
+            Long pair = Long.valueOf(tradeCoinId.toString() + coinId.toString());
             Long id = matchDetailMq.getId();
             Long matchId = matchDetailMq.getMatchId();
             Long memberId = matchDetailMq.getMemberId();
@@ -191,9 +191,9 @@ public class MatchDetailStream {
             // 如果订单是限价，修改深度图
             if (type == 1) {
                 String key = direction == 1 ? CacheConstant.BUY_DEPTH : CacheConstant.SELL_DEPTH;
-                key = String.format(key, symbol);
+                key = String.format(key, pair);
                 String infoKey = direction == 1 ? CacheConstant.BUY_DEPTH_INFO : CacheConstant.SELL_DEPTH_INFO;
-                String amountKey = String.format(infoKey, symbol, price);
+                String amountKey = String.format(infoKey, pair, price);
                 Long increment = redisTemplate.opsForValue().increment(amountKey, -amount.multiply(bigPow).longValue());
                 if (increment == null || increment <= 0) {
                     redisTemplate.delete(amountKey);
@@ -204,7 +204,7 @@ public class MatchDetailStream {
                 List<DepthVo> depthVoList = new ArrayList<>();
                 if (depthPriceList != null) {
                     for (String depthPrice : depthPriceList) {
-                        String depthAmountKey = String.format(infoKey, symbol, depthPrice);
+                        String depthAmountKey = String.format(infoKey, pair, depthPrice);
                         String depthAmountStr = redisTemplate.opsForValue().get(depthAmountKey);
                         DepthVo depthVo = new DepthVo();
                         depthVo.setPrice(Double.parseDouble(depthPrice));
@@ -231,9 +231,9 @@ public class MatchDetailStream {
             // 如果对手单是限价
             if (matchType == 1) {
                 String matchKey = matchDirection == 1 ? CacheConstant.BUY_DEPTH : CacheConstant.SELL_DEPTH;
-                matchKey = String.format(matchKey, symbol);
+                matchKey = String.format(matchKey, pair);
                 String matchInfoKey = matchDirection == 1 ? CacheConstant.BUY_DEPTH_INFO : CacheConstant.SELL_DEPTH_INFO;
-                String matchAmountKey = String.format(matchInfoKey, symbol, price);
+                String matchAmountKey = String.format(matchInfoKey, pair, price);
                 Long matchIncrement = redisTemplate.opsForValue().increment(matchAmountKey, -amount.multiply(bigPow).longValue());
                 if (matchIncrement == null || matchIncrement <= 0) {
                     redisTemplate.delete(matchAmountKey);
@@ -244,7 +244,7 @@ public class MatchDetailStream {
                 List<DepthVo> matchDepthVoList = new ArrayList<>();
                 if (matchDepthPriceList != null) {
                     for (String depthPrice : matchDepthPriceList) {
-                        String depthAmountKey = String.format(matchInfoKey, symbol, depthPrice);
+                        String depthAmountKey = String.format(matchInfoKey, pair, depthPrice);
                         String depthAmountStr = redisTemplate.opsForValue().get(depthAmountKey);
                         DepthVo depthVo = new DepthVo();
                         depthVo.setPrice(Double.parseDouble(depthPrice));

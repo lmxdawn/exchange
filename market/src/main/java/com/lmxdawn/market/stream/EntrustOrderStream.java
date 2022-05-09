@@ -47,7 +47,7 @@ public class EntrustOrderStream {
             BeanUtils.copyProperties(entrustOrderMq, matchEventDubboReq);
             matchDubboService.push(matchEventDubboReq);
 
-            Long symbol = Long.valueOf(entrustOrderMq.getTradeCoinId().toString() + entrustOrderMq.getCoinId().toString());
+            Long pair = Long.valueOf(entrustOrderMq.getTradeCoinId().toString() + entrustOrderMq.getCoinId().toString());
             // 保存深度图行情
             Long tradeCoinId = entrustOrderMq.getTradeCoinId();
             Long coinId = entrustOrderMq.getCoinId();
@@ -60,19 +60,19 @@ public class EntrustOrderStream {
             BigDecimal bigPow = BigDecimal.valueOf(Math.pow(10.0, tradeAmountPrecision));
 
             String key = direction == 1 ? CacheConstant.BUY_DEPTH : CacheConstant.SELL_DEPTH;
-            key = String.format(key, symbol);
+            key = String.format(key, pair);
             String infoKey = direction == 1 ? CacheConstant.BUY_DEPTH_INFO : CacheConstant.SELL_DEPTH_INFO;
             // 如果是限价，处理行情深度
             if (type == 1) {
                 // 行情深度处理
                 redisTemplate.opsForZSet().add(key, price.toString(), price);
-                Long increment = redisTemplate.opsForValue().increment(String.format(infoKey, symbol, price), bigAmount.multiply(bigPow).longValue());
+                Long increment = redisTemplate.opsForValue().increment(String.format(infoKey, pair, price), bigAmount.multiply(bigPow).longValue());
 
                 Set<String> depthPriceList = direction == 1 ? redisTemplate.opsForZSet().reverseRange(key, 0, 100) : redisTemplate.opsForZSet().range(key, 0, 100);
                 List<DepthVo> depthVoList = new ArrayList<>();
                 if (depthPriceList != null) {
                     for (String depthPrice : depthPriceList) {
-                        String depthAmountKey = String.format(infoKey, symbol, depthPrice);
+                        String depthAmountKey = String.format(infoKey, pair, depthPrice);
                         String depthAmountStr = redisTemplate.opsForValue().get(depthAmountKey);
                         DepthVo depthVo = new DepthVo();
                         depthVo.setPrice(Double.parseDouble(depthPrice));

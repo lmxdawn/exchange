@@ -4,12 +4,12 @@ import com.lmxdawn.admin.annotation.AuthRuleAnnotation;
 import com.lmxdawn.admin.enums.ResultEnum;
 import com.lmxdawn.admin.res.BaseRes;
 import com.lmxdawn.admin.util.ResultVOUtils;
-import com.lmxdawn.dubboapi.req.trade.SymbolQueryDubboReq;
-import com.lmxdawn.dubboapi.req.trade.SymbolSaveDubboReq;
+import com.lmxdawn.dubboapi.req.trade.PairQueryDubboReq;
+import com.lmxdawn.dubboapi.req.trade.PairSaveDubboReq;
 import com.lmxdawn.dubboapi.res.PageSimpleDubboRes;
-import com.lmxdawn.dubboapi.res.trade.SymbolDubboRes;
+import com.lmxdawn.dubboapi.res.trade.PairDubboRes;
 import com.lmxdawn.dubboapi.res.wallet.CoinSimpleDubboRes;
-import com.lmxdawn.dubboapi.service.trade.SymbolDubboService;
+import com.lmxdawn.dubboapi.service.trade.PairDubboService;
 import com.lmxdawn.dubboapi.service.wallet.CoinDubboService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,17 +32,17 @@ import java.util.Map;
 @Api(tags = "交易对管理")
 @RestController
 @Slf4j
-public class SymbolController {
+public class PairController {
 
     @DubboReference
     private CoinDubboService coinDubboService;
 
     @DubboReference
-    private SymbolDubboService symbolDubboService;
+    private PairDubboService pairDubboService;
 
     @ApiOperation(value = "交易对里币种列表")
-    @AuthRuleAnnotation(value = "market/symbol/coinList")
-    @GetMapping(value = "market/symbol/coinList")
+    @AuthRuleAnnotation(value = "market/pair/coinList")
+    @GetMapping(value = "market/pair/coinList")
     public BaseRes<List<CoinSimpleDubboRes>> coinList() {
 
         List<CoinSimpleDubboRes> list = coinDubboService.listAll();
@@ -51,31 +51,31 @@ public class SymbolController {
     }
 
     @ApiOperation(value = "交易对列表")
-    @AuthRuleAnnotation(value = "market/symbol/index")
-    @GetMapping(value = "market/symbol/index")
-    public BaseRes<PageSimpleDubboRes<SymbolDubboRes>> index(@Valid SymbolQueryDubboReq req,
-                                                             BindingResult bindingResult) {
+    @AuthRuleAnnotation(value = "market/pair/index")
+    @GetMapping(value = "market/pair/index")
+    public BaseRes<PageSimpleDubboRes<PairDubboRes>> index(@Valid PairQueryDubboReq req,
+                                                           BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, bindingResult.getFieldError().getDefaultMessage());
         }
 
 
-        PageSimpleDubboRes<SymbolDubboRes> list = symbolDubboService.list(req);
+        PageSimpleDubboRes<PairDubboRes> list = pairDubboService.list(req);
 
         return ResultVOUtils.success(list);
     }
 
 
     @ApiOperation(value = "交易对添加")
-    @AuthRuleAnnotation(value = "market/symbol/save")
-    @PostMapping(value = "market/symbol/save")
-    public BaseRes save(@RequestBody @Valid SymbolSaveDubboReq req,
+    @AuthRuleAnnotation(value = "market/pair/save")
+    @PostMapping(value = "market/pair/save")
+    public BaseRes save(@RequestBody @Valid PairSaveDubboReq req,
                         BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, bindingResult.getFieldError().getDefaultMessage());
         }
 
-        Long id = symbolDubboService.insert(req);
+        Long id = pairDubboService.insert(req);
 
         if (id == null) {
             return ResultVOUtils.error(ResultEnum.DATA_REPEAT, "当前交易对已存在");
@@ -88,9 +88,9 @@ public class SymbolController {
 
 
     @ApiOperation(value = "交易对修改")
-    @AuthRuleAnnotation(value = "market/symbol/edit")
-    @PostMapping(value = "market/symbol/edit")
-    public BaseRes edit(@RequestBody @Valid SymbolSaveDubboReq req,
+    @AuthRuleAnnotation(value = "market/pair/edit")
+    @PostMapping(value = "market/pair/edit")
+    public BaseRes edit(@RequestBody @Valid PairSaveDubboReq req,
                         BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, bindingResult.getFieldError().getDefaultMessage());
@@ -100,7 +100,7 @@ public class SymbolController {
             return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, "ID必传");
         }
 
-        boolean update = symbolDubboService.update(req);
+        boolean update = pairDubboService.update(req);
 
         if (!update) {
             return ResultVOUtils.error(ResultEnum.DATA_REPEAT, "当前交易对已存在");

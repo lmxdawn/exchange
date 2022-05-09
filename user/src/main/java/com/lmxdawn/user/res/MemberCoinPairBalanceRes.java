@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @ApiModel
-public class MemberCoinSymbolBalanceRes {
+public class MemberCoinPairBalanceRes {
 
     @ApiModelProperty(value = "交易币种可用余额")
     private Double tradeBalance;

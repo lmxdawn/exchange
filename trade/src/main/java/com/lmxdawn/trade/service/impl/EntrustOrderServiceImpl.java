@@ -4,7 +4,7 @@ import com.lmxdawn.dubboapi.res.wallet.CoinSimpleDubboRes;
 import com.lmxdawn.dubboapi.service.user.MemberCoinDubboService;
 import com.lmxdawn.dubboapi.service.wallet.CoinDubboService;
 import com.lmxdawn.trade.dao.EntrustOrderDao;
-import com.lmxdawn.trade.dao.SymbolDao;
+import com.lmxdawn.trade.dao.PairDao;
 import com.lmxdawn.trade.entity.EntrustOrder;
 import com.lmxdawn.trade.req.EntrustOrderCreateReq;
 import com.lmxdawn.trade.req.EntrustOrderListPageReq;
@@ -29,7 +29,7 @@ public class EntrustOrderServiceImpl implements EntrustOrderService {
     private EntrustOrderDao entrustOrderDao;
 
     @Autowired
-    private SymbolDao symbolDao;
+    private PairDao pairDao;
 
     @DubboReference
     private CoinDubboService coinDubboService;

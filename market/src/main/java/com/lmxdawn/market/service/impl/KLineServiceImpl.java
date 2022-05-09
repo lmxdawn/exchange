@@ -25,7 +25,7 @@ public class KLineServiceImpl implements KLineService {
     @Override
     public boolean install(Long tradeCoinId, Long coinId, BigDecimal price, BigDecimal amount) {
 
-        long symbol = Long.parseLong(tradeCoinId.toString() + coinId.toString());
+        long pair = Long.parseLong(tradeCoinId.toString() + coinId.toString());
 
         KLineDateTimeVo kLineDateTimeVo = KLineUtil.createDateTime();
 
@@ -33,23 +33,23 @@ public class KLineServiceImpl implements KLineService {
         BigDecimal vol = amount.multiply(price);
 
         // 1分钟
-        createKLine(kLineDateTimeVo, "1min", symbol, price, amount, vol);
+        createKLine(kLineDateTimeVo, "1min", pair, price, amount, vol);
         // 5分钟
-        createKLine(kLineDateTimeVo, "5min", symbol, price, amount, vol);
+        createKLine(kLineDateTimeVo, "5min", pair, price, amount, vol);
         // 15分钟
-        createKLine(kLineDateTimeVo, "15min", symbol, price, amount, vol);
+        createKLine(kLineDateTimeVo, "15min", pair, price, amount, vol);
         // 30分钟
-        createKLine(kLineDateTimeVo, "30min", symbol, price, amount, vol);
+        createKLine(kLineDateTimeVo, "30min", pair, price, amount, vol);
         // 1小时
-        createKLine(kLineDateTimeVo, "1hour", symbol, price, amount, vol);
+        createKLine(kLineDateTimeVo, "1hour", pair, price, amount, vol);
         // 1小时
-        createKLine(kLineDateTimeVo, "4hour", symbol, price, amount, vol);
+        createKLine(kLineDateTimeVo, "4hour", pair, price, amount, vol);
         // 1天
-        createKLine(kLineDateTimeVo, "1day", symbol, price, amount, vol);
+        createKLine(kLineDateTimeVo, "1day", pair, price, amount, vol);
         // 1周
-        createKLine(kLineDateTimeVo, "1week", symbol, price, amount, vol);
+        createKLine(kLineDateTimeVo, "1week", pair, price, amount, vol);
         // 1月
-        createKLine(kLineDateTimeVo, "1month", symbol, price, amount, vol);
+        createKLine(kLineDateTimeVo, "1month", pair, price, amount, vol);
 
         return false;
     }
@@ -58,13 +58,13 @@ public class KLineServiceImpl implements KLineService {
      * 创建k线实例
      * @param kLineDateTimeVo 时间
      * @param timeStr 时间字符
-     * @param symbol 交易对
+     * @param pair 交易对
      * @param price 价格
      * @param amount 数量
      * @param vol 数量
      * @return 是否创建成功
      */
-    private boolean createKLine(KLineDateTimeVo kLineDateTimeVo, String timeStr, Long symbol, BigDecimal price, BigDecimal amount, BigDecimal vol) {
+    private boolean createKLine(KLineDateTimeVo kLineDateTimeVo, String timeStr, Long pair, BigDecimal price, BigDecimal amount, BigDecimal vol) {
         long time;
         try {
             time = (long) kLineDateTimeVo.getClass().getMethod("getTime" + timeStr).invoke(kLineDateTimeVo);
@@ -73,7 +73,7 @@ public class KLineServiceImpl implements KLineService {
             return false;
         }
 
-        String collectionName = String.format(collectionNamePrefix, symbol, timeStr);
+        String collectionName = String.format(collectionNamePrefix, pair, timeStr);
         Query timeQuery = new Query(Criteria.where("time").is(time));
         KLine timeKLine = mongoTemplate.findOne(timeQuery, KLine.class, collectionName);
         boolean isAdd = false;

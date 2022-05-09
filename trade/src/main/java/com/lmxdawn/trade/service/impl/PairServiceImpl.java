@@ -2,12 +2,12 @@ package com.lmxdawn.trade.service.impl;
 
 import com.lmxdawn.dubboapi.res.wallet.CoinSimpleDubboRes;
 import com.lmxdawn.dubboapi.service.wallet.CoinDubboService;
-import com.lmxdawn.trade.dao.SymbolDao;
-import com.lmxdawn.trade.entity.Symbol;
-import com.lmxdawn.trade.req.SymbolListPageReq;
-import com.lmxdawn.trade.req.SymbolReadReq;
-import com.lmxdawn.trade.res.SymbolRes;
-import com.lmxdawn.trade.service.SymbolService;
+import com.lmxdawn.trade.dao.PairDao;
+import com.lmxdawn.trade.entity.Pair;
+import com.lmxdawn.trade.req.PairListPageReq;
+import com.lmxdawn.trade.req.PairReadReq;
+import com.lmxdawn.trade.res.PairRes;
+import com.lmxdawn.trade.service.PairService;
 import com.lmxdawn.trade.util.PageUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.DubboReference;
@@ -19,18 +19,18 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class SymbolServiceImpl implements SymbolService {
+public class PairServiceImpl implements PairService {
 
     @Autowired
-    private SymbolDao symbolDao;
+    private PairDao pairDao;
 
     @DubboReference
     private CoinDubboService coinDubboService;
 
     @Override
-    public List<SymbolRes> listPage(SymbolListPageReq req) {
+    public List<PairRes> listPage(PairListPageReq req) {
 
-        List<Symbol> symbols = new ArrayList<>();
+        List<Pair> pairs = new ArrayList<>();
         Long coinId = req.getCoinId();
         if (coinId == null || coinId == 0) {
             String collect = req.getCollect();
@@ -44,7 +44,7 @@ public class SymbolServiceImpl implements SymbolService {
                 }
             }
             if (ids.size() > 0) {
-                symbols = symbolDao.listByIdIn(ids);
+                pairs = pairDao.listByIdIn(ids);
             }
 
         } else {
@@ -52,16 +52,16 @@ public class SymbolServiceImpl implements SymbolService {
             Integer limit = req.getLimit();
             Integer offset = PageUtils.createOffset(page, limit);
             req.setOffset(offset);
-            symbols = symbolDao.listPage(req);
+            pairs = pairDao.listPage(req);
         }
 
 
-        if (symbols.size() == 0) {
+        if (pairs.size() == 0) {
             return new ArrayList<>();
         }
 
         Set<Long> coinIdSet = new HashSet<>();
-        symbols.forEach(v -> {
+        pairs.forEach(v -> {
             coinIdSet.add(v.getTradeCoinId());
             coinIdSet.add(v.getCoinId());
         });
@@ -69,33 +69,33 @@ public class SymbolServiceImpl implements SymbolService {
 
         Map<Long, CoinSimpleDubboRes> coinMap = coinDubboService.mapByCoinIds(coinIds);
 
-        List<SymbolRes> collect = symbols.stream().map(v -> {
-            SymbolRes symbolRes = new SymbolRes();
-            BeanUtils.copyProperties(v, symbolRes);
-            symbolRes.setTradeCoin(coinMap.get(v.getTradeCoinId()));
-            symbolRes.setCoin(coinMap.get(v.getCoinId()));
-            return symbolRes;
+        List<PairRes> collect = pairs.stream().map(v -> {
+            PairRes pairRes = new PairRes();
+            BeanUtils.copyProperties(v, pairRes);
+            pairRes.setTradeCoin(coinMap.get(v.getTradeCoinId()));
+            pairRes.setCoin(coinMap.get(v.getCoinId()));
+            return pairRes;
         }).collect(Collectors.toList());
 
         return collect;
     }
 
     @Override
-    public Symbol findByTidAndCid(Long tradeCoinId, Long coinId) {
-        return symbolDao.findByTidAndCid(tradeCoinId, coinId);
+    public Pair findByTidAndCid(Long tradeCoinId, Long coinId) {
+        return pairDao.findByTidAndCid(tradeCoinId, coinId);
     }
 
     @Override
-    public SymbolRes read(SymbolReadReq req) {
+    public PairRes read(PairReadReq req) {
 
-        Symbol byTidAndCid = findByTidAndCid(req.getTradeCoinId(), req.getCoinId());
+        Pair byTidAndCid = findByTidAndCid(req.getTradeCoinId(), req.getCoinId());
 
-        SymbolRes symbolRes = new SymbolRes();
+        PairRes pairRes = new PairRes();
         if (byTidAndCid == null) {
-            return symbolRes;
+            return pairRes;
         }
 
-        BeanUtils.copyProperties(byTidAndCid, symbolRes);
+        BeanUtils.copyProperties(byTidAndCid, pairRes);
 
         Long tradeCoinId = byTidAndCid.getTradeCoinId();
         Long coinId = byTidAndCid.getCoinId();
@@ -107,9 +107,9 @@ public class SymbolServiceImpl implements SymbolService {
 
         Map<Long, CoinSimpleDubboRes> coinMap = coinDubboService.mapByCoinIds(coinIds);
 
-        symbolRes.setTradeCoin(coinMap.get(tradeCoinId));
-        symbolRes.setCoin(coinMap.get(coinId));
+        pairRes.setTradeCoin(coinMap.get(tradeCoinId));
+        pairRes.setCoin(coinMap.get(coinId));
 
-        return symbolRes;
+        return pairRes;
     }
 }

@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 
 @ApiModel
 @Data
-public class MemberCoinSymbolBalanceReq {
+public class MemberCoinPairBalanceReq {
 
     @ApiModelProperty(value = "交易币种ID")
     @NotNull(message = "交易币种ID不能为空")

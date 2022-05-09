@@ -2,14 +2,14 @@ package com.lmxdawn.trade.dubbo.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.lmxdawn.dubboapi.req.trade.SymbolQueryDubboReq;
-import com.lmxdawn.dubboapi.req.trade.SymbolSaveDubboReq;
+import com.lmxdawn.dubboapi.req.trade.PairQueryDubboReq;
+import com.lmxdawn.dubboapi.req.trade.PairSaveDubboReq;
 import com.lmxdawn.dubboapi.res.PageSimpleDubboRes;
-import com.lmxdawn.dubboapi.res.trade.SymbolDubboRes;
-import com.lmxdawn.dubboapi.res.trade.SymbolSimpleDubboRes;
-import com.lmxdawn.dubboapi.service.trade.SymbolDubboService;
-import com.lmxdawn.trade.dao.SymbolDao;
-import com.lmxdawn.trade.entity.Symbol;
+import com.lmxdawn.dubboapi.res.trade.PairDubboRes;
+import com.lmxdawn.dubboapi.res.trade.PairSimpleDubboRes;
+import com.lmxdawn.dubboapi.service.trade.PairDubboService;
+import com.lmxdawn.trade.dao.PairDao;
+import com.lmxdawn.trade.entity.Pair;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,25 +18,25 @@ import java.util.Date;
 import java.util.List;
 
 @DubboService
-public class SymbolDubboServiceImpl implements SymbolDubboService {
+public class PairDubboServiceImpl implements PairDubboService {
 
     @Autowired
-    private SymbolDao symbolDao;
+    private PairDao pairDao;
 
     @Override
-    public PageSimpleDubboRes<SymbolDubboRes> list(SymbolQueryDubboReq req) {
+    public PageSimpleDubboRes<PairDubboRes> list(PairQueryDubboReq req) {
 
         int offset = (req.getPage() - 1) * req.getLimit();
         PageHelper.offsetPage(offset, req.getLimit());
-        List<SymbolDubboRes> infoDubboResList = symbolDao.listPageDubbo(req);
+        List<PairDubboRes> infoDubboResList = pairDao.listPageDubbo(req);
 
-        PageSimpleDubboRes<SymbolDubboRes> pageSimpleDubboRes = new PageSimpleDubboRes<>();
+        PageSimpleDubboRes<PairDubboRes> pageSimpleDubboRes = new PageSimpleDubboRes<>();
 
         if (infoDubboResList == null || infoDubboResList.size() == 0) {
             return pageSimpleDubboRes;
         }
 
-        PageInfo<SymbolDubboRes> infoDubboResPageInfo = new PageInfo<>(infoDubboResList);
+        PageInfo<PairDubboRes> infoDubboResPageInfo = new PageInfo<>(infoDubboResList);
 
         pageSimpleDubboRes.setTotal(infoDubboResPageInfo.getTotal());
         pageSimpleDubboRes.setList(infoDubboResList);
@@ -44,47 +44,47 @@ public class SymbolDubboServiceImpl implements SymbolDubboService {
     }
 
     @Override
-    public Long insert(SymbolSaveDubboReq req) {
+    public Long insert(PairSaveDubboReq req) {
 
         Long tradeCoinId = req.getTradeCoinId();
         Long coinId = req.getCoinId();
-        Symbol byTidAndCid = symbolDao.findByTidAndCid(tradeCoinId, coinId);
+        Pair byTidAndCid = pairDao.findByTidAndCid(tradeCoinId, coinId);
         if (byTidAndCid != null) {
             return null;
         }
 
-        Symbol coin = new Symbol();
+        Pair coin = new Pair();
         BeanUtils.copyProperties(req, coin);
         coin.setCreateTime(new Date());
         coin.setModifiedTime(new Date());
-        symbolDao.insert(coin);
+        pairDao.insert(coin);
         return coin.getId();
     }
 
     @Override
-    public boolean update(SymbolSaveDubboReq req) {
+    public boolean update(PairSaveDubboReq req) {
 
         Long tradeCoinId = req.getTradeCoinId();
         Long coinId = req.getCoinId();
-        Symbol byTidAndCid = symbolDao.findByTidAndCid(tradeCoinId, coinId);
+        Pair byTidAndCid = pairDao.findByTidAndCid(tradeCoinId, coinId);
         if (byTidAndCid != null && !byTidAndCid.getId().equals(req.getId())) {
             return false;
         }
-        Symbol coin = new Symbol();
+        Pair coin = new Pair();
         BeanUtils.copyProperties(req, coin);
         coin.setModifiedTime(new Date());
 
-        return symbolDao.update(coin);
+        return pairDao.update(coin);
     }
 
     @Override
-    public SymbolSimpleDubboRes findByTidAndCid(Long tradeCoinId, Long coinId) {
-        Symbol byTidAndCid = symbolDao.findByTidAndCid(tradeCoinId, coinId);
+    public PairSimpleDubboRes findByTidAndCid(Long tradeCoinId, Long coinId) {
+        Pair byTidAndCid = pairDao.findByTidAndCid(tradeCoinId, coinId);
         if (byTidAndCid == null) {
             return null;
         }
-        SymbolSimpleDubboRes symbolSimpleDubboRes = new SymbolSimpleDubboRes();
-        BeanUtils.copyProperties(byTidAndCid, symbolSimpleDubboRes);
-        return symbolSimpleDubboRes;
+        PairSimpleDubboRes pairSimpleDubboRes = new PairSimpleDubboRes();
+        BeanUtils.copyProperties(byTidAndCid, pairSimpleDubboRes);
+        return pairSimpleDubboRes;
     }
 }

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.lmxdawn.trade.dao.SymbolDao">
+<mapper namespace="com.lmxdawn.trade.dao.PairDao">
 
-    <select id="listPageDubbo" parameterType="com.lmxdawn.dubboapi.req.trade.SymbolQueryDubboReq" resultType="com.lmxdawn.dubboapi.res.trade.SymbolDubboRes">
+    <select id="listPageDubbo" parameterType="com.lmxdawn.dubboapi.req.trade.PairQueryDubboReq" resultType="com.lmxdawn.dubboapi.res.trade.PairDubboRes">
         SELECT id,trade_coin_id,coin_id,buy_fee,buy_fee_precision,sell_fee,sell_fee_precision,min_amount,min_total,trade_total_precision,trade_price_precision,trade_amount_precision,sort,status,create_time,modified_time
-        FROM `symbol`
+        FROM `pair`
         <where>
             <choose>
                 <when test="status == 0">
@@ -20,9 +20,9 @@
         ASC
     </select>
 
-    <select id="listPage" parameterType="com.lmxdawn.trade.req.SymbolListPageReq" resultType="com.lmxdawn.trade.entity.Symbol">
+    <select id="listPage" parameterType="com.lmxdawn.trade.req.PairListPageReq" resultType="com.lmxdawn.trade.entity.Pair">
         SELECT id,trade_coin_id,coin_id,buy_fee,buy_fee_precision,sell_fee,sell_fee_precision,min_amount,min_total,trade_total_precision,trade_price_precision,trade_amount_precision,price,price_24,trade_total_24,status
-        FROM `symbol`
+        FROM `pair`
         <where>
             status = 2
             and coin_id = #{coinId}
@@ -31,18 +31,18 @@
         limit #{offset},#{limit}
     </select>
 
-    <select id="listByIdIn" resultType="com.lmxdawn.trade.entity.Symbol">
+    <select id="listByIdIn" resultType="com.lmxdawn.trade.entity.Pair">
         SELECT id,trade_coin_id,coin_id,buy_fee,buy_fee_precision,sell_fee,sell_fee_precision,min_amount,min_total,trade_total_precision,trade_price_precision,trade_amount_precision,price,price_24,trade_total_24,status
-        FROM `symbol`
+        FROM `pair`
         where `id` in
         <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
             #{id}
         </foreach>
     </select>
 
-    <select id="findByTidAndCid" resultType="com.lmxdawn.trade.entity.Symbol">
+    <select id="findByTidAndCid" resultType="com.lmxdawn.trade.entity.Pair">
         SELECT id,buy_fee,buy_fee_precision,sell_fee,sell_fee_precision,min_amount,min_total,trade_total_precision,trade_price_precision,trade_amount_precision,price,price_24,trade_total_24
-        FROM `symbol`
+        FROM `pair`
         <where>
             trade_coin_id = #{tradeCoinId}
             and coin_id = #{coinId}
@@ -50,8 +50,8 @@
         limit 1
     </select>
 
-    <insert id="insert" keyProperty="id" parameterType="com.lmxdawn.trade.entity.Symbol">
-        INSERT INTO `symbol`(trade_coin_id,coin_id,buy_fee,buy_fee_precision,sell_fee,sell_fee_precision,min_amount,min_total,trade_total_precision,trade_price_precision,trade_amount_precision,sort,status,create_time,modified_time)
+    <insert id="insert" keyProperty="id" parameterType="com.lmxdawn.trade.entity.Pair">
+        INSERT INTO `pair`(trade_coin_id,coin_id,buy_fee,buy_fee_precision,sell_fee,sell_fee_precision,min_amount,min_total,trade_total_precision,trade_price_precision,trade_amount_precision,sort,status,create_time,modified_time)
         VALUES
         (#{tradeCoinId},
          #{coinId},
@@ -70,8 +70,8 @@
          #{modifiedTime})
     </insert>
 
-    <update id="update" parameterType="com.lmxdawn.trade.entity.Symbol">
-        UPDATE `symbol`
+    <update id="update" parameterType="com.lmxdawn.trade.entity.Pair">
+        UPDATE `pair`
         <trim prefix="set" suffixOverrides=",">
             <if test="tradeCoinId != null">`trade_coin_id`=#{tradeCoinId},</if>
             <if test="coinId != null">`coin_id`=#{coinId},</if>
