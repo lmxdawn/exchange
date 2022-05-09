@@ -7,10 +7,41 @@
 
 [前端代码，点击跳转](https://github.com/lmxdawn/exchange-uniapp)
 
+# 依赖环境
+
+> 先运行 Nacos 服务。[点击跳转官方文档](https://nacos.io/zh-cn/docs/quick-start.html)
+
+- Linux/Unix/Mac
+```shell
+$ sh startup.sh -m standalone
+```
+- 如果您使用的是ubuntu系统，或者运行脚本报错提示[[符号找不到，可尝试如下运行：
+```shell
+bash startup.sh -m standalone
+```
+- Windows
+```shell
+$ startup.cmd -m standalone
+```
+
+> 再运行 Seata 服务。[点击跳转官方文档](https://seata.io/zh-cn/docs/ops/deploy-server.html)
+
+- 在 `script/seata` 目录下面查看配置seata的教程，需要运行SQL和把配置文件传到nacos
+
+
+- 在 Linux/Mac 下
+```shell
+$ ./bin/seata-server.sh -h 127.0.0.1 -p 8091 -m db
+```
+- 在 Windows 下
+```shell
+$ bin\seata-server.bat -h 127.0.0.1 -p 8091 -m db
+```
+
 # 下载-打包
 
 ```shell
-git clone https://github.com/lmxdawn/im-java.git
+git clone https://github.com/lmxdawn/exchange.git
 
 # 整体打包
 mvn -Dmaven.test.skip=true clean package

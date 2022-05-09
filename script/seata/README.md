@@ -12,11 +12,11 @@
 
 > 注册中心和配置中心用的 nacos，所以先启动 nacos
 
-> 在 `config-center/nacos` 目录里面找到运行命令
+> 在 `config-center/nacos` 目录里面找到运行命令，把配置文件写入 nacos，配置文件里面写入了 seata 的db配置，把里面的db链接信息替换掉，seata 就会用 nacos 获取到数据库配置
 
-> `$ ./nacos-config.sh -h localhost -p 8848 -g SEATA_GROUP -u nacos -w nacos`
-
-> 运行上面的命令，把配置文件写入 nacos
+```shell
+$ ./nacos-config.sh -h localhost -p 8848 -g SEATA_GROUP -u nacos -w nacos
+```
 
 ## 启动
 > 配置文件在 `client/conf` 目录
