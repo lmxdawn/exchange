@@ -1,7 +1,5 @@
 package com.lmxdawn.wsroute.controller;
 
-import com.lmxdawn.wsroute.enums.ResultEnum;
-import com.lmxdawn.wsroute.req.LoginReq;
 import com.lmxdawn.wsroute.res.BaseRes;
 import com.lmxdawn.wsroute.res.ConnectionInfoRes;
 import com.lmxdawn.wsroute.service.UserLoginService;
@@ -10,13 +8,11 @@ import com.lmxdawn.wsroute.util.ResultVOUtils;
 import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
+import javax.servlet.http.HttpServletRequest;
 import java.util.UUID;
 
 @Api(tags = "授权ws连接信息")
@@ -31,16 +27,13 @@ public class ConnectionController {
     private WsRouteService wsRouteService;
 
     @PostMapping("/login")
-    public BaseRes<ConnectionInfoRes> login(@RequestBody @Valid LoginReq req,
-                                            BindingResult bindingResult) {
+    public BaseRes<ConnectionInfoRes> login(HttpServletRequest request) {
 
-        if (bindingResult.hasErrors()) {
-            return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, bindingResult.getFieldError().getDefaultMessage());
-        }
+        String token = request.getHeader("x-token");
 
         String memberId = "";
-        if (!StringUtils.isBlank(req.getToken())) {
-            Long login = userLoginService.Login(req.getToken());
+        if (!StringUtils.isBlank(token)) {
+            Long login = userLoginService.Login(token);
             memberId = login != null && login > 0 ? login.toString() : "";
         }
 

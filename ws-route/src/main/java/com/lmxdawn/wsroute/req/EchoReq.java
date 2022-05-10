@@ -6,7 +6,7 @@ import lombok.Data;
 
 @ApiModel
 @Data
-public class LoginReq {
+public class EchoReq {
 
     @ApiModelProperty(value = "用户token，不传表示游客登录")
     private String token;
