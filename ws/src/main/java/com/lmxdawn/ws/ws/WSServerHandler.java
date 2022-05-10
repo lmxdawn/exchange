@@ -104,12 +104,6 @@ public class WSServerHandler extends SimpleChannelInboundHandler<TextWebSocketFr
         } else if (type == 2) { // 游客登录
             log.info("游客登录");
             touristLogin(ctx, memberId, wsId, data);
-        } else if (type == 3) { // 行情推送
-            log.info("行情推送");
-            marketPush(ctx, data);
-        } else { // 委托订单变化通知
-            log.info("委托订单变化");
-            entrustOrderPush(ctx, data);
         }
 
     }
@@ -170,31 +164,6 @@ public class WSServerHandler extends SimpleChannelInboundHandler<TextWebSocketFr
         wsBaseRes.setType(1);
         wsBaseRes.setWsId(wsId);
         wsBaseRes.setData(memberId);
-        String s = JSON.toJSONString(wsBaseRes);
-        ctx.channel().writeAndFlush(new TextWebSocketFrame(s));
-
-    }
-
-    /**
-     * 行情推送
-     */
-    private void marketPush(ChannelHandlerContext ctx, String data) {
-
-        WSBaseRes wsBaseRes = new WSBaseRes();
-        wsBaseRes.setType(2);
-        wsBaseRes.setData(data);
-        String s = JSON.toJSONString(wsBaseRes);
-        ctx.channel().writeAndFlush(new TextWebSocketFrame(s));
-    }
-
-    /**
-     * 委托订单变化
-     */
-    private void entrustOrderPush(ChannelHandlerContext ctx, String data) {
-
-        WSBaseRes wsBaseRes = new WSBaseRes();
-        wsBaseRes.setType(3);
-        wsBaseRes.setData(data);
         String s = JSON.toJSONString(wsBaseRes);
         ctx.channel().writeAndFlush(new TextWebSocketFrame(s));
 
