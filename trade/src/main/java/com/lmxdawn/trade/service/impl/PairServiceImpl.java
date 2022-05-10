@@ -88,7 +88,10 @@ public class PairServiceImpl implements PairService {
     @Override
     public PairRes read(PairReadReq req) {
 
-        Pair byTidAndCid = findByTidAndCid(req.getTradeCoinId(), req.getCoinId());
+        Long tradeCoinId = req.getTradeCoinId();
+        Long coinId = req.getCoinId();
+
+        Pair byTidAndCid = findByTidAndCid(tradeCoinId, coinId);
 
         PairRes pairRes = new PairRes();
         if (byTidAndCid == null) {
@@ -96,9 +99,6 @@ public class PairServiceImpl implements PairService {
         }
 
         BeanUtils.copyProperties(byTidAndCid, pairRes);
-
-        Long tradeCoinId = byTidAndCid.getTradeCoinId();
-        Long coinId = byTidAndCid.getCoinId();
 
         Set<Long> coinIdSet = new HashSet<>();
         coinIdSet.add(tradeCoinId);
