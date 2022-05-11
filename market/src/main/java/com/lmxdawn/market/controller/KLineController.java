@@ -35,7 +35,7 @@ public class KLineController {
 
         BigDecimal close = BigDecimal.ZERO;
         BigDecimal open;
-        long date = 1652191200L;
+        long date = new Date().getTime();
         for (int i = 0; i < 100; i++) {
             if (close.compareTo(BigDecimal.ZERO) == 0) {
                 open = BigDecimal.valueOf(RandomUtils.nextDouble(20, 100));
