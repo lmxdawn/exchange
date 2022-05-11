@@ -15,6 +15,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -74,6 +75,8 @@ public class PairServiceImpl implements PairService {
             BeanUtils.copyProperties(v, pairRes);
             pairRes.setTradeCoin(coinMap.get(v.getTradeCoinId()));
             pairRes.setCoin(coinMap.get(v.getCoinId()));
+
+            pairRes.setRate24(getRate24(pairRes.getPrice(), pairRes.getPrice24()));
             return pairRes;
         }).collect(Collectors.toList());
 
@@ -110,6 +113,24 @@ public class PairServiceImpl implements PairService {
         pairRes.setTradeCoin(coinMap.get(tradeCoinId));
         pairRes.setCoin(coinMap.get(coinId));
 
+        pairRes.setRate24(getRate24(pairRes.getPrice(), pairRes.getPrice24()));
+
         return pairRes;
+    }
+
+    /**
+     * 获取24涨跌幅
+     * @return
+     */
+    private Double getRate24(Double price, Double price24) {
+        BigDecimal bPrice = BigDecimal.valueOf(price);
+        BigDecimal bPrice24 = BigDecimal.valueOf(price24);
+        BigDecimal difference = bPrice.subtract(bPrice24);
+        // 计算涨跌幅 涨跌幅=涨跌值/昨收盘*100%
+        BigDecimal bRate24 = BigDecimal.ZERO;
+        if (BigDecimal.ZERO.compareTo(bPrice24) != 0) {
+            bRate24 = difference.divide(bPrice24, 2).multiply(BigDecimal.valueOf(100));
+        }
+        return bRate24.doubleValue();
     }
 }

@@ -38,18 +38,23 @@ public class KLineController {
         long date = 1652191200L;
         for (int i = 0; i < 100; i++) {
             if (close.compareTo(BigDecimal.ZERO) == 0) {
-                open = BigDecimal.valueOf(RandomUtils.nextDouble(1, 9999));
+                open = BigDecimal.valueOf(RandomUtils.nextDouble(20, 100));
             } else {
                 open = close;
             }
-            close = BigDecimal.valueOf(RandomUtils.nextDouble(1, 9999));
+            if (i % 2 == 0) {
+                close = open.add(BigDecimal.valueOf(RandomUtils.nextDouble(1, 5)));
+            } else {
+                close = open.subtract(BigDecimal.valueOf(RandomUtils.nextDouble(1, 5)));
+            }
+            date = date + 60;
             KLineListRes kLineListRes = new KLineListRes();
-            kLineListRes.setTime(date + 60);
+            kLineListRes.setTime(date);
             kLineListRes.setOpen(open);
             kLineListRes.setClose(close);
-            kLineListRes.setLowest(close.add(BigDecimal.valueOf(0.5)));
-            kLineListRes.setHighest(close.add(BigDecimal.valueOf(2)));
-            kLineListRes.setVol(BigDecimal.valueOf(RandomUtils.nextDouble(1, 50)));
+            kLineListRes.setLowest(close.subtract(BigDecimal.valueOf(RandomUtils.nextDouble(1, 5))));
+            kLineListRes.setHighest(close.add(BigDecimal.valueOf(RandomUtils.nextDouble(1, 5))));
+            kLineListRes.setVol(BigDecimal.valueOf(RandomUtils.nextDouble(1, 20)));
             kLineListResList.add(kLineListRes);
         }
 
