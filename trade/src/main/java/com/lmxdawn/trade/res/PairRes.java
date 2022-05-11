@@ -37,4 +37,13 @@ public class PairRes {
 
     @ApiModelProperty(value = "(24h)交易额")
     private Double tradeTotal24;
+
+    @ApiModelProperty(value = "(24h)交易数量")
+    private Double tradeAmount24;
+
+    @ApiModelProperty(value = "(24h)最高")
+    private Double highest24;
+
+    @ApiModelProperty(value = "(24h)最低")
+    private Double lowest24;
 }

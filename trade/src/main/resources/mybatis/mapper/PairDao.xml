@@ -21,7 +21,7 @@
     </select>
 
     <select id="listPage" parameterType="com.lmxdawn.trade.req.PairListPageReq" resultType="com.lmxdawn.trade.entity.Pair">
-        SELECT id,trade_coin_id,coin_id,buy_fee,buy_fee_precision,sell_fee,sell_fee_precision,min_amount,min_total,trade_total_precision,trade_price_precision,trade_amount_precision,price,price_24,trade_total_24,status
+        SELECT id,trade_coin_id,coin_id,buy_fee,buy_fee_precision,sell_fee,sell_fee_precision,min_amount,min_total,trade_total_precision,trade_price_precision,trade_amount_precision,price,price_24,trade_total_24,trade_amount_24,highest_24,lowest_24,status
         FROM `pair`
         <where>
             status = 2
@@ -32,7 +32,7 @@
     </select>
 
     <select id="listByIdIn" resultType="com.lmxdawn.trade.entity.Pair">
-        SELECT id,trade_coin_id,coin_id,buy_fee,buy_fee_precision,sell_fee,sell_fee_precision,min_amount,min_total,trade_total_precision,trade_price_precision,trade_amount_precision,price,price_24,trade_total_24,status
+        SELECT id,trade_coin_id,coin_id,buy_fee,buy_fee_precision,sell_fee,sell_fee_precision,min_amount,min_total,trade_total_precision,trade_price_precision,trade_amount_precision,price,price_24,trade_total_24,trade_amount_24,highest_24,lowest_24,status
         FROM `pair`
         where `id` in
         <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
@@ -41,7 +41,7 @@
     </select>
 
     <select id="findByTidAndCid" resultType="com.lmxdawn.trade.entity.Pair">
-        SELECT id,buy_fee,buy_fee_precision,sell_fee,sell_fee_precision,min_amount,min_total,trade_total_precision,trade_price_precision,trade_amount_precision,price,price_24,trade_total_24
+        SELECT id,buy_fee,buy_fee_precision,sell_fee,sell_fee_precision,min_amount,min_total,trade_total_precision,trade_price_precision,trade_amount_precision,price,price_24,trade_total_24,trade_amount_24,highest_24,lowest_24
         FROM `pair`
         <where>
             trade_coin_id = #{tradeCoinId}

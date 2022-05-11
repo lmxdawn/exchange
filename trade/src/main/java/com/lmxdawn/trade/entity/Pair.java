@@ -82,6 +82,21 @@ public class Pair {
 	private Double tradeTotal24;
 
 	/**
+	 * (24h)交易数量
+	 */
+	private Double tradeAmount24;
+
+	/**
+	 * (24h)最高
+	 */
+	private Double highest24;
+
+	/**
+	 * (24h)最低
+	 */
+	private Double lowest24;
+
+	/**
 	 * 排序（升序）
 	 */
 	private Integer sort;
