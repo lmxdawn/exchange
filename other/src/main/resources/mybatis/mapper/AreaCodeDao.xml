@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.lmxdawn.other.dao.AreaCodeDao">
+
+    <select id="listPageDubbo" parameterType="com.lmxdawn.dubboapi.req.other.AreaCodeQueryDubboReq" resultType="com.lmxdawn.dubboapi.res.other.AreaCodeInfoDubboRes">
+        SELECT id,`lang`,`name`,`code`,`sort`,status,create_time,modified_time
+        FROM `area_code`
+        <where>
+            <choose>
+                <when test="status == -1">
+                    status IN (0,1)
+                </when>
+                <otherwise>
+                    status = #{status}
+                </otherwise>
+            </choose>
+            <if test="lang != null">and `lang`=#{lang}</if>
+        </where>
+        ORDER BY id
+        DESC
+    </select>
+
+    <select id="listPageByLang" resultType="com.lmxdawn.other.entity.AreaCode">
+        SELECT id,`lang`,`name`,`code`,create_time,modified_time
+        FROM `area_code`
+        <where>
+            `lang`=#{lang}
+            and `status` = 1
+        </where>
+        ORDER BY `sort` ASC
+        limit #{offset},#{limit}
+    </select>
+
+    <insert id="insert" keyProperty="id" parameterType="com.lmxdawn.other.entity.AreaCode">
+        INSERT INTO `area_code`(`lang`,`name`,`code`,`sort`,status,create_time,modified_time)
+        VALUES
+        (#{lang},
+         #{name},
+         #{code},
+         #{sort},
+         #{status},
+         #{createTime},
+         #{modifiedTime})
+    </insert>
+
+    <update id="update" parameterType="com.lmxdawn.other.entity.AreaCode">
+        UPDATE `area_code`
+        <set>
+            <if test="lang != null">`lang`=#{lang},</if>
+            <if test="name != null">`name`=#{name},</if>
+            <if test="code != null">`code`=#{code},</if>
+            <if test="sort != null">`sort`=#{sort},</if>
+            <if test="status != null">`status`=#{status},</if>
+            modified_time=#{modifiedTime}
+        </set>
+        WHERE `id` = #{id}
+    </update>
+
+</mapper>
