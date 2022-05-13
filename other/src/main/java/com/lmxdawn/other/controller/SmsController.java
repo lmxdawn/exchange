@@ -1,13 +1,10 @@
 package com.lmxdawn.other.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.lmxdawn.other.enums.ResultEnum;
 import com.lmxdawn.other.res.BaseRes;
 import com.lmxdawn.other.util.ResultVOUtils;
 import com.lmxdawn.other.constant.CacheConstant;
 import com.lmxdawn.other.constant.SmsConstant;
-import com.lmxdawn.other.constant.SmsCountryCodeConstant;
 import com.lmxdawn.other.entity.SmsTemplate;
 import com.lmxdawn.other.req.SmsSendReq;
 import com.lmxdawn.other.res.HuaWeiSmsSendRes;
@@ -42,22 +39,11 @@ public class SmsController {
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
-    @ApiOperation(value = "短信的区号列表")
-    @GetMapping("/countryCode")
-    public BaseRes countryCode() {
-
-        System.out.println(redisTemplate.opsForValue().get("*"));
-
-        JSONArray objects = JSON.parseArray(SmsCountryCodeConstant.LIST_JSON);
-
-        return ResultVOUtils.success(objects.toArray());
-    }
-
 
     @ApiOperation(value = "发送短信", notes = "<font size=\"5\" color=\"red\">如果后台关闭验证后，这里data里面返回code码，前端默认加上去</font>")
     @PostMapping("/send")
-    public BaseRes send(@RequestBody @Validated SmsSendReq smsSendReq,
-                             BindingResult bindingResult) {
+    public BaseRes send(@RequestBody @Validated SmsSendReq req,
+                        BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, bindingResult.getFieldError().getDefaultMessage());
@@ -67,13 +53,13 @@ public class SmsController {
         // 目前只实现了华为云短信
         HuaWeiSmsSendVo huaWeiSmsSendVo = settingService.listToHuaWeiSmsVo();
 
-        SmsTemplate smsTemplate = smsTemplateService.find(SmsConstant.HUAWEI_PLATFORM, smsSendReq.getScene());
+        SmsTemplate smsTemplate = smsTemplateService.find(SmsConstant.HUAWEI_PLATFORM, req.getScene(), req.getLang());
 
         if (huaWeiSmsSendVo == null || smsTemplate == null) {
             return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, "Please check if the background is configured");
         }
 
-        String tt = smsSendReq.getScene() + ":" + smsSendReq.getTel();
+        String tt = req.getScene() + ":" + req.getTel();
         String key = String.format(CacheConstant.SMS_SEND, tt);
         String code = redisTemplate.opsForValue().get(key);
         if (StringUtils.isBlank(code)) {
@@ -83,7 +69,7 @@ public class SmsController {
                 if (StringUtils.isBlank(smsTemplate.getTemplateParas())) {
                     huaWeiSmsSendVo.setTemplateParas(smsTemplate.getTemplateParas().replace("NUM", code));
                 }
-                huaWeiSmsSendVo.setReceiver(smsSendReq.getTel());
+                huaWeiSmsSendVo.setReceiver(req.getTel());
                 if (smsTemplate.getStatus() == 1) {
                     HuaWeiSmsSendRes huaWeiSmsSendRes = HuaWeiSmsUtil.send(huaWeiSmsSendVo);
                     if (!"000000".equals(huaWeiSmsSendRes.getCode())) {

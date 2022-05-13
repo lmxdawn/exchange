@@ -19,6 +19,9 @@ public class SmsTemplateInfoDubboRes implements Serializable {
     @ApiModelProperty(value = "场景（1：注册，2：登录，3：绑定，4：注销，5：找回密码）", position = 2)
     private Integer scene;
 
+    @ApiModelProperty(value = "语言（国际化）", position = 2)
+    private String lang;
+
     @ApiModelProperty(value = "模板ID", position = 2)
     private String templateId;
 

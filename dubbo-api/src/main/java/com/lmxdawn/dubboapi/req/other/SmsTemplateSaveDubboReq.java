@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
@@ -24,8 +25,12 @@ public class SmsTemplateSaveDubboReq implements Serializable {
     @NotNull(message = "场景必传")
     private Integer scene;
 
+    @ApiModelProperty(value = "语言（国际化）", position = 2)
+    @NotNull(message = "语言必传")
+    private String lang;
+
     @ApiModelProperty(value = "模板ID", position = 2)
-    @NotNull(message = "模板ID必传")
+    @NotBlank(message = "模板ID必传")
     private String templateId;
 
     @ApiModelProperty(value = "模板参数，目前只支持数字变量（华为数字填：[\"NUM\"], 阿里数字填：{\"code\":\"NUM\"}）", position = 2)

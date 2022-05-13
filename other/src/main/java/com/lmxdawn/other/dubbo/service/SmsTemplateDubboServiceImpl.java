@@ -40,14 +40,14 @@ public class SmsTemplateDubboServiceImpl implements SmsTemplateDubboService {
     }
 
     @Override
-    public Long insert(SmsTemplateSaveDubboReq smsTemplateSaveDubboReq) {
+    public Long insert(SmsTemplateSaveDubboReq req) {
         // 判断是否存在
-        SmsTemplate smsTemplate1 = smsTemplateDao.find(smsTemplateSaveDubboReq.getPlatform(), smsTemplateSaveDubboReq.getScene());
+        SmsTemplate smsTemplate1 = smsTemplateDao.find(req.getPlatform(), req.getScene(), req.getLang());
         if (smsTemplate1 != null) {
             return null;
         }
         SmsTemplate smsTemplate = new SmsTemplate();
-        BeanUtils.copyProperties(smsTemplateSaveDubboReq, smsTemplate);
+        BeanUtils.copyProperties(req, smsTemplate);
         smsTemplate.setCreateTime(new Date());
         smsTemplate.setModifiedTime(new Date());
         smsTemplateDao.insert(smsTemplate);
@@ -55,15 +55,15 @@ public class SmsTemplateDubboServiceImpl implements SmsTemplateDubboService {
     }
 
     @Override
-    public boolean update(SmsTemplateSaveDubboReq smsTemplateSaveDubboReq) {
+    public boolean update(SmsTemplateSaveDubboReq req) {
         // 判断是否存在
-        SmsTemplate smsTemplate1 = smsTemplateDao.find(smsTemplateSaveDubboReq.getPlatform(), smsTemplateSaveDubboReq.getScene());
+        SmsTemplate smsTemplate1 = smsTemplateDao.find(req.getPlatform(), req.getScene(), req.getLang());
         // 当前平台的场景已存在
-        if (smsTemplate1 != null && !smsTemplate1.getId().equals(smsTemplateSaveDubboReq.getId())) {
+        if (smsTemplate1 != null && !smsTemplate1.getId().equals(req.getId())) {
             return false;
         }
         SmsTemplate smsTemplate = new SmsTemplate();
-        BeanUtils.copyProperties(smsTemplateSaveDubboReq, smsTemplate);
+        BeanUtils.copyProperties(req, smsTemplate);
         smsTemplate.setModifiedTime(new Date());
         return smsTemplateDao.update(smsTemplate);
     }

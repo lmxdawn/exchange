@@ -4,7 +4,7 @@
 <mapper namespace="com.lmxdawn.other.dao.SmsTemplateDao">
 
     <select id="listPageDubbo" parameterType="com.lmxdawn.dubboapi.req.other.SmsTemplateQueryDubboReq" resultType="com.lmxdawn.dubboapi.res.other.SmsTemplateInfoDubboRes">
-        SELECT id,platform,scene,template_id,template_paras,remark,status,create_time,modified_time
+        SELECT id,platform,scene,`lang`,template_id,template_paras,remark,status,create_time,modified_time
         FROM `sms_template`
         <where>
             <if test="platform != null and '' != platform">
@@ -12,6 +12,9 @@
             </if>
             <if test="scene != null and '' != scene">
                 AND `scene` = #{scene}
+            </if>
+            <if test="lang != null and '' != lang">
+                AND `lang` = #{lang}
             </if>
         </where>
         ORDER BY create_time
@@ -24,6 +27,7 @@
         <where>
             `platform` = #{platform}
             and `scene` = #{scene}
+            and `lang` = #{lang}
         </where>
         LIMIT 1
     </select>

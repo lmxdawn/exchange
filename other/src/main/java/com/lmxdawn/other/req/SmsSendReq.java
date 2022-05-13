@@ -16,9 +16,13 @@ public class SmsSendReq {
     @NotNull(message = "场景不能为空")
     private Integer scene;
 
+    @ApiModelProperty(value = "语言（国际化）", required = true)
+    @NotNull(message = "语言不能为空")
+    private String lang;
+
     @ApiModelProperty(value = "区号")
     @NotBlank(message = "区号不能为空")
-    private String countryCode;
+    private String areaCode;
 
     @ApiModelProperty(value = "手机号（11位）", required = true)
     @NotBlank(message = "手机号不能为空")

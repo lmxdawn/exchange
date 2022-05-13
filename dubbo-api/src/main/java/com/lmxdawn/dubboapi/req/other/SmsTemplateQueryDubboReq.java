@@ -19,4 +19,7 @@ public class SmsTemplateQueryDubboReq extends ListPageDubboReq {
     @ApiModelProperty(value = "场景（1：注册，2：登录，3：绑定，4：注销，5：找回密码）", position = 2)
     private Integer scene;
 
+    @ApiModelProperty(value = "语言", position = 2)
+    private String lang;
+
 }

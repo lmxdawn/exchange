@@ -13,7 +13,7 @@ public class SmsTemplateServiceImpl implements SmsTemplateService {
     private SmsTemplateDao smsTemplateDao;
 
     @Override
-    public SmsTemplate find(Integer platform, Integer scene) {
-        return smsTemplateDao.find(platform, scene);
+    public SmsTemplate find(Integer platform, Integer scene, String lang) {
+        return smsTemplateDao.find(platform, scene, lang);
     }
 }

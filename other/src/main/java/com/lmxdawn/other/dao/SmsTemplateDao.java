@@ -25,7 +25,9 @@ public interface SmsTemplateDao {
      * @param scene
      * @return
      */
-    SmsTemplate find(@Param("platform") Integer platform, @Param("scene") Integer scene);
+    SmsTemplate find(@Param("platform") Integer platform,
+                     @Param("scene") Integer scene,
+                     @Param("lang") String lang);
 
     /**
      * 添加
