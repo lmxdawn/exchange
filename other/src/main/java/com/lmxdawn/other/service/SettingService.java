@@ -1,5 +1,6 @@
 package com.lmxdawn.other.service;
 
+import com.lmxdawn.other.vo.EmailSendVo;
 import com.lmxdawn.other.vo.HuaWeiSmsSendVo;
 import com.lmxdawn.other.vo.StorageSettingVo;
 
@@ -17,5 +18,11 @@ public interface SettingService {
      * @return
      */
     HuaWeiSmsSendVo listToHuaWeiSmsVo();
+
+    /**
+     * 根据模块获取邮件配置
+     * @return
+     */
+    EmailSendVo listToEmailSendVo();
 
 }

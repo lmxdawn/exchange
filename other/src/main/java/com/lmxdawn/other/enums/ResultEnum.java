@@ -18,6 +18,7 @@ public enum ResultEnum {
     DATA_REPEAT(7, "数据已存在"),
 
     OTHER_SMS_ERR(30000, "短信发送失败"),
+    OTHER_EMAIL_ERR(30001, "邮件发送失败"),
 
     ;
 

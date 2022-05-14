@@ -17,7 +17,7 @@ public class SmsSendReq {
     private Integer scene;
 
     @ApiModelProperty(value = "语言（国际化）", required = true)
-    @NotNull(message = "语言不能为空")
+    @NotBlank(message = "语言不能为空")
     private String lang;
 
     @ApiModelProperty(value = "区号")

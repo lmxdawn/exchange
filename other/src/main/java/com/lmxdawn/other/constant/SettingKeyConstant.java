@@ -40,4 +40,12 @@ public interface SettingKeyConstant {
     String APP_ANDROID_DOWNLOAD_URL = "android_download_url"; //Android下载链接
     String APP_H5_URL = "h5_url"; //H5域名
 
+    /**
+     * 邮件配置
+     */
+    Integer EMAIL = 5;
+    String EMAIL_HOST = "email_host"; // 邮件服务主机
+    String EMAIL_USERNAME = "email_username"; // 邮件服务用户名
+    String EMAIL_PASSWORD = "email_password"; // 邮件服务密码
+
 }

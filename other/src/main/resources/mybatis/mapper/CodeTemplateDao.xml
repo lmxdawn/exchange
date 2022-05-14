@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.lmxdawn.other.dao.CodeTemplateDao">
+
+    <select id="listPageDubbo" parameterType="com.lmxdawn.dubboapi.req.other.CodeTemplateQueryDubboReq" resultType="com.lmxdawn.dubboapi.res.other.CodeTemplateInfoDubboRes">
+        SELECT id,platform,scene,`lang`,template_id,template_paras,remark,status,create_time,modified_time
+        FROM `code_template`
+        <where>
+            <if test="platform != null and '' != platform">
+                `platform` = #{platform}
+            </if>
+            <if test="scene != null and '' != scene">
+                AND `scene` = #{scene}
+            </if>
+            <if test="lang != null and '' != lang">
+                AND `lang` = #{lang}
+            </if>
+        </where>
+        ORDER BY create_time
+        ASC
+    </select>
+
+    <select id="find" resultType="com.lmxdawn.other.entity.CodeTemplate">
+        SELECT id,template_id,template_paras,status
+        FROM `code_template`
+        <where>
+            `platform` = #{platform}
+            and `scene` = #{scene}
+            and `lang` = #{lang}
+        </where>
+        LIMIT 1
+    </select>
+
+    <insert id="insert" keyProperty="id" parameterType="com.lmxdawn.other.entity.CodeTemplate">
+        INSERT INTO `code_template`(platform,scene,template_id,template_paras,remark,status,create_time,modified_time)
+        VALUES
+        (#{platform},
+         #{scene},
+         #{templateId},
+         #{templateParas},
+         #{remark},
+         #{status},
+         #{createTime},
+         #{modifiedTime})
+    </insert>
+
+    <update id="update" parameterType="com.lmxdawn.other.entity.CodeTemplate">
+        UPDATE `code_template`
+        <set>
+            `platform`=#{platform},
+            `scene`=#{scene},
+            `template_id`=#{templateId},
+            `template_paras`=#{templateParas},
+            `remark`=#{remark},
+            `status`=#{status},
+            modified_time=#{modifiedTime}
+        </set>
+        WHERE `id` = #{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        delete from code_template where id = #{id}
+    </delete>
+
+</mapper>

@@ -5,6 +5,7 @@ import com.lmxdawn.other.constant.SettingKeyConstant;
 import com.lmxdawn.other.dao.SettingDao;
 import com.lmxdawn.other.entity.Setting;
 import com.lmxdawn.other.service.SettingService;
+import com.lmxdawn.other.vo.EmailSendVo;
 import com.lmxdawn.other.vo.HuaWeiSmsSendVo;
 import com.lmxdawn.other.vo.StorageSettingVo;
 import org.apache.commons.lang3.StringUtils;
@@ -26,7 +27,7 @@ public class SettingServiceImpl implements SettingService {
     public StorageSettingVo listToStorageSettingVo() {
         List<Setting> settings = settingDao.listByModule(SettingKeyConstant.STORAGE_MODULE);
         if (settings == null || settings.size() == 0) {
-            return null;
+            return new StorageSettingVo();
         }
 
         List<Setting> settingList = new ArrayList<>();
@@ -57,7 +58,7 @@ public class SettingServiceImpl implements SettingService {
         List<Setting> settings = settingDao.listByModule(SettingKeyConstant.HUA_WEI_SMS_MODULE);
 
         if (settings == null) {
-            return null;
+            return new HuaWeiSmsSendVo();
         }
 
         List<Setting> settingList = new ArrayList<>();
@@ -80,5 +81,33 @@ public class SettingServiceImpl implements SettingService {
 
         Map<String, String> collect = settingList.stream().collect(Collectors.toMap(Setting::getKey, Setting::getValue));
         return JSON.parseObject(JSON.toJSONString(collect), HuaWeiSmsSendVo.class);
+    }
+
+    @Override
+    public EmailSendVo listToEmailSendVo() {
+        List<Setting> settings = settingDao.listByModule(SettingKeyConstant.EMAIL);
+
+        if (settings == null) {
+            return new EmailSendVo();
+        }
+
+        List<Setting> settingList = new ArrayList<>();
+        for (Setting item : settings) {
+            if (!StringUtils.isBlank(item.getKey()) && !StringUtils.isBlank(item.getValue())) {
+                switch (item.getKey()){
+                    case SettingKeyConstant.EMAIL_HOST:
+                    case SettingKeyConstant.EMAIL_USERNAME:
+                    case SettingKeyConstant.EMAIL_PASSWORD:
+                        settingList.add(item);
+                }
+            }
+        }
+
+        if (settingList.size() <= 0) {
+            return null;
+        }
+
+        Map<String, String> collect = settingList.stream().collect(Collectors.toMap(Setting::getKey, Setting::getValue));
+        return JSON.parseObject(JSON.toJSONString(collect), EmailSendVo.class);
     }
 }

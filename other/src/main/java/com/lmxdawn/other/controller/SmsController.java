@@ -4,12 +4,12 @@ import com.lmxdawn.other.enums.ResultEnum;
 import com.lmxdawn.other.res.BaseRes;
 import com.lmxdawn.other.util.ResultVOUtils;
 import com.lmxdawn.other.constant.CacheConstant;
-import com.lmxdawn.other.constant.SmsConstant;
-import com.lmxdawn.other.entity.SmsTemplate;
+import com.lmxdawn.other.constant.CodeConstant;
+import com.lmxdawn.other.entity.CodeTemplate;
 import com.lmxdawn.other.req.SmsSendReq;
 import com.lmxdawn.other.res.HuaWeiSmsSendRes;
 import com.lmxdawn.other.service.SettingService;
-import com.lmxdawn.other.service.SmsTemplateService;
+import com.lmxdawn.other.service.CodeTemplateService;
 import com.lmxdawn.other.util.HuaWeiSmsUtil;
 import com.lmxdawn.other.vo.HuaWeiSmsSendVo;
 import io.swagger.annotations.Api;
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 
-@Api(tags = "短信相关")
+@Api(tags = "验证码相关")
 @RestController
 @RequestMapping("/sms")
 public class SmsController {
@@ -34,7 +34,7 @@ public class SmsController {
     private SettingService settingService;
 
     @Resource
-    private SmsTemplateService smsTemplateService;
+    private CodeTemplateService codeTemplateService;
 
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
@@ -53,9 +53,9 @@ public class SmsController {
         // 目前只实现了华为云短信
         HuaWeiSmsSendVo huaWeiSmsSendVo = settingService.listToHuaWeiSmsVo();
 
-        SmsTemplate smsTemplate = smsTemplateService.find(SmsConstant.HUAWEI_PLATFORM, req.getScene(), req.getLang());
+        CodeTemplate codeTemplate = codeTemplateService.find(CodeConstant.HUAWEI_PLATFORM_SMS, req.getScene(), req.getLang());
 
-        if (huaWeiSmsSendVo == null || smsTemplate == null) {
+        if (huaWeiSmsSendVo == null || codeTemplate == null) {
             return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, "Please check if the background is configured");
         }
 
@@ -65,12 +65,12 @@ public class SmsController {
         if (StringUtils.isBlank(code)) {
             try {
                 code = String.valueOf(RandomUtils.nextInt(100000, 999999));
-                huaWeiSmsSendVo.setTemplateId(smsTemplate.getTemplateId());
-                if (StringUtils.isBlank(smsTemplate.getTemplateParas())) {
-                    huaWeiSmsSendVo.setTemplateParas(smsTemplate.getTemplateParas().replace("NUM", code));
+                huaWeiSmsSendVo.setTemplateId(codeTemplate.getTemplateId());
+                if (StringUtils.isBlank(codeTemplate.getTemplateParas())) {
+                    huaWeiSmsSendVo.setTemplateParas(codeTemplate.getTemplateParas().replace("NUM", code));
                 }
                 huaWeiSmsSendVo.setReceiver(req.getTel());
-                if (smsTemplate.getStatus() == 1) {
+                if (codeTemplate.getStatus() == 1) {
                     HuaWeiSmsSendRes huaWeiSmsSendRes = HuaWeiSmsUtil.send(huaWeiSmsSendVo);
                     if (!"000000".equals(huaWeiSmsSendRes.getCode())) {
                         return ResultVOUtils.error(ResultEnum.OTHER_SMS_ERR, huaWeiSmsSendRes.getDescription());
@@ -83,7 +83,7 @@ public class SmsController {
             }
 
         }
-        String res = smsTemplate.getStatus() == 1 ? "" : code;
+        String res = codeTemplate.getStatus() == 1 ? "" : code;
         return ResultVOUtils.success(res);
     }
 
