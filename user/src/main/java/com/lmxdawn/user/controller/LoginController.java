@@ -44,9 +44,10 @@ public class LoginController {
         if (!"email".equals(type) && !"tel".equals(type)) {
             return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL);
         }
-        if (req.getEmail() == null || "".equals(req.getEmail())
-            || req.getTel() == null || "".equals(req.getTel())
-        ) {
+        if ("email".equals(type) && (req.getEmail() == null || "".equals(req.getEmail()))) {
+            return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL);
+        }
+        if ("tel".equals(type) && (req.getTel() == null || "".equals(req.getTel()))) {
             return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL);
         }
 
