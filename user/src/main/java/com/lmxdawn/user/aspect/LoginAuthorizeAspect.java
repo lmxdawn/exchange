@@ -52,30 +52,34 @@ public class LoginAuthorizeAspect {
         HttpServletRequest request = attributes.getRequest();
         String token = request.getHeader("x-token");
         if (token == null) {
-            if (login) {
-                throw new JsonException(ResultEnum.LOGIN_VERIFY_FALL);
+            if (!login) {
+                return;
             }
+            throw new JsonException(ResultEnum.LOGIN_VERIFY_FALL);
         }
 
         // 验证 token
         Claims claims = JwtUtils.parse(token);
         if (claims == null) {
-            if (login) {
-                throw new JsonException(ResultEnum.LOGIN_VERIFY_FALL);
+            if (!login) {
+                return;
             }
+            throw new JsonException(ResultEnum.LOGIN_VERIFY_FALL);
         }
         long memberId = 0;
         try {
             memberId = Long.parseLong(claims.get("memberId").toString());
         }catch (Exception e) {
-            if (login) {
-                throw new JsonException(ResultEnum.LOGIN_VERIFY_FALL);
+            if (!login) {
+                return;
             }
+            throw new JsonException(ResultEnum.LOGIN_VERIFY_FALL);
         }
         if (memberId <= 0) {
-            if (login) {
-                throw new JsonException(ResultEnum.LOGIN_VERIFY_FALL);
+            if (!login) {
+                return;
             }
+            throw new JsonException(ResultEnum.LOGIN_VERIFY_FALL);
         }
 
         // 设置

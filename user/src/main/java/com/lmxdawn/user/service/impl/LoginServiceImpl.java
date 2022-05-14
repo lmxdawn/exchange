@@ -19,12 +19,12 @@ public class LoginServiceImpl implements LoginService {
     private RedisTemplate<String, String> redisTemplate;
 
     @Override
-    public String createToken(Long uid) {
-        String key = String.format(USER_LOGIN, uid);
+    public String createToken(Long memberId) {
+        String key = String.format(USER_LOGIN, memberId);
         String token = redisTemplate.opsForValue().get(key);
         if (token == null || token.isEmpty()) {
             Map<String, Object> claims = new HashMap<>();
-            claims.put("uid", uid);
+            claims.put("memberId", memberId);
             claims.put("t", System.currentTimeMillis());
             token = JwtUtils.createToken(claims);
             redisTemplate.opsForValue().set(key, token);
@@ -42,7 +42,7 @@ public class LoginServiceImpl implements LoginService {
 
         long uid;
         try {
-            uid = Long.parseLong(claims.get("uid").toString());
+            uid = Long.parseLong(claims.get("memberId").toString());
         }catch (Exception e) {
             return null;
         }
@@ -61,8 +61,8 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public void delete(Long uid) {
-        String key = String.format(USER_LOGIN, uid);
+    public void delete(Long memberId) {
+        String key = String.format(USER_LOGIN, memberId);
         redisTemplate.delete(key);
     }
 }
