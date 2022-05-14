@@ -33,24 +33,37 @@ public class LoginController {
 
     @ApiOperation(value = "密码登录")
     @PostMapping("/byPwd")
-    public BaseRes<LoginTokenRes> byPwd(@RequestBody @Valid LoginPwdReq loginPwdReq,
+    public BaseRes<LoginTokenRes> byPwd(@RequestBody @Valid LoginPwdReq req,
                                         BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, bindingResult.getFieldError().getDefaultMessage());
         }
 
-        String tel = loginPwdReq.getTel();
-        String pwd = loginPwdReq.getPwd();
-        Member byTel = memberService.findByTel(tel);
-        if (!PasswordUtils.memberPwd(pwd).equals(byTel.getPwd())) {
+        String type = req.getType();
+        if ("email".equals(type) && (req.getEmail() == null || "".equals(req.getEmail()))) {
+            return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL);
+        } else if (req.getTel() == null || "".equals(req.getTel())) {
+            return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL);
+        }
+
+        String tel = req.getTel();
+        String email = req.getEmail();
+        String pwd = req.getPassword();
+        Member member;
+        if ("email".equals(type)) {
+            member = memberService.findByEmail(tel);
+        } else {
+            member = memberService.findByTel(tel);
+        }
+        if (!PasswordUtils.memberPwd(pwd).equals(member.getPwd())) {
             return ResultVOUtils.error(ResultEnum.USER_LOGIN_PWD_ERR);
         }
 
-        String token = loginService.createToken(byTel.getMemberId());
+        String token = loginService.createToken(member.getMemberId());
 
         LoginTokenRes loginTokenRes = new LoginTokenRes();
-        loginTokenRes.setMemberId(byTel.getMemberId());
+        loginTokenRes.setMemberId(member.getMemberId());
         loginTokenRes.setToken(token);
 
         return ResultVOUtils.success(loginTokenRes);

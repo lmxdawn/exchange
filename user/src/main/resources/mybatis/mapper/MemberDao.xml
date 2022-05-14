@@ -26,8 +26,17 @@
         LIMIT 1
     </select>
 
+    <select id="findByEmail" parameterType="hashmap" resultType="com.lmxdawn.user.entity.Member">
+        SELECT member_id,pwd
+        FROM member
+        <where>
+            email = #{email}
+        </where>
+        LIMIT 1
+    </select>
+
     <insert id="insert" keyProperty="uid" parameterType="com.lmxdawn.user.entity.Member">
-        INSERT INTO `member`(tel,pwd,`name`,avatar,create_time,modified_time)
+        INSERT INTO `member`(tel,email,pwd,`name`,avatar,create_time,modified_time)
         VALUES
         (#{tel},
          #{email},

@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : 本地服务
+ Source Server         : 本地
  Source Server Type    : MySQL
- Source Server Version : 50734
+ Source Server Version : 50726
  Source Host           : localhost:3306
  Source Schema         : exchange-user
 
  Target Server Type    : MySQL
- Target Server Version : 50734
+ Target Server Version : 50726
  File Encoding         : 65001
 
- Date: 31/12/2021 16:39:13
+ Date: 14/05/2022 11:39:32
 */
 
 SET NAMES utf8mb4;
@@ -24,6 +24,7 @@ DROP TABLE IF EXISTS `member`;
 CREATE TABLE `member`  (
   `member_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '用户ID',
   `tel` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '手机号',
+  `email` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '邮箱号',
   `pwd` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '密码',
   `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '用户昵称',
   `avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '用户头像',
@@ -31,15 +32,16 @@ CREATE TABLE `member`  (
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `modified_time` datetime NOT NULL COMMENT '更新时间',
   PRIMARY KEY (`member_id`) USING BTREE,
-  UNIQUE INDEX `uk_tel`(`tel`) USING BTREE
+  UNIQUE INDEX `uk_tel`(`tel`) USING BTREE,
+  UNIQUE INDEX `uk_email`(`email`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of member
 -- ----------------------------
-INSERT INTO `member` VALUES (1, '15213230873', 'c3284d0f94606de1fd2af172aba15bf3', '555', '11', '22', '2021-09-10 23:10:08', '2021-09-10 23:10:08');
-INSERT INTO `member` VALUES (2, '15213230874', 'c3284d0f94606de1fd2af172aba15bf3', '999', '22', '33', '2021-09-10 23:10:08', '2021-09-10 23:10:08');
-INSERT INTO `member` VALUES (3, '15213230875', 'c3284d0f94606de1fd2af172aba15bf3', '666', '44', '55', '2021-09-10 23:10:08', '2021-09-10 23:10:08');
+INSERT INTO `member` VALUES (1, '15213230873', NULL, 'c3284d0f94606de1fd2af172aba15bf3', '555', '11', '22', '2021-09-10 23:10:08', '2021-09-10 23:10:08');
+INSERT INTO `member` VALUES (2, '15213230874', NULL, 'c3284d0f94606de1fd2af172aba15bf3', '999', '22', '33', '2021-09-10 23:10:08', '2021-09-10 23:10:08');
+INSERT INTO `member` VALUES (3, '15213230875', NULL, 'c3284d0f94606de1fd2af172aba15bf3', '666', '44', '55', '2021-09-10 23:10:08', '2021-09-10 23:10:08');
 
 -- ----------------------------
 -- Table structure for member_bill
@@ -58,7 +60,7 @@ CREATE TABLE `member_bill`  (
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `modified_time` datetime NOT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of member_bill
@@ -71,6 +73,14 @@ INSERT INTO `member_bill` VALUES (5, 1, 1, 'trade', 1, 0.200000000000000000, 0.0
 INSERT INTO `member_bill` VALUES (6, 1, 3, 'trade', 2, 1.000000000000000000, 0.000000000000000000, '币币交易解冻买入', '2021-12-17', '2021-12-17 17:34:13', '2021-12-17 17:34:13');
 INSERT INTO `member_bill` VALUES (7, 1, 3, 'trade', 1, 0.900000000000000000, 0.100000000000000000, '币币交易卖出', '2021-12-17', '2021-12-17 17:34:13', '2021-12-17 17:34:13');
 INSERT INTO `member_bill` VALUES (8, 1, 1, 'trade', 2, 0.200000000000000000, 0.000000000000000000, '币币交易解冻卖出', '2021-12-17', '2021-12-17 17:34:13', '2021-12-17 17:34:13');
+INSERT INTO `member_bill` VALUES (9, 1, 3, 'trade', 1, 0.040000000000000000, 0.000000000000000000, '币币交易买入', '2022-05-11', '2022-05-11 17:41:44', '2022-05-11 17:41:44');
+INSERT INTO `member_bill` VALUES (10, 1, 1, 'trade', 2, 1.000000000000000000, 0.000000000000000000, '币币交易解冻买入', '2022-05-11', '2022-05-11 17:41:44', '2022-05-11 17:41:44');
+INSERT INTO `member_bill` VALUES (11, 1, 1, 'trade', 1, 0.800000000000000000, 0.080000000000000000, '币币交易卖出', '2022-05-11', '2022-05-11 17:41:44', '2022-05-11 17:41:44');
+INSERT INTO `member_bill` VALUES (12, 1, 3, 'trade', 2, 0.040000000000000000, 0.000000000000000000, '币币交易解冻卖出', '2022-05-11', '2022-05-11 17:41:44', '2022-05-11 17:41:44');
+INSERT INTO `member_bill` VALUES (13, 1, 3, 'trade', 1, 0.040000000000000000, 0.000000000000000000, '币币交易买入', '2022-05-11', '2022-05-11 17:41:59', '2022-05-11 17:41:59');
+INSERT INTO `member_bill` VALUES (14, 1, 1, 'trade', 2, 1.000000000000000000, 0.000000000000000000, '币币交易解冻买入', '2022-05-11', '2022-05-11 17:41:59', '2022-05-11 17:41:59');
+INSERT INTO `member_bill` VALUES (15, 1, 1, 'trade', 1, 0.800000000000000000, 0.080000000000000000, '币币交易卖出', '2022-05-11', '2022-05-11 17:41:59', '2022-05-11 17:41:59');
+INSERT INTO `member_bill` VALUES (16, 1, 3, 'trade', 2, 0.040000000000000000, 0.000000000000000000, '币币交易解冻卖出', '2022-05-11', '2022-05-11 17:41:59', '2022-05-11 17:41:59');
 
 -- ----------------------------
 -- Table structure for member_bill_category
@@ -82,7 +92,7 @@ CREATE TABLE `member_bill_category`  (
   `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '标题',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uk_name`(`name`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '账单类型表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '账单类型表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of member_bill_category
@@ -107,13 +117,13 @@ CREATE TABLE `member_coin`  (
   `modified_time` datetime NOT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uk_mid_cid`(`member_id`, `coin_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户钱包表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户钱包表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of member_coin
 -- ----------------------------
-INSERT INTO `member_coin` VALUES (1, 1, 1, 100.000000000000000000, 0.000000000000000000, 1, '2021-12-02 23:37:03', '2021-12-02 23:37:08');
-INSERT INTO `member_coin` VALUES (2, 1, 3, 99.000000000000000000, 0.000000000000000000, 1, '2021-12-06 09:16:03', '2021-12-06 09:16:03');
+INSERT INTO `member_coin` VALUES (1, 1, 1, 15.600000000000000000, 84.000000000000000000, 1, '2021-12-02 23:37:03', '2021-12-02 23:37:08');
+INSERT INTO `member_coin` VALUES (2, 1, 3, 89.080000000000000000, 9.920000000000000000, 1, '2021-12-06 09:16:03', '2021-12-06 09:16:03');
 
 -- ----------------------------
 -- Table structure for undo_log
@@ -131,7 +141,7 @@ CREATE TABLE `undo_log`  (
   `ext` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `ux_undo_log`(`xid`, `branch_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of undo_log

@@ -17,6 +17,11 @@ public class Member {
 	private String tel;
 
 	/**
+	 * 邮箱
+	 */
+	private String email;
+
+	/**
 	 * 密码
 	 */
 	private String pwd;

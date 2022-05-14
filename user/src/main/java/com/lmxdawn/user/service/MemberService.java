@@ -6,5 +6,6 @@ public interface MemberService {
 
     Member findByMemberId(Long uid);
     Member findByTel(String tel);
+    Member findByEmail(String email);
     boolean create(Member member);
 }

@@ -28,6 +28,13 @@ public interface MemberDao {
     Member findByTel(String tel);
 
     /**
+     * 根据邮箱查询
+     * @param email
+     * @return
+     */
+    Member findByEmail(String email);
+
+    /**
      * 插入
      * @param member
      * @return

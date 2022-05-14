@@ -25,6 +25,11 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public Member findByEmail(String email) {
+        return memberDao.findByEmail(email);
+    }
+
+    @Override
     public boolean create(Member member) {
         member.setCreateTime(new Date());
         member.setModifiedTime(new Date());
