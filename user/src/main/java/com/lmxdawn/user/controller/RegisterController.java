@@ -46,8 +46,7 @@ public class RegisterController {
 
         Member member = new Member();
         member.setTel(tel);
-        member.setName(req.getName());
-        member.setPwd(PasswordUtils.memberPwd(req.getPwd()));
+        member.setPwd(PasswordUtils.memberPwd(req.getPassword()));
 
         memberService.create(member);
 
@@ -68,13 +67,12 @@ public class RegisterController {
         String email = req.getEmail();
         Member byTel = memberService.findByEmail(email);
         if (byTel != null) {
-            return ResultVOUtils.error(ResultEnum.USER_REGISTER_TEL_EXISTS);
+            return ResultVOUtils.error(ResultEnum.USER_REGISTER_EMAIL_EXISTS);
         }
 
         Member member = new Member();
         member.setEmail(email);
-        member.setName(req.getName());
-        member.setPwd(PasswordUtils.memberPwd(req.getPwd()));
+        member.setPwd(PasswordUtils.memberPwd(req.getPassword()));
 
         memberService.create(member);
 

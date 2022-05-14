@@ -22,13 +22,8 @@ public class RegisterTelReq {
     @Length(min = 6,max = 6,message = "Verification code format error")
     private String code;
 
-    @ApiModelProperty(value = "昵称（2-20个字符）", required = true)
-    @NotEmpty(message = "username can not be blank")
-    @Length(min = 2,max = 20,message = "The nickname can only be 2-20 characters")
-    private String name;
-
     @ApiModelProperty(value = "密码（确认密码前端确认即可，密码为８-20位密码及数字组成）", required = true)
     @NotNull(message = "pwd can not be blank")
     @Pattern(regexp = "^[a-zA-Z0-9]{8,20}$", message = "The password can only be 8 to 20 letters and numbers")
-    private String pwd;
+    private String password;
 }

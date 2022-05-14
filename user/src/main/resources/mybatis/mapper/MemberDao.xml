@@ -35,7 +35,7 @@
         LIMIT 1
     </select>
 
-    <insert id="insert" keyProperty="uid" parameterType="com.lmxdawn.user.entity.Member">
+    <insert id="insert" keyProperty="memberId" parameterType="com.lmxdawn.user.entity.Member">
         INSERT INTO `member`(tel,email,pwd,`name`,avatar,create_time,modified_time)
         VALUES
         (#{tel},
