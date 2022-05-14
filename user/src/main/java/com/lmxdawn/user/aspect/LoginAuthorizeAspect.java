@@ -64,22 +64,22 @@ public class LoginAuthorizeAspect {
                 throw new JsonException(ResultEnum.LOGIN_VERIFY_FALL);
             }
         }
-        long uid = 0;
+        long memberId = 0;
         try {
-            uid = Long.parseLong(claims.get("uid").toString());
+            memberId = Long.parseLong(claims.get("memberId").toString());
         }catch (Exception e) {
             if (login) {
                 throw new JsonException(ResultEnum.LOGIN_VERIFY_FALL);
             }
         }
-        if (uid <= 0) {
+        if (memberId <= 0) {
             if (login) {
                 throw new JsonException(ResultEnum.LOGIN_VERIFY_FALL);
             }
         }
 
         // 设置
-        request.setAttribute("uid", uid);
+        request.setAttribute("memberId", memberId);
     }
 
 }
