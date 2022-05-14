@@ -20,6 +20,6 @@ public interface CodeConstant {
     /**
      * 阿里云短信
      */
-    Integer EMAIL = 2;
+    Integer EMAIL = 3;
 
 }
