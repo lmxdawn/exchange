@@ -41,9 +41,12 @@ public class LoginController {
         }
 
         String type = req.getType();
-        if ("email".equals(type) && (req.getEmail() == null || "".equals(req.getEmail()))) {
+        if (!"email".equals(type) && !"tel".equals(type)) {
             return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL);
-        } else if (req.getTel() == null || "".equals(req.getTel())) {
+        }
+        if (req.getEmail() == null || "".equals(req.getEmail())
+            || req.getTel() == null || "".equals(req.getTel())
+        ) {
             return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL);
         }
 
@@ -52,7 +55,7 @@ public class LoginController {
         String pwd = req.getPassword();
         Member member;
         if ("email".equals(type)) {
-            member = memberService.findByEmail(tel);
+            member = memberService.findByEmail(email);
         } else {
             member = memberService.findByTel(tel);
         }
