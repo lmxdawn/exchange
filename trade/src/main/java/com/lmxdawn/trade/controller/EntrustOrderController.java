@@ -104,7 +104,6 @@ public class EntrustOrderController {
         Integer tradeTotalPrecision = byTidAndCid.getTradeTotalPrecision();
         BigDecimal bigPrice = new BigDecimal(req.getPrice() + "");
         BigDecimal bigAmount = new BigDecimal(req.getAmount() + "");
-        BigDecimal bigTotal = new BigDecimal(req.getTotal() + "");
 
         BigDecimal bigMoney = BigDecimal.ZERO;
 
@@ -123,6 +122,8 @@ public class EntrustOrderController {
                     return ResultVOUtils.error(ResultEnum.MIN_AMOUNT);
                 }
             } else {
+                Double total = req.getTotal();
+                BigDecimal bigTotal = new BigDecimal(total != null ? total + "" : "0");
                 // 市价
                 if (bigTotal.compareTo(BigDecimal.ZERO) <= 0) {
                     // 市价买入订单必须输入交易额

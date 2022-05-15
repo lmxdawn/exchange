@@ -44,7 +44,6 @@ public class EntrustOrderCreateReq {
     private Double amount;
 
     @ApiModelProperty(value = "交易金额")
-    @NotNull(message = "交易金额不能为空")
     private Double total;
 
     @ApiModelProperty(value = "支付的币种", hidden = true)
