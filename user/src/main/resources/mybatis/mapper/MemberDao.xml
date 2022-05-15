@@ -9,7 +9,7 @@
     </select>
 
     <select id="findByMemberId" resultType="com.lmxdawn.user.entity.Member">
-        SELECT member_id,`name`,avatar,remark
+        SELECT member_id,tel,email,`name`,avatar,remark
         FROM member
         <where>
             member_id = #{memberId}

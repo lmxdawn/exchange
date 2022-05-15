@@ -39,25 +39,22 @@ public class LoginServiceImpl implements LoginService {
         if (claims == null) {
             return null;
         }
-
-        long uid;
+        long memberId;
         try {
-            uid = Long.parseLong(claims.get("memberId").toString());
+            memberId = Long.parseLong(claims.get("memberId").toString());
         }catch (Exception e) {
             return null;
         }
-        if (uid <= 0) {
+        if (memberId <= 0) {
             return null;
         }
 
-        String key = String.format(USER_LOGIN, uid);
+        String key = String.format(USER_LOGIN, memberId);
         String s = redisTemplate.opsForValue().get(key);
-        System.out.println(s);
-        System.out.println(token);
         if (s == null || s.isEmpty() || !s.equals(token)) {
             return null;
         }
-        return uid;
+        return memberId;
     }
 
     @Override

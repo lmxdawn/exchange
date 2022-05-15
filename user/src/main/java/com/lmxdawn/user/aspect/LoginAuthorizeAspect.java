@@ -3,14 +3,14 @@ package com.lmxdawn.user.aspect;
 import com.lmxdawn.user.annotation.LoginAuthAnnotation;
 import com.lmxdawn.user.enums.ResultEnum;
 import com.lmxdawn.user.exception.JsonException;
-import com.lmxdawn.user.util.JwtUtils;
-import io.jsonwebtoken.Claims;
+import com.lmxdawn.user.service.LoginService;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -25,6 +25,9 @@ import java.lang.reflect.Method;
 @Component
 @Slf4j
 public class LoginAuthorizeAspect {
+
+    @Autowired
+    private LoginService loginService;
 
     @Pointcut("@annotation(com.lmxdawn.user.annotation.LoginAuthAnnotation)")
     public void loginVerify() {
@@ -59,23 +62,8 @@ public class LoginAuthorizeAspect {
         }
 
         // 验证 token
-        Claims claims = JwtUtils.parse(token);
-        if (claims == null) {
-            if (!login) {
-                return;
-            }
-            throw new JsonException(ResultEnum.LOGIN_VERIFY_FALL);
-        }
-        long memberId = 0;
-        try {
-            memberId = Long.parseLong(claims.get("memberId").toString());
-        }catch (Exception e) {
-            if (!login) {
-                return;
-            }
-            throw new JsonException(ResultEnum.LOGIN_VERIFY_FALL);
-        }
-        if (memberId <= 0) {
+        Long memberId = loginService.verify(token);
+        if (memberId == null || memberId <= 0) {
             if (!login) {
                 return;
             }
