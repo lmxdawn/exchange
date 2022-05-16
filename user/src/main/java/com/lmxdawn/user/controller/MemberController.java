@@ -52,11 +52,11 @@ public class MemberController {
 
         BeanUtils.copyProperties(member, res);
 
-        Integer isPwd = member.getPwd() != null && !"".equals(member.getPwd()) ? 0 : 1;
+        Integer isPwd = member.getPwd() != null && !"".equals(member.getPwd()) ? 1 : 0;
         res.setIsPwd(isPwd);
-        Integer isPayPwd = member.getPayPwd() != null && !"".equals(member.getPayPwd()) ? 0 : 1;
+        Integer isPayPwd = member.getPayPwd() != null && !"".equals(member.getPayPwd()) ? 1 : 0;
         res.setIsPayPwd(isPayPwd);
-        Integer isGoogleKey = member.getGoogleKey() != null && !"".equals(member.getGoogleKey()) ? 0 : 1;
+        Integer isGoogleKey = member.getGoogleKey() != null && !"".equals(member.getGoogleKey()) ? 1 : 0;
         res.setIsGoogleKey(isGoogleKey);
 
         return ResultVOUtils.success(res);
