@@ -20,6 +20,9 @@ public class MemberLoginInfoRes {
     @ApiModelProperty(value = "邮箱")
     private String email;
 
+    @ApiModelProperty(value = "谷歌key")
+    private String googleKey;
+
     @ApiModelProperty(value = "用户昵称")
     private String name;
 
