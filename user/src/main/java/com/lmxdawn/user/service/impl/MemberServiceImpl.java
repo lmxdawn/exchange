@@ -20,6 +20,11 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public Member findPwdByMemberId(Long memberId) {
+        return memberDao.findPwdByMemberId(memberId);
+    }
+
+    @Override
     public Member findByTel(String tel) {
         return memberDao.findByTel(tel);
     }
@@ -34,5 +39,11 @@ public class MemberServiceImpl implements MemberService {
         member.setCreateTime(new Date());
         member.setModifiedTime(new Date());
         return memberDao.insert(member);
+    }
+
+    @Override
+    public boolean update(Member member) {
+        member.setModifiedTime(new Date());
+        return memberDao.update(member);
     }
 }

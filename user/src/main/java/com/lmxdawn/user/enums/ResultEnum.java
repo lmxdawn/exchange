@@ -20,6 +20,7 @@ public enum ResultEnum {
     USER_LOGIN_PWD_ERR(40000, "密码错误"),
     USER_REGISTER_TEL_EXISTS(40001, "手机号已存在"),
     USER_REGISTER_EMAIL_EXISTS(40002, "邮箱已存在"),
+    USER_CODE_ERR(40003, "验证码错误"),
 
     ;
 

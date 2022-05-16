@@ -26,4 +26,13 @@ public class MemberLoginInfoRes {
     @ApiModelProperty(value = "个性签名")
     private String remark;
 
+    @ApiModelProperty(value = "是否设置了登录密码")
+    private Integer isPwd;
+
+    @ApiModelProperty(value = "是否设置了支付密码")
+    private Integer isPayPwd;
+
+    @ApiModelProperty(value = "是否设置了谷歌验证码")
+    private Integer isGoogleKey;
+
 }

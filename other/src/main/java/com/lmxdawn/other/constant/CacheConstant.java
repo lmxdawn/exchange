@@ -5,8 +5,6 @@ package com.lmxdawn.other.constant;
  */
 public interface CacheConstant {
 
-    String SMS_SEND = "sms_send:%s";
-
-    String EMAIL_SEND = "email_send:%s";
+    String CODE_SEND = "code_send:%s";
 
 }

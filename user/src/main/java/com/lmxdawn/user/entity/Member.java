@@ -27,6 +27,16 @@ public class Member {
 	private String pwd;
 
 	/**
+	 * 支付密码
+	 */
+	private String payPwd;
+
+	/**
+	 * 谷歌验证key
+	 */
+	private String googleKey;
+
+	/**
 	 * 用户昵称
 	 */
 	private String name;

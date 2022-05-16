@@ -12,7 +12,7 @@ import javax.validation.constraints.Pattern;
 @ApiModel
 @Data
 public class SmsSendReq {
-    @ApiModelProperty(value = "场景（1：注册，2：登录，3：绑定，4：注销，5：找回密码）", required = true)
+    @ApiModelProperty(value = "场景（1：注册，2：登录，3：绑定邮箱，4：绑定手机，5：找回登录密码，6：设置支付密码，7：找回支付密码，8：绑定谷歌验证码，9：找回谷歌验证码）", required = true)
     @NotNull(message = "场景不能为空")
     private Integer scene;
 

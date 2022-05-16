@@ -60,7 +60,7 @@ public class SmsController {
         }
 
         String tt = req.getScene() + ":" + req.getTel();
-        String key = String.format(CacheConstant.SMS_SEND, tt);
+        String key = String.format(CacheConstant.CODE_SEND, tt);
         String code = redisTemplate.opsForValue().get(key);
         if (StringUtils.isBlank(code)) {
             try {

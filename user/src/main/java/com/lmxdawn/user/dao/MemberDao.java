@@ -21,6 +21,12 @@ public interface MemberDao {
     Member findByMemberId(Long memberId);
 
     /**
+     * 查询各种安全相关
+     * @return
+     */
+    Member findPwdByMemberId(Long memberId);
+
+    /**
      * 根据手机号查询
      * @param tel
      * @return
@@ -40,5 +46,12 @@ public interface MemberDao {
      * @return
      */
     boolean insert(Member member);
+
+    /**
+     * 修改
+     * @param member
+     * @return
+     */
+    boolean update(Member member);
 
 }

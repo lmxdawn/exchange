@@ -9,7 +9,16 @@
     </select>
 
     <select id="findByMemberId" resultType="com.lmxdawn.user.entity.Member">
-        SELECT member_id,tel,email,`name`,avatar,remark
+        SELECT member_id,tel,email,pay_pwd,google_key,`name`,avatar,remark
+        FROM member
+        <where>
+            member_id = #{memberId}
+        </where>
+        LIMIT 1
+    </select>
+
+    <select id="findPwdByMemberId" resultType="com.lmxdawn.user.entity.Member">
+        SELECT pwd,pay_pwd,google_key
         FROM member
         <where>
             member_id = #{memberId}
@@ -47,5 +56,19 @@
          #{modifiedTime})
     </insert>
 
+    <update id="update" parameterType="com.lmxdawn.user.entity.Member">
+        UPDATE `member`
+        <trim prefix="set" suffixOverrides=",">
+            <if test="tel != null">`tel`=#{tel},</if>
+            <if test="email != null">`email`=#{email},</if>
+            <if test="pwd != null">`pwd`=#{pwd},</if>
+            <if test="payPwd != null">`pay_pwd`=#{payPwd},</if>
+            <if test="googleKey != null">`google_key`=#{googleKey},</if>
+            <if test="name != null">`name`=#{name},</if>
+            <if test="avatar != null">`avatar`=#{avatar},</if>
+            <if test="modifiedTime != null">`modified_time`=#{modifiedTime},</if>
+        </trim>
+        WHERE `member_id` = #{memberId}
+    </update>
 
 </mapper>

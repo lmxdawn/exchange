@@ -61,7 +61,7 @@ public class EmailController {
         }
 
         String tt = req.getScene() + ":" + req.getEmail();
-        String key = String.format(CacheConstant.EMAIL_SEND, tt);
+        String key = String.format(CacheConstant.CODE_SEND, tt);
         String code = redisTemplate.opsForValue().get(key);
         if (StringUtils.isBlank(code)) {
             try {
