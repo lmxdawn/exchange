@@ -14,7 +14,7 @@ public class Member {
 	/**
 	 * 手机号区号
 	 */
-	private String telAreaCode;
+	private Long telAreaCode;
 
 	/**
 	 * 手机号
