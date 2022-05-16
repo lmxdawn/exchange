@@ -9,7 +9,7 @@
     </select>
 
     <select id="findByMemberId" resultType="com.lmxdawn.user.entity.Member">
-        SELECT member_id,tel,email,pay_pwd,google_key,`name`,avatar,remark
+        SELECT member_id,tel_area_code,tel,email,pay_pwd,google_key,`name`,avatar,remark
         FROM member
         <where>
             member_id = #{memberId}
@@ -45,9 +45,10 @@
     </select>
 
     <insert id="insert" keyProperty="memberId" parameterType="com.lmxdawn.user.entity.Member">
-        INSERT INTO `member`(tel,email,pwd,`name`,avatar,create_time,modified_time)
+        INSERT INTO `member`(tel_area_code,tel,email,pwd,`name`,avatar,create_time,modified_time)
         VALUES
-        (#{tel},
+        (#{telAreaCode},
+         #{tel},
          #{email},
          #{pwd},
          #{name},
@@ -59,6 +60,7 @@
     <update id="update" parameterType="com.lmxdawn.user.entity.Member">
         UPDATE `member`
         <trim prefix="set" suffixOverrides=",">
+            <if test="telAreaCode != null">`tel_area_code`=#{telAreaCode},</if>
             <if test="tel != null">`tel`=#{tel},</if>
             <if test="email != null">`email`=#{email},</if>
             <if test="pwd != null">`pwd`=#{pwd},</if>

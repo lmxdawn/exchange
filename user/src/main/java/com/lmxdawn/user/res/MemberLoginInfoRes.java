@@ -11,6 +11,9 @@ public class MemberLoginInfoRes {
     @ApiModelProperty(value = "用户ID")
     private Long memberId;
 
+    @ApiModelProperty(value = "手机号区号")
+    private String telAreaCode;
+
     @ApiModelProperty(value = "手机号")
     private String tel;
 

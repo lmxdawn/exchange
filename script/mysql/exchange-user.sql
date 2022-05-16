@@ -11,7 +11,7 @@
  Target Server Version : 50726
  File Encoding         : 65001
 
- Date: 16/05/2022 17:01:17
+ Date: 16/05/2022 18:10:25
 */
 
 SET NAMES utf8mb4;
@@ -23,6 +23,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `member`;
 CREATE TABLE `member`  (
   `member_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '用户ID',
+  `tel_area_code` bigint(20) UNSIGNED NOT NULL DEFAULT 0 COMMENT '手机区号',
   `tel` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '手机号',
   `email` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '邮箱号',
   `pwd` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '密码',
@@ -41,11 +42,11 @@ CREATE TABLE `member`  (
 -- ----------------------------
 -- Records of member
 -- ----------------------------
-INSERT INTO `member` VALUES (1, '15213230873', NULL, 'c3284d0f94606de1fd2af172aba15bf3', NULL, NULL, '555', '11', '22', '2021-09-10 23:10:08', '2021-09-10 23:10:08');
-INSERT INTO `member` VALUES (2, '15213230874', NULL, 'c3284d0f94606de1fd2af172aba15bf3', NULL, NULL, '999', '22', '33', '2021-09-10 23:10:08', '2021-09-10 23:10:08');
-INSERT INTO `member` VALUES (3, '15213230875', NULL, 'c3284d0f94606de1fd2af172aba15bf3', NULL, NULL, '666', '44', '55', '2021-09-10 23:10:08', '2021-09-10 23:10:08');
-INSERT INTO `member` VALUES (4, NULL, '862253272@qq.com', '550e1bafe077ff0b0b67f4e32f29d751', NULL, NULL, '范德萨发啥大发生发生 发对私', NULL, NULL, '2022-05-14 13:47:22', '2022-05-14 13:47:22');
-INSERT INTO `member` VALUES (5, NULL, '862253273@qq.com', '550e1bafe077ff0b0b67f4e32f29d751', NULL, NULL, NULL, NULL, NULL, '2022-05-14 13:50:21', '2022-05-14 13:50:21');
+INSERT INTO `member` VALUES (1, 0, '15213230873', NULL, 'c3284d0f94606de1fd2af172aba15bf3', NULL, NULL, '555', '11', '22', '2021-09-10 23:10:08', '2021-09-10 23:10:08');
+INSERT INTO `member` VALUES (2, 0, '15213230874', NULL, 'c3284d0f94606de1fd2af172aba15bf3', NULL, NULL, '999', '22', '33', '2021-09-10 23:10:08', '2021-09-10 23:10:08');
+INSERT INTO `member` VALUES (3, 0, '15213230875', NULL, 'c3284d0f94606de1fd2af172aba15bf3', NULL, NULL, '666', '44', '55', '2021-09-10 23:10:08', '2021-09-10 23:10:08');
+INSERT INTO `member` VALUES (4, 0, NULL, '862253272@qq.com', '550e1bafe077ff0b0b67f4e32f29d751', NULL, NULL, '范德萨发啥大发生发生 发对私', NULL, NULL, '2022-05-14 13:47:22', '2022-05-14 13:47:22');
+INSERT INTO `member` VALUES (5, 0, NULL, '862253273@qq.com', '550e1bafe077ff0b0b67f4e32f29d751', NULL, NULL, NULL, NULL, NULL, '2022-05-14 13:50:21', '2022-05-14 13:50:21');
 
 -- ----------------------------
 -- Table structure for member_bill

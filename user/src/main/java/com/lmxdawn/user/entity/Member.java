@@ -12,6 +12,11 @@ public class Member {
 	private Long memberId;
 
 	/**
+	 * 手机号区号
+	 */
+	private String telAreaCode;
+
+	/**
 	 * 手机号
 	 */
 	private String tel;
