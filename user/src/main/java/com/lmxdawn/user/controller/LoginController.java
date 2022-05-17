@@ -60,6 +60,9 @@ public class LoginController {
         } else {
             member = memberService.findByTel(tel);
         }
+        if (member == null) {
+            return ResultVOUtils.error(ResultEnum.USER_LOGIN_PWD_ERR);
+        }
         if (!PasswordUtils.memberPwd(pwd).equals(member.getPwd())) {
             return ResultVOUtils.error(ResultEnum.USER_LOGIN_PWD_ERR);
         }
