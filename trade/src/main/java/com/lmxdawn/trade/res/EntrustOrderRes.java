@@ -43,7 +43,7 @@ public class EntrustOrderRes {
     @ApiModelProperty(value = "已完成交易额")
     private Double totalComplete;
 
-    @ApiModelProperty(value = "状态（1：未完成，2：已完成）")
+    @ApiModelProperty(value = "状态（1：未完成，2：已完成，3：已撤单）")
     private Integer status;
 
     @ApiModelProperty(value = "创建时间")

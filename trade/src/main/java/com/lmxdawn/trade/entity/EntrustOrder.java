@@ -67,7 +67,7 @@ public class EntrustOrder {
 	private Double totalFee;
 
 	/**
-	 * 状态（1：未完成，2：已完成）
+	 * 状态（1：未完成，2：已完成，3：已撤单）
 	 */
 	private Integer status;
 

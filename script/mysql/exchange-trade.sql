@@ -34,7 +34,7 @@ CREATE TABLE `entrust_order`  (
   `total` decimal(26, 18) UNSIGNED NOT NULL COMMENT '交易额',
   `total_complete` decimal(26, 18) UNSIGNED NOT NULL DEFAULT 0.000000000000000000 COMMENT '已完成的交易额',
   `total_fee` decimal(26, 18) UNSIGNED NOT NULL DEFAULT 0.000000000000000000 COMMENT '总的手续费',
-  `status` tinyint(3) UNSIGNED NOT NULL COMMENT '状态（1：未完成，2：已完成）',
+  `status` tinyint(3) UNSIGNED NOT NULL COMMENT '状态（1：未完成，2：已完成，3：已撤单）',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `modified_time` datetime NOT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE

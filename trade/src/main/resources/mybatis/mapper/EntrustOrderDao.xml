@@ -14,6 +14,9 @@
             <if test="coinId != null and '' != coinId">
                 AND coin_id = #{coinId}
             </if>
+            <if test="type != null and '' != type">
+                AND `type` = #{type}
+            </if>
             <if test="direction != null and '' != direction">
                 AND direction = #{direction}
             </if>

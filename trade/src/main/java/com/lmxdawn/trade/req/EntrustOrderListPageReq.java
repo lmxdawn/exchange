@@ -21,6 +21,9 @@ public class EntrustOrderListPageReq extends ListPageReq {
     private Long coinId;
 
     @ApiModelProperty(value = "类型（0：全部，1：限价，2：市价）")
+    private Integer type;
+
+    @ApiModelProperty(value = "类型（0：全部，1：买入，2：卖出）")
     private Integer direction;
 
     @ApiModelProperty(value = "状态（0：全部，1：未完成，2：已完成）")
