@@ -1,7 +1,11 @@
 # 工程简介
-> 交易所项目
+> Java 交易所源码，前端APP使用uniapp开发，后端使用java开发，采用 Spring Cloud Alibaba 微服务架构，撮合引擎使用`Disruptor`高效内存队列，所有服务可以实现分布式部署，websocket推送通过增加一层路由服务实现分布式部署
 
-# 由于前端暂缓，uniapp的限制，暂停开发
+# 前端说明
+
+> *之前由于uniapp的闪屏一度准备放弃，暂时解决闪屏问题，重新开始开发*
+
+# ~~由于前端暂缓，uniapp的限制，暂停开发~~
 
 [uni-app切换页面闪屏或者白屏](https://ask.dcloud.net.cn/question/73807)
 
@@ -124,17 +128,19 @@ nohup java -jar -Dspring.profiles.active=prod user/target/user-0.0.1-SNAPSHOT.ja
 
 > Java 8
 
-> Maven 3.6.1
+> Maven 3.6.1 版本控制
 
-> RocketMQ 4.9.3
+> RocketMQ 4.9.3 消息队列
 
 > Nacos 2.0.3  操作文档：https://nacos.io/zh-cn/docs/quick-start.html
 
-> Redis 3
+> Redis 3 缓存服务
 
-> MySQL 5.7
+> MySQL 5.7 数据库服务
 
-> Seata 1.3.0
+> MongoDB 5.0.5 K线数据库服务
+
+> Seata 1.3.0 分布式事务解决方案
 
 > Disruptor 3.4.4  高效的内存队列，为了多线程操作变量时并发问题，用这个可以不用锁
 
