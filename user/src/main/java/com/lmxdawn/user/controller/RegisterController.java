@@ -55,6 +55,7 @@ public class RegisterController {
 
         Member member = new Member();
         member.setTel(tel);
+        member.setTelAreaCode(req.getAreaCode());
         member.setPwd(PasswordUtils.memberPwd(req.getPassword()));
 
         memberService.create(member);
@@ -84,6 +85,7 @@ public class RegisterController {
 
         Member member = new Member();
         member.setEmail(email);
+        member.setTelAreaCode(null);
         member.setPwd(PasswordUtils.memberPwd(req.getPassword()));
 
         memberService.create(member);

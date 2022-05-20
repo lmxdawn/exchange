@@ -17,6 +17,10 @@ public class RegisterTelReq {
     @Pattern(regexp = "^[1][3,4,5,6,7,8,9][0-9]{9}$", message = "Malformed phone number")
     private String tel;
 
+    @ApiModelProperty(value = "区号")
+    @NotBlank(message = "区号不能为空")
+    private String areaCode;
+
     @ApiModelProperty(value = "验证码（6位纯数字组成）", required = true)
     @NotBlank(message = "verification code must be filled")
     @Length(min = 6,max = 6,message = "Verification code format error")

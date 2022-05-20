@@ -12,7 +12,7 @@ public class MemberLoginInfoRes {
     private Long memberId;
 
     @ApiModelProperty(value = "手机号区号")
-    private Long telAreaCode;
+    private String telAreaCode;
 
     @ApiModelProperty(value = "手机号")
     private String tel;
