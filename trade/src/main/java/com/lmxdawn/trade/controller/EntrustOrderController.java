@@ -11,7 +11,6 @@ import com.lmxdawn.trade.mq.EntrustOrderMq;
 import com.lmxdawn.trade.req.EntrustOrderCreateReq;
 import com.lmxdawn.trade.req.EntrustOrderListPageReq;
 import com.lmxdawn.trade.res.BaseRes;
-import com.lmxdawn.trade.res.EchoRes;
 import com.lmxdawn.trade.res.EntrustOrderRes;
 import com.lmxdawn.trade.service.EntrustOrderService;
 import com.lmxdawn.trade.service.PairService;
@@ -50,7 +49,7 @@ public class EntrustOrderController {
     @ApiOperation(value = "订单列表")
     @GetMapping("/list")
     @LoginAuthAnnotation
-    public BaseRes<EchoRes> list(@Valid EntrustOrderListPageReq req,
+    public BaseRes<EntrustOrderRes> list(@Valid EntrustOrderListPageReq req,
                                  BindingResult bindingResult,
                                  HttpServletRequest request) {
 

@@ -11,14 +11,19 @@ import java.io.Serializable;
 public class EntrustOrderMatchDubboReq implements Serializable {
 
     /**
-     * 订单号
+     * 交易币种ID
      */
-    private Long id;
+    private Long tradeCoinId;
 
     /**
-     * 上次已完成数量，幂等需要
+     * 计价币种ID
      */
-    private Double amountComplete;
+    private Long coinId;
+
+    /**
+     * 价格
+     */
+    private Double price;
 
     /**
      * 成交数量
@@ -29,6 +34,28 @@ public class EntrustOrderMatchDubboReq implements Serializable {
      * 成交额
      */
     private Double total;
+
+    /*---------订单信息------------*/
+
+    /**
+     * 订单号
+     */
+    private Long id;
+
+    /**
+     * 方向（1：买入，2：卖出）
+     */
+    private Integer direction;
+
+    /**
+     * 用户ID
+     */
+    private Long memberId;
+
+    /**
+     * 上次已完成数量，幂等需要
+     */
+    private Double amountComplete;
 
     /**
      * 手续费
@@ -46,19 +73,19 @@ public class EntrustOrderMatchDubboReq implements Serializable {
     private Long matchId;
 
     /**
+     * 对手单方向（1：买入，2：卖出）
+     */
+    private Integer matchDirection;
+
+    /**
+     * 对手单用户ID
+     */
+    private Long matchMemberId;
+
+    /**
      * 对手单上次已完成数量，幂等需要
      */
     private Double matchAmountComplete;
-
-    /**
-     * 对手单成交数量
-     */
-    private Double matchAmount;
-
-    /**
-     * 对手单成交额
-     */
-    private Double matchTotal;
 
     /**
      * 对手单手续费

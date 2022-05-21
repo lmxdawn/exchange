@@ -129,9 +129,9 @@ public class MatchDetailStream {
                             memberCoinMatchDubboReq.setSellUnfrozenMoney(amount.doubleValue());
                         }
                         entrustOrderMatchDubboReq.setId(id);
+                        entrustOrderMatchDubboReq.setDirection(direction);
+                        entrustOrderMatchDubboReq.setMemberId(memberId);
                         entrustOrderMatchDubboReq.setAmountComplete(entrustOrder.getAmountComplete());
-                        entrustOrderMatchDubboReq.setAmount(amount.doubleValue());
-                        entrustOrderMatchDubboReq.setTotal(completeMoney.doubleValue());
                         entrustOrderMatchDubboReq.setFee(bigFeeMoney.doubleValue());
                         entrustOrderMatchDubboReq.setStatus(isComplete == 1 ? 2 : 1);
                     }
@@ -142,7 +142,7 @@ public class MatchDetailStream {
                         if (matchIsComplete == 1 && matchType == 2 && matchDirection == 1) {
                             BigDecimal bigTotal = BigDecimal.valueOf(matchEntrustOrder.getTotal());
                             BigDecimal bigTotalComplete = BigDecimal.valueOf(matchEntrustOrder.getTotalComplete());
-                            // 成交额 = 交易额 - 已完成的交易额
+                            // 如果交易完了，但是有除不尽的情况 成交额 = 总交易额 - 已完成的交易额
                             completeMoney = bigTotal.subtract(bigTotalComplete);
                         }
                         // 手续费
@@ -152,7 +152,7 @@ public class MatchDetailStream {
                             // 计算手续费
                             bigFeeMoney = amount.multiply(bigSellFee).setScale(sellFeePrecision, BigDecimal.ROUND_DOWN);
                             BigDecimal buyMoney = amount.compareTo(bigFeeMoney) > 0 ? amount.subtract(bigFeeMoney) : amount;
-                            memberCoinMatchDubboReq.setBuyMemberId(memberId);
+                            memberCoinMatchDubboReq.setBuyMemberId(matchMemberId);
                             memberCoinMatchDubboReq.setBuyMoney(buyMoney.doubleValue());
                             memberCoinMatchDubboReq.setBuyMoneyFee(bigFeeMoney.doubleValue());
                             memberCoinMatchDubboReq.setBuyUnfrozenMoney(completeMoney.doubleValue());
@@ -161,19 +161,25 @@ public class MatchDetailStream {
                             // 计算手续费
                             bigFeeMoney = completeMoney.multiply(bigBuyFee).setScale(buyFeePrecision, BigDecimal.ROUND_DOWN);
                             BigDecimal sellMoney = completeMoney.compareTo(bigFeeMoney) > 0 ? completeMoney.subtract(bigFeeMoney) : amount;
-                            memberCoinMatchDubboReq.setSellMemberId(memberId);
+                            memberCoinMatchDubboReq.setSellMemberId(matchMemberId);
                             memberCoinMatchDubboReq.setSellMoney(sellMoney.doubleValue());
                             memberCoinMatchDubboReq.setSellMoneyFee(bigFeeMoney.doubleValue());
                             memberCoinMatchDubboReq.setSellUnfrozenMoney(amount.doubleValue());
                         }
 
                         entrustOrderMatchDubboReq.setMatchId(matchId);
+                        entrustOrderMatchDubboReq.setMatchDirection(matchDirection);
+                        entrustOrderMatchDubboReq.setMatchMemberId(matchMemberId);
                         entrustOrderMatchDubboReq.setMatchAmountComplete(matchEntrustOrder.getAmountComplete());
-                        entrustOrderMatchDubboReq.setMatchAmount(amount.doubleValue());
-                        entrustOrderMatchDubboReq.setMatchTotal(completeMoney.doubleValue());
                         entrustOrderMatchDubboReq.setMatchFee(bigFeeMoney.doubleValue());
                         entrustOrderMatchDubboReq.setMatchStatus(matchIsComplete == 1 ? 2 : 1);
                     }
+
+                    entrustOrderMatchDubboReq.setCoinId(coinId);
+                    entrustOrderMatchDubboReq.setTradeCoinId(tradeCoinId);
+                    entrustOrderMatchDubboReq.setPrice(price.doubleValue());
+                    entrustOrderMatchDubboReq.setAmount(amount.doubleValue());
+                    entrustOrderMatchDubboReq.setTotal(completeMoney.doubleValue());
 
                     // 处理交易
                     boolean complete = matchService.complete(memberCoinMatchDubboReq, entrustOrderMatchDubboReq);

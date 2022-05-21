@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.lmxdawn.trade.dao.EntrustOrderDetailDao">
+
+    <select id="listPageByMemberIdAndOrderId" parameterType="com.lmxdawn.trade.req.EntrustOrderDetailReq" resultType="com.lmxdawn.trade.entity.EntrustOrderDetail">
+        SELECT id,buy_fee,sell_fee,price,amount,create_time
+        FROM `entrust_order_detail`
+        <where>
+            <choose>
+                <when test="direction == 1">
+                    buy_member_id = #{memberId}
+                    AND buy_order_id = #{orderId}
+                </when>
+                <otherwise>
+                    sell_member_id = #{memberId}
+                    AND sell_order_id = #{orderId}
+                </otherwise>
+            </choose>
+        </where>
+        ORDER BY `create_time` DESC
+        limit #{offset},#{limit}
+    </select>
+
+    <insert id="insert" keyProperty="id" parameterType="com.lmxdawn.trade.entity.EntrustOrderDetail">
+        INSERT INTO `entrust_order_detail`(trade_coin_id,coin_id,buy_member_id,buy_order_id,buy_fee,sell_member_id,sell_order_id,sell_fee,price,amount,create_time,modified_time)
+        VALUES
+        (#{tradeCoinId},
+         #{coinId},
+         #{buyMemberId},
+         #{buyOrderId},
+         #{buyFee},
+         #{sellMemberId},
+         #{sellOrderId},
+         #{sellFee},
+         #{price},
+         #{amount},
+         #{createTime},
+         #{modifiedTime})
+    </insert>
+
+</mapper>
