@@ -10,6 +10,7 @@ import com.lmxdawn.trade.exception.JsonException;
 import com.lmxdawn.trade.mq.EntrustOrderMq;
 import com.lmxdawn.trade.req.EntrustOrderCreateReq;
 import com.lmxdawn.trade.req.EntrustOrderListPageReq;
+import com.lmxdawn.trade.req.EntrustOrderReadReq;
 import com.lmxdawn.trade.res.BaseRes;
 import com.lmxdawn.trade.res.EntrustOrderRes;
 import com.lmxdawn.trade.service.EntrustOrderService;
@@ -49,9 +50,9 @@ public class EntrustOrderController {
     @ApiOperation(value = "订单列表")
     @GetMapping("/list")
     @LoginAuthAnnotation
-    public BaseRes<EntrustOrderRes> list(@Valid EntrustOrderListPageReq req,
-                                 BindingResult bindingResult,
-                                 HttpServletRequest request) {
+    public BaseRes<List<EntrustOrderRes>> list(@Valid EntrustOrderListPageReq req,
+                                               BindingResult bindingResult,
+                                               HttpServletRequest request) {
 
         if (bindingResult.hasErrors()) {
             return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, bindingResult.getFieldError().getDefaultMessage());
@@ -64,6 +65,25 @@ public class EntrustOrderController {
         List<EntrustOrderRes> entrustOrderRes = entrustOrderService.listPage(req);
 
         return ResultVOUtils.success(entrustOrderRes);
+    }
+
+    @ApiOperation(value = "订单详情")
+    @GetMapping("/read")
+    @LoginAuthAnnotation
+    public BaseRes<EntrustOrderRes> read(@Valid EntrustOrderReadReq req,
+                                         BindingResult bindingResult,
+                                         HttpServletRequest request) {
+
+        if (bindingResult.hasErrors()) {
+            return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, bindingResult.getFieldError().getDefaultMessage());
+        }
+
+        Long memberId = (Long) request.getAttribute("memberId");
+        req.setMemberId(memberId);
+
+        EntrustOrderRes read = entrustOrderService.read(req);
+
+        return ResultVOUtils.success(read);
     }
 
 

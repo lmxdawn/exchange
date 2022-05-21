@@ -4,39 +4,45 @@
 <mapper namespace="com.lmxdawn.trade.dao.EntrustOrderDetailDao">
 
     <select id="listPageByMemberIdAndOrderId" parameterType="com.lmxdawn.trade.req.EntrustOrderDetailReq" resultType="com.lmxdawn.trade.entity.EntrustOrderDetail">
-        SELECT id,buy_fee,sell_fee,price,amount,create_time
+        SELECT id,price,amount,fee,create_time
         FROM `entrust_order_detail`
         <where>
-            <choose>
-                <when test="direction == 1">
-                    buy_member_id = #{memberId}
-                    AND buy_order_id = #{orderId}
-                </when>
-                <otherwise>
-                    sell_member_id = #{memberId}
-                    AND sell_order_id = #{orderId}
-                </otherwise>
-            </choose>
+            member_id = #{memberId}
+            AND order_id = #{orderId}
         </where>
         ORDER BY `create_time` DESC
         limit #{offset},#{limit}
     </select>
 
     <insert id="insert" keyProperty="id" parameterType="com.lmxdawn.trade.entity.EntrustOrderDetail">
-        INSERT INTO `entrust_order_detail`(trade_coin_id,coin_id,buy_member_id,buy_order_id,buy_fee,sell_member_id,sell_order_id,sell_fee,price,amount,create_time,modified_time)
+        INSERT INTO `entrust_order_detail`(trade_coin_id,coin_id,member_id,order_id,price,amount,fee,create_time,modified_time)
         VALUES
         (#{tradeCoinId},
          #{coinId},
-         #{buyMemberId},
-         #{buyOrderId},
-         #{buyFee},
-         #{sellMemberId},
-         #{sellOrderId},
-         #{sellFee},
+         #{memberId},
+         #{orderId},
          #{price},
          #{amount},
+         #{fee},
          #{createTime},
          #{modifiedTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" parameterType="java.util.List">
+        INSERT INTO
+        `entrust_order_detail`(trade_coin_id,coin_id,member_id,order_id,price,amount,fee,create_time,modified_time)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.tradeCoinId},
+            #{item.coinId},
+            #{item.memberId},
+            #{item.orderId},
+            #{item.price},
+            #{item.amount},
+            #{item.fee},
+            #{item.createTime},
+            #{item.modifiedTime})
+        </foreach>
     </insert>
 
 </mapper>

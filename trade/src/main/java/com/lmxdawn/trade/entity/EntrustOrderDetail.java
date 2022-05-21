@@ -22,34 +22,19 @@ public class EntrustOrderDetail {
 	private Long coinId;
 
 	/**
-	 * 买家用户ID
+	 * 用户ID
 	 */
-	private Long buyMemberId;
+	private Long memberId;
 
 	/**
-	 * 买家订单ID
+	 * 订单ID
 	 */
-	private Long buyOrderId;
+	private Long orderId;
 
 	/**
-	 * 买家手续费
+	 * 手续费
 	 */
-	private Double buyFee;
-
-	/**
-	 * 卖家单用户ID
-	 */
-	private Long sellMemberId;
-
-	/**
-	 * 卖家订单ID
-	 */
-	private Long sellOrderId;
-
-	/**
-	 * 卖家手续费
-	 */
-	private Double sellFee;
+	private Double fee;
 
 	/**
 	 * 价格

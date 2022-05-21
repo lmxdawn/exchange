@@ -23,4 +23,11 @@ public interface EntrustOrderDetailDao {
      */
     boolean insert(EntrustOrderDetail entrustOrderDetail);
 
+    /**
+     * 批量插入
+     *
+     * @return
+     */
+    boolean insertBatch(List<EntrustOrderDetail> list);
+
 }

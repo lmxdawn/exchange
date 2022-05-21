@@ -11,7 +11,7 @@
  Target Server Version : 50726
  File Encoding         : 65001
 
- Date: 21/05/2022 15:42:54
+ Date: 22/05/2022 01:47:18
 */
 
 SET NAMES utf8mb4;
@@ -145,25 +145,21 @@ CREATE TABLE `entrust_order_detail`  (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '自增ID',
   `trade_coin_id` bigint(20) UNSIGNED NOT NULL COMMENT '交易币种ID',
   `coin_id` bigint(20) UNSIGNED NOT NULL COMMENT '计价币种ID',
-  `buy_member_id` bigint(20) UNSIGNED NOT NULL COMMENT '买家用户ID',
-  `buy_order_id` bigint(20) UNSIGNED NOT NULL COMMENT '买家订单ID',
-  `buy_fee` decimal(26, 18) UNSIGNED NOT NULL COMMENT '买家手续费',
-  `sell_member_id` bigint(20) UNSIGNED NOT NULL COMMENT '卖家单用户ID',
-  `sell_order_id` bigint(20) UNSIGNED NOT NULL COMMENT '卖家订单ID',
-  `sell_fee` decimal(26, 18) UNSIGNED NOT NULL COMMENT '卖家手续费',
+  `member_id` bigint(20) UNSIGNED NOT NULL COMMENT '用户ID',
+  `order_id` bigint(20) UNSIGNED NOT NULL COMMENT '订单ID',
+  `fee` decimal(26, 18) UNSIGNED NOT NULL COMMENT '手续费',
   `price` decimal(26, 18) NOT NULL COMMENT '价格',
   `amount` decimal(26, 18) UNSIGNED NOT NULL COMMENT '数量',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `modified_time` datetime NOT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE,
-  INDEX `idx_bmid_boid`(`buy_member_id`, `buy_order_id`, `create_time`) USING BTREE,
-  INDEX `idx_smid_soid`(`sell_member_id`, `sell_order_id`, `create_time`) USING BTREE
+  INDEX `idx_mid_oid`(`member_id`, `order_id`, `create_time`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '委托订单明细表' ROW_FORMAT = Fixed;
 
 -- ----------------------------
 -- Records of entrust_order_detail
 -- ----------------------------
-INSERT INTO `entrust_order_detail` VALUES (1, 3, 1, 4, 92, 0.000000000000000000, 6, 93, 0.100000000000000000, 1.000000000000000000, 1.000000000000000000, '2022-05-21 15:38:56', '2022-05-21 15:38:56');
+INSERT INTO `entrust_order_detail` VALUES (1, 3, 1, 4, 92, 0.000000000000000000, 1.000000000000000000, 1.000000000000000000, '2022-05-21 15:38:56', '2022-05-21 15:38:56');
 
 -- ----------------------------
 -- Table structure for pair

@@ -22,6 +22,12 @@ public interface EntrustOrderDao {
     List<EntrustOrder> listByIdIn(List<Long> ids);
 
     /**
+     * 查询
+     * @return
+     */
+    EntrustOrder findById(Long id);
+
+    /**
      * 插入
      * @return
      */

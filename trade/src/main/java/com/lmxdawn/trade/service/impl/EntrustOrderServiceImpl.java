@@ -8,6 +8,7 @@ import com.lmxdawn.trade.dao.PairDao;
 import com.lmxdawn.trade.entity.EntrustOrder;
 import com.lmxdawn.trade.req.EntrustOrderCreateReq;
 import com.lmxdawn.trade.req.EntrustOrderListPageReq;
+import com.lmxdawn.trade.req.EntrustOrderReadReq;
 import com.lmxdawn.trade.res.EntrustOrderRes;
 import com.lmxdawn.trade.service.EntrustOrderService;
 import com.lmxdawn.trade.util.PageUtils;
@@ -67,6 +68,29 @@ public class EntrustOrderServiceImpl implements EntrustOrderService {
         }).collect(Collectors.toList());
 
         return collect;
+    }
+
+    @Override
+    public EntrustOrderRes read(EntrustOrderReadReq req) {
+
+        EntrustOrder info = entrustOrderDao.findById(req.getId());
+        if (info == null || !info.getMemberId().equals(req.getMemberId())) {
+            return null;
+        }
+
+        Set<Long> coinIdSet = new HashSet<>();
+        coinIdSet.add(info.getCoinId());
+        coinIdSet.add(info.getTradeCoinId());
+        List<Long> coinIds = new ArrayList<>(coinIdSet);
+
+        Map<Long, CoinSimpleDubboRes> coinMap = coinDubboService.mapByCoinIds(coinIds);
+
+        EntrustOrderRes res = new EntrustOrderRes();
+        BeanUtils.copyProperties(info, res);
+        res.setTradeCoin(coinMap.get(info.getTradeCoinId()));
+        res.setCoin(coinMap.get(info.getCoinId()));
+
+        return res;
     }
 
     @Override

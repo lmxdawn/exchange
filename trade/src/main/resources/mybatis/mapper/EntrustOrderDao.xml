@@ -37,6 +37,12 @@
         </foreach>
     </select>
 
+    <select id="findById" resultType="com.lmxdawn.trade.entity.EntrustOrder">
+        SELECT id,member_id,trade_coin_id,coin_id,`type`,direction,price,amount,amount_complete,total,`total_complete`,status,create_time,modified_time
+        FROM `entrust_order`
+        where `id` = #{id}
+    </select>
+
     <insert id="insert" keyProperty="id" parameterType="com.lmxdawn.trade.entity.EntrustOrder">
         INSERT INTO `entrust_order`(member_id,trade_coin_id,coin_id,`type`,direction,price,amount,amount_complete,total,total_complete,status,create_time,modified_time)
         VALUES

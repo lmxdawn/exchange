@@ -11,10 +11,7 @@ import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @DubboService
 public class EntrustOrderDubboServiceImpl implements EntrustOrderDubboService {
@@ -84,26 +81,29 @@ public class EntrustOrderDubboServiceImpl implements EntrustOrderDubboService {
         EntrustOrderDetail entrustOrderDetail = new EntrustOrderDetail();
         entrustOrderDetail.setCoinId(req.getCoinId());
         entrustOrderDetail.setTradeCoinId(req.getTradeCoinId());
+        entrustOrderDetail.setMemberId(req.getMemberId());
+        entrustOrderDetail.setOrderId(req.getId());
         entrustOrderDetail.setPrice(req.getPrice());
         entrustOrderDetail.setAmount(req.getAmount());
+        entrustOrderDetail.setFee(req.getFee());
         entrustOrderDetail.setCreateTime(new Date());
         entrustOrderDetail.setModifiedTime(new Date());
 
-        Integer direction = req.getDirection();
+        EntrustOrderDetail entrustOrderDetail2 = new EntrustOrderDetail();
+        entrustOrderDetail2.setCoinId(req.getCoinId());
+        entrustOrderDetail2.setTradeCoinId(req.getTradeCoinId());
+        entrustOrderDetail2.setMemberId(req.getMatchMemberId());
+        entrustOrderDetail2.setOrderId(req.getMatchId());
+        entrustOrderDetail2.setPrice(req.getPrice());
+        entrustOrderDetail2.setAmount(req.getAmount());
+        entrustOrderDetail2.setFee(req.getMatchFee());
+        entrustOrderDetail2.setCreateTime(new Date());
+        entrustOrderDetail2.setModifiedTime(new Date());
 
-        Long buyMemberId = direction == 1 ? req.getMemberId() : req.getMatchMemberId();
-        Long buyOrderId = direction == 1 ? req.getId() : req.getMatchId();
-        Double buyFee = direction == 1 ? req.getFee() : req.getMatchFee();
-        Long sellMemberId = direction == 2 ? req.getMemberId() : req.getMatchMemberId();
-        Long sellOrderId = direction == 2 ? req.getId() : req.getMatchId();
-        Double sellFee = direction == 2 ? req.getFee() : req.getMatchFee();
-        entrustOrderDetail.setBuyMemberId(buyMemberId);
-        entrustOrderDetail.setBuyOrderId(buyOrderId);
-        entrustOrderDetail.setBuyFee(buyFee);
-        entrustOrderDetail.setSellMemberId(sellMemberId);
-        entrustOrderDetail.setSellOrderId(sellOrderId);
-        entrustOrderDetail.setSellFee(sellFee);
+        List<EntrustOrderDetail> batch = new ArrayList<>();
+        batch.add(entrustOrderDetail);
+        batch.add(entrustOrderDetail2);
 
-        return entrustOrderDetailDao.insert(entrustOrderDetail);
+        return entrustOrderDetailDao.insertBatch(batch);
     }
 }
