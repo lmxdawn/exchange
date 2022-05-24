@@ -3,87 +3,73 @@ package com.lmxdawn.market.util;
 import com.lmxdawn.market.vo.KLineDateTimeVo;
 
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 分页工具类
  */
 public class KLineUtil {
 
+    public static final Map<String, Long> timeMap = new HashMap<String, Long>() {{
+        put("1min", 60L);
+        put("5min", 5 * 60L);
+        put("15min", 15 * 60L);
+        put("30min", 30 * 60L);
+        put("1hour", 60 * 60L);
+        put("4hour", 4 * 60 * 60L);
+        put("1day", 24 * 60 * 60L);
+        put("1week", 7 * 24 * 60 * 60L);
+        put("1month", 0L);
+    }};
+
+    // 需要减掉的时间，初始时间：1970-01-01 08:00:00
+    public static final Map<String, Long> timeSubMap = new HashMap<String, Long>() {{
+        put("1day", -8 * 60 * 60L); // 一天的零点需要减去8小时，因为时间戳从8点开始算的
+        put("1week", 4 * 24 * 60 * 60 - 8 * 60 * 60L); // 每周的周一需要加上 4天，去掉8小时，因为时间戳是从周四开始的
+    }};
+
     /**
      * 生成时间
      */
-    public static KLineDateTimeVo createDateTime() {
+    public static KLineDateTimeVo createDateTime(String timeStr, Long time, Integer limit) {
+
+        long prevTime = 0L;
+
+        if (!timeMap.containsKey(timeStr)) {
+            return new KLineDateTimeVo();
+        }
+
+        // 月份的处理方式不一样
+        if ("1month".equals(timeStr)) {
+            Calendar calendar = Calendar.getInstance();
+            //将秒、微秒字段置为0
+            calendar.set(Calendar.HOUR_OF_DAY,0);
+            calendar.set(Calendar.MINUTE,0);
+            calendar.set(Calendar.SECOND,0);
+            calendar.set(Calendar.MILLISECOND,0);
+            // 一月
+            calendar.set(Calendar.DAY_OF_MONTH,1);
+            time = calendar.getTime().getTime() / 1000;
+            // 设置上一个时间
+            calendar.add(Calendar.MONTH, -limit);
+            prevTime = calendar.getTime().getTime() / 1000;
+
+        } else {
+            long nowTime = new Date().getTime() / 1000;
+            Long timeValue = timeMap.get(timeStr);
+
+            time = time == null || time <= 0 ? nowTime - (nowTime % timeValue) : time;
+            if (timeSubMap.containsKey(timeStr)) {
+                time = time + timeSubMap.get(timeStr);
+            }
+            prevTime = time - (limit * timeValue);
+        }
+
         KLineDateTimeVo vo = new KLineDateTimeVo();
-
-        Calendar calendar = Calendar.getInstance();
-        //将秒、微秒字段置为0
-        calendar.set(Calendar.SECOND,0);
-        calendar.set(Calendar.MILLISECOND,0);
-
-        int minute = calendar.get(Calendar.MINUTE);
-        // 1分钟
-        long time1min = calendar.getTime().getTime() / 1000;
-        vo.setTime1min(time1min);
-        // 设置上一个时间
-        vo.setPreTime1min(time1min - 60);
-
-        // 5分钟
-        calendar.set(Calendar.MINUTE, (minute / 5) * 5);
-        long time5min = calendar.getTime().getTime() / 1000;
-        vo.setTime5min(time5min);
-        // 设置上一个时间
-        vo.setPreTime5min(time5min - 5 * 60);
-
-        // 15分钟
-        calendar.set(Calendar.MINUTE, (minute / 15) * 15);
-        long time15min = calendar.getTime().getTime() / 1000;
-        vo.setTime15min(time15min);
-        // 设置上一个时间
-        vo.setPreTime15min(time15min - 15 * 60);
-
-        // 30分钟
-        calendar.set(Calendar.MINUTE, (minute / 30) * 30);
-        long time30min = calendar.getTime().getTime() / 1000;
-        vo.setTime30min(time30min);
-        // 设置上一个时间
-        vo.setPreTime30min(time30min - 30 * 60);
-
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        // 1小时
-        calendar.set(Calendar.MINUTE,0);
-        long time1hour = calendar.getTime().getTime() / 1000;
-        vo.setTime1hour(time1hour);
-        // 设置上一个时间
-        vo.setPreTime1hour(time1hour - 3600);
-
-        // 4小时
-        calendar.set(Calendar.HOUR_OF_DAY, (hour / 4) * 4);
-        long time4hour = calendar.getTime().getTime() / 1000;
-        vo.setTime4hour(time4hour);
-        // 设置上一个时间
-        vo.setPreTime4hour(time4hour - 4 * 3600);
-
-        // 一天
-        calendar.set(Calendar.HOUR_OF_DAY,0);
-        long time1day = calendar.getTime().getTime() / 1000;
-        vo.setTime1day(time1day);
-        // 设置上一个时间
-        vo.setPreTime1day(time1day - 86400);
-
-        // 一周的星期一
-        calendar.set(Calendar.DAY_OF_WEEK,2);
-        long time1week = calendar.getTime().getTime() / 1000;
-        vo.setTime1week(time1week);
-        // 设置上一个时间
-        vo.setPreTime1week(time1week - 7 * 86400);
-
-        // 一月
-        calendar.set(Calendar.DAY_OF_MONTH,1);
-        Long time1month = calendar.getTime().getTime() / 1000;
-        vo.setTime1month(time1month);
-        // 设置上一个时间
-        calendar.add(Calendar.MONTH, -1);
-        vo.setPreTime1month(calendar.getTime().getTime() / 1000);
+        vo.setTime(time);
+        vo.setPrevTime(prevTime);
 
         return vo;
     }

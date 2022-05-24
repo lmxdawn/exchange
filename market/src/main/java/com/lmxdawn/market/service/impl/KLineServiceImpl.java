@@ -1,18 +1,24 @@
 package com.lmxdawn.market.service.impl;
 
 import com.lmxdawn.market.entity.KLine;
+import com.lmxdawn.market.req.KLineListReq;
+import com.lmxdawn.market.res.KLineListRes;
 import com.lmxdawn.market.service.KLineService;
 import com.lmxdawn.market.util.KLineUtil;
 import com.lmxdawn.market.vo.KLineDateTimeVo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class KLineServiceImpl implements KLineService {
@@ -27,51 +33,66 @@ public class KLineServiceImpl implements KLineService {
 
         long pair = Long.parseLong(tradeCoinId.toString() + coinId.toString());
 
-        KLineDateTimeVo kLineDateTimeVo = KLineUtil.createDateTime();
-
         // 成交额
         BigDecimal vol = amount.multiply(price);
 
-        // 1分钟
-        createKLine(kLineDateTimeVo, "1min", pair, price, amount, vol);
-        // 5分钟
-        createKLine(kLineDateTimeVo, "5min", pair, price, amount, vol);
-        // 15分钟
-        createKLine(kLineDateTimeVo, "15min", pair, price, amount, vol);
-        // 30分钟
-        createKLine(kLineDateTimeVo, "30min", pair, price, amount, vol);
-        // 1小时
-        createKLine(kLineDateTimeVo, "1hour", pair, price, amount, vol);
-        // 1小时
-        createKLine(kLineDateTimeVo, "4hour", pair, price, amount, vol);
-        // 1天
-        createKLine(kLineDateTimeVo, "1day", pair, price, amount, vol);
-        // 1周
-        createKLine(kLineDateTimeVo, "1week", pair, price, amount, vol);
-        // 1月
-        createKLine(kLineDateTimeVo, "1month", pair, price, amount, vol);
+        KLineUtil.timeMap.keySet().forEach(timeStr -> createKLine(timeStr, pair, price, amount, vol));
 
-        return false;
+        return true;
+    }
+
+    @Override
+    public List<KLineListRes> list(KLineListReq req) {
+
+        String timeStr = req.getTimeStr();
+        Long time = req.getTime();
+
+        KLineDateTimeVo timeVo = KLineUtil.createDateTime(timeStr, time, 50);
+
+        time = timeVo.getTime();
+        Long prevTime = timeVo.getPrevTime();
+
+        Criteria criteria = Criteria.where("time").gte(prevTime).andOperator(Criteria.where("time").lte(time));
+        Sort sort = Sort.by(Sort.Direction.ASC, "time");
+        Query query = new Query(criteria).with(sort);
+
+        Long tradeCoinId = req.getTradeCoinId();
+        Long coinId = req.getCoinId();
+
+        long pair = Long.parseLong(tradeCoinId.toString() + coinId.toString());
+        String collectionName = String.format(collectionNamePrefix, pair, timeStr);
+
+        List<KLine> kLines = mongoTemplate.find(query, KLine.class, collectionName);
+
+        if (kLines.size() == 0) {
+            return new ArrayList<>();
+        }
+
+        return kLines.stream().map(v -> {
+
+            KLineListRes res = new KLineListRes();
+
+            BeanUtils.copyProperties(v, res);
+            return res;
+        }).collect(Collectors.toList());
     }
 
     /**
      * 创建k线实例
-     * @param kLineDateTimeVo 时间
-     * @param timeStr 时间字符
-     * @param pair 交易对
-     * @param price 价格
-     * @param amount 数量
-     * @param vol 数量
+     *
+     * @param timeStr         时间字符
+     * @param pair            交易对
+     * @param price           价格
+     * @param amount          数量
+     * @param vol             数量
      * @return 是否创建成功
      */
-    private boolean createKLine(KLineDateTimeVo kLineDateTimeVo, String timeStr, Long pair, BigDecimal price, BigDecimal amount, BigDecimal vol) {
-        long time;
-        try {
-            time = (long) kLineDateTimeVo.getClass().getMethod("getTime" + timeStr).invoke(kLineDateTimeVo);
-        } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-            e.printStackTrace();
-            return false;
-        }
+    private boolean createKLine(String timeStr, Long pair, BigDecimal price, BigDecimal amount, BigDecimal vol) {
+        Long time = 0L;
+
+        KLineDateTimeVo timeVo = KLineUtil.createDateTime(timeStr, time, 1);
+
+        time = timeVo.getTime();
 
         String collectionName = String.format(collectionNamePrefix, pair, timeStr);
         Query timeQuery = new Query(Criteria.where("time").is(time));

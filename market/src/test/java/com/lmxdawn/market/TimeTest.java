@@ -5,21 +5,25 @@ import com.lmxdawn.market.vo.KLineDateTimeVo;
 import org.junit.jupiter.api.Test;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
-class MarketApplicationTest {
+class TimeTest {
 
     @Test
-    void main() {
+    void time() {
 
 
-        KLineUtil.timeMap.keySet().forEach(timeStr -> {
+        long time = new Date().getTime() / 1000;
 
-            KLineDateTimeVo timeVo = KLineUtil.createDateTime(timeStr, null, 1);
+        long i = 4 * 24 * 60 * 60 - 8 * 60 * 60;
+        long s = time - (time % (7 * 24 * 60 * 60L)) + i;
 
-            System.out.println(timeStr);
-            ss(timeVo.getTime());
-            ss(timeVo.getPrevTime());
-        });
+        // System.out.println(24 * 60 * 60L);
+        ss(s);
+
+        KLineDateTimeVo timeVo = KLineUtil.createDateTime("1week", null, 1);
+
+        ss(timeVo.getTime());
 
     }
 
@@ -28,4 +32,5 @@ class MarketApplicationTest {
         System.out.println(time);
         System.out.println(format);
     }
+
 }

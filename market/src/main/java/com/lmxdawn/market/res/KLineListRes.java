@@ -22,10 +22,10 @@ public class KLineListRes {
     private BigDecimal close;
 
     @ApiModelProperty(value = "最低")
-    private BigDecimal lowest;
+    private BigDecimal low;
 
     @ApiModelProperty(value = "最高")
-    private BigDecimal highest;
+    private BigDecimal high;
 
     @ApiModelProperty(value = "数量")
     private BigDecimal vol;

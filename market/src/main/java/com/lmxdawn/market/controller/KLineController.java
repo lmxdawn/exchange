@@ -4,10 +4,14 @@ import com.lmxdawn.market.enums.ResultEnum;
 import com.lmxdawn.market.req.KLineListReq;
 import com.lmxdawn.market.res.BaseRes;
 import com.lmxdawn.market.res.KLineListRes;
+import com.lmxdawn.market.service.KLineService;
+import com.lmxdawn.market.util.KLineUtil;
 import com.lmxdawn.market.util.ResultVOUtils;
+import com.lmxdawn.market.vo.KLineDateTimeVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.RandomUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,9 +26,26 @@ import java.util.*;
 @RequestMapping("/kLine")
 public class KLineController {
 
+    @Autowired
+    private KLineService kLineService;
+
     @ApiOperation(value = "K线历史列表")
     @GetMapping("/list")
-    public BaseRes<KLineListRes> list(@Valid KLineListReq req,
+    public BaseRes<List<KLineListRes>> list(@Valid KLineListReq req,
+                                 BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return ResultVOUtils.error(ResultEnum.PARAM_VERIFY_FALL, bindingResult.getFieldError().getDefaultMessage());
+        }
+
+        List<KLineListRes> list = kLineService.list(req);
+
+        return ResultVOUtils.success(list);
+    }
+
+    @ApiOperation(value = "K线历史测试随机列表")
+    @GetMapping("/list-test")
+    public BaseRes<List<KLineListRes>> listTest(@Valid KLineListReq req,
                                  BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
@@ -52,8 +73,8 @@ public class KLineController {
             kLineListRes.setTime(date);
             kLineListRes.setOpen(open);
             kLineListRes.setClose(close);
-            kLineListRes.setLowest(close.subtract(BigDecimal.valueOf(RandomUtils.nextDouble(1, 5))));
-            kLineListRes.setHighest(close.add(BigDecimal.valueOf(RandomUtils.nextDouble(1, 5))));
+            kLineListRes.setLow(close.subtract(BigDecimal.valueOf(RandomUtils.nextDouble(1, 5))));
+            kLineListRes.setHigh(close.add(BigDecimal.valueOf(RandomUtils.nextDouble(1, 5))));
             kLineListRes.setVol(BigDecimal.valueOf(RandomUtils.nextDouble(1, 20)));
             kLineListResList.add(kLineListRes);
         }

@@ -1,6 +1,10 @@
 package com.lmxdawn.market.service;
 
+import com.lmxdawn.market.req.KLineListReq;
+import com.lmxdawn.market.res.KLineListRes;
+
 import java.math.BigDecimal;
+import java.util.List;
 
 public interface KLineService {
 
@@ -13,4 +17,6 @@ public interface KLineService {
      * @return
      */
     boolean install(Long tradeCoinId, Long coinId, BigDecimal price, BigDecimal amount);
+
+    List<KLineListRes> list(KLineListReq req);
 }
