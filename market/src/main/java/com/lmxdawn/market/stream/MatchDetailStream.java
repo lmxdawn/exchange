@@ -1,24 +1,21 @@
 package com.lmxdawn.market.stream;
 
 import com.alibaba.fastjson.JSON;
-import com.lmxdawn.dubboapi.req.match.MatchEventDubboReq;
 import com.lmxdawn.dubboapi.req.trade.EntrustOrderMatchDubboReq;
 import com.lmxdawn.dubboapi.req.user.MemberCoinMatchDubboReq;
 import com.lmxdawn.dubboapi.res.trade.EntrustOrderMatchDubboRes;
-import com.lmxdawn.dubboapi.service.match.MatchDubboService;
 import com.lmxdawn.dubboapi.service.trade.EntrustOrderDubboService;
 import com.lmxdawn.market.constant.CacheConstant;
 import com.lmxdawn.market.constant.MqTopicConstant;
-import com.lmxdawn.market.mq.EntrustOrderMq;
 import com.lmxdawn.market.mq.MatchDetailMq;
 import com.lmxdawn.market.mq.WsMarketMq;
+import com.lmxdawn.market.service.KLineService;
 import com.lmxdawn.market.service.MatchService;
 import com.lmxdawn.market.ws.DataVo;
 import com.lmxdawn.market.ws.DepthVo;
 import com.lmxdawn.market.ws.MatchVo;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.DubboReference;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.context.annotation.Bean;
@@ -43,6 +40,9 @@ public class MatchDetailStream {
 
     @DubboReference
     private EntrustOrderDubboService entrustOrderDubboService;
+
+    @Autowired
+    private KLineService kLineService;
 
     /**
      * 监听撮合成功的消息
@@ -291,7 +291,7 @@ public class MatchDetailStream {
             streamBridge.send(MqTopicConstant.WS_MARKET_TOPIC, wsMarketMq);
 
             // 保存k线图到MongoDB
-
+            kLineService.install(tradeCoinId, coinId, price, amount);
 
 
         };
