@@ -5,8 +5,10 @@ import com.lmxdawn.dubboapi.res.trade.EntrustOrderMatchDubboRes;
 import com.lmxdawn.dubboapi.service.trade.EntrustOrderDubboService;
 import com.lmxdawn.trade.dao.EntrustOrderDao;
 import com.lmxdawn.trade.dao.EntrustOrderDetailDao;
+import com.lmxdawn.trade.dao.PairDao;
 import com.lmxdawn.trade.entity.EntrustOrder;
 import com.lmxdawn.trade.entity.EntrustOrderDetail;
+import com.lmxdawn.trade.entity.Pair;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,9 @@ public class EntrustOrderDubboServiceImpl implements EntrustOrderDubboService {
 
     @Autowired
     private EntrustOrderDetailDao entrustOrderDetailDao;
+
+    @Autowired
+    private PairDao pairDao;
 
     @Override
     public Map<Long, EntrustOrderMatchDubboRes> mapByIdIn(List<Long> ids) {
@@ -42,6 +47,13 @@ public class EntrustOrderDubboServiceImpl implements EntrustOrderDubboService {
 
     @Override
     public boolean matchIncr(EntrustOrderMatchDubboReq req) {
+
+        // 更新交易对价格
+        Pair pair = new Pair();
+        pair.setTradeCoinId(req.getTradeCoinId());
+        pair.setCoinId(req.getCoinId());
+        pair.setPrice(req.getPrice());
+        pairDao.updateByTradeCoinIdAndCoinId(pair);
 
         // 更新订单
         EntrustOrder entrustOrder = new EntrustOrder();

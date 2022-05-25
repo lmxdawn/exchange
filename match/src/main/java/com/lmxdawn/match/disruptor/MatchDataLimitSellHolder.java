@@ -58,6 +58,7 @@ public class MatchDataLimitSellHolder {
                 matchDetailMq.setMatchType(market.getType());
                 matchDetailMq.setDirection(buy.getDirection());
                 matchDetailMq.setMatchDirection(market.getDirection());
+                matchDetailMq.setMatchPrice(buyPrice.doubleValue());
                 matchDetailMq.setPrice(buyPrice.doubleValue());
                 matchDetailMq.setIsComplete(0);
                 matchDetailMq.setMatchIsComplete(0);
@@ -130,6 +131,7 @@ public class MatchDataLimitSellHolder {
                     matchDetailMq.setMatchType(matchEvent.getType());
                     matchDetailMq.setDirection(buy.getDirection());
                     matchDetailMq.setMatchDirection(matchEvent.getDirection());
+                    matchDetailMq.setMatchPrice(buyPrice.doubleValue());
                     matchDetailMq.setPrice(matchEvent.getPrice());
                     matchDetailMq.setIsComplete(0);
                     matchDetailMq.setMatchIsComplete(0);

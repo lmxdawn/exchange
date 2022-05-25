@@ -64,6 +64,7 @@ public class MatchDetailStream {
             Integer matchDirection = matchDetailMq.getMatchDirection();
             Integer isRobot = matchDetailMq.getIsRobot();
             Integer matchIsRobot = matchDetailMq.getMatchIsRobot();
+            BigDecimal matchPrice = BigDecimal.valueOf(matchDetailMq.getMatchPrice());
             BigDecimal price = BigDecimal.valueOf(matchDetailMq.getPrice());
             BigDecimal amount = BigDecimal.valueOf(matchDetailMq.getAmount());
             Integer isComplete = matchDetailMq.getIsComplete();
@@ -199,11 +200,13 @@ public class MatchDetailStream {
                 String key = direction == 1 ? CacheConstant.BUY_DEPTH : CacheConstant.SELL_DEPTH;
                 key = String.format(key, pair);
                 String infoKey = direction == 1 ? CacheConstant.BUY_DEPTH_INFO : CacheConstant.SELL_DEPTH_INFO;
-                String amountKey = String.format(infoKey, pair, price);
+                String keyPrice = direction == 1 ? matchPrice.max(price).toString() : matchPrice.min(price).toString();
+                System.out.println("价格：" + keyPrice);
+                String amountKey = String.format(infoKey, pair, keyPrice);
                 Long increment = redisTemplate.opsForValue().increment(amountKey, -amount.multiply(bigPow).longValue());
                 if (increment == null || increment <= 0) {
                     redisTemplate.delete(amountKey);
-                    redisTemplate.opsForZSet().remove(key, price.toString());
+                    redisTemplate.opsForZSet().remove(key, keyPrice);
                 }
 
                 Set<String> depthPriceList = direction == 1 ? redisTemplate.opsForZSet().reverseRange(key, 0, 100) : redisTemplate.opsForZSet().range(key, 0, 100);
@@ -239,11 +242,13 @@ public class MatchDetailStream {
                 String matchKey = matchDirection == 1 ? CacheConstant.BUY_DEPTH : CacheConstant.SELL_DEPTH;
                 matchKey = String.format(matchKey, pair);
                 String matchInfoKey = matchDirection == 1 ? CacheConstant.BUY_DEPTH_INFO : CacheConstant.SELL_DEPTH_INFO;
-                String matchAmountKey = String.format(matchInfoKey, pair, price);
+                String keyPrice = matchDirection == 1 ? matchPrice.max(price).toString() : matchPrice.min(price).toString();
+                System.out.println("对手单价格：" + keyPrice);
+                String matchAmountKey = String.format(matchInfoKey, pair, keyPrice);
                 Long matchIncrement = redisTemplate.opsForValue().increment(matchAmountKey, -amount.multiply(bigPow).longValue());
                 if (matchIncrement == null || matchIncrement <= 0) {
                     redisTemplate.delete(matchAmountKey);
-                    redisTemplate.opsForZSet().remove(matchKey, price.toString());
+                    redisTemplate.opsForZSet().remove(matchKey, keyPrice);
                 }
 
                 Set<String> matchDepthPriceList = matchDirection == 1 ? redisTemplate.opsForZSet().reverseRange(matchKey, 0, 100) : redisTemplate.opsForZSet().range(matchKey, 0, 100);

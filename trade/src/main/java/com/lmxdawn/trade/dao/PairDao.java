@@ -47,6 +47,12 @@ public interface PairDao {
      * 修改
      * @return
      */
+    boolean updateByTradeCoinIdAndCoinId(Pair pair);
+
+    /**
+     * 修改
+     * @return
+     */
     boolean update(Pair pair);
 
 }

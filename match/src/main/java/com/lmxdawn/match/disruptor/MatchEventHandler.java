@@ -29,7 +29,7 @@ public class MatchEventHandler implements EventHandler<MatchEvent>, WorkHandler<
             // 买入，匹配卖单
             matchDetailMqList = MatchDataLimitSellHolder.match(event);
         } else {
-            // 卖出，匹配卖单
+            // 卖出，匹配买单
             matchDetailMqList = MatchDataLimitBuyHolder.match(event);
         }
 

@@ -59,6 +59,11 @@ public class MatchDetailMq {
     private Long matchMemberId;
 
     /**
+     * 对手单价格
+     */
+    private Double matchPrice;
+
+    /**
      * 成交价格
      */
     private Double price;

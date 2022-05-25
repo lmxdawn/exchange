@@ -70,11 +70,23 @@
          #{modifiedTime})
     </insert>
 
+    <update id="updateByTradeCoinIdAndCoinId" parameterType="com.lmxdawn.trade.entity.Pair">
+        UPDATE `pair`
+        <trim prefix="set" suffixOverrides=",">
+            <if test="price != null">`price`=#{price},</if>
+            <if test="price24 != null">`price_24`=#{price24},</if>
+            <if test="tradeTotal24 != null">`trade_total_24`=#{tradeTotal24},</if>
+            <if test="tradeAmount24 != null">`trade_amount_24`=#{tradeAmount24},</if>
+            <if test="highest24 != null">`highest_24`=#{highest24},</if>
+            <if test="lowest24 != null">`lowest_24`=#{lowest24},</if>
+            <if test="modifiedTime != null">`modified_time`=#{modifiedTime},</if>
+        </trim>
+        WHERE `trade_coin_id` = #{tradeCoinId} and `coin_id` = #{coinId}
+    </update>
+
     <update id="update" parameterType="com.lmxdawn.trade.entity.Pair">
         UPDATE `pair`
         <trim prefix="set" suffixOverrides=",">
-            <if test="tradeCoinId != null">`trade_coin_id`=#{tradeCoinId},</if>
-            <if test="coinId != null">`coin_id`=#{coinId},</if>
             <if test="buyFee != null">`buy_fee`=#{buyFee},</if>
             <if test="buyFeePrecision != null">`buy_fee_precision`=#{buyFeePrecision},</if>
             <if test="sellFee != null">`sell_fee`=#{sellFee},</if>
