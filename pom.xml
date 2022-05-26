@@ -18,6 +18,7 @@
         <module>match</module>
         <module>ws</module>
         <module>ws-route</module>
+        <module>robot</module>
     </modules>
     <name>parent</name>
     <description>交易所项目</description>

@@ -1,17 +1,23 @@
 package com.lmxdawn.trade.dubbo.service;
 
 import com.lmxdawn.dubboapi.req.trade.EntrustOrderMatchDubboReq;
+import com.lmxdawn.dubboapi.req.trade.EntrustOrderRobotCreateDubboReq;
 import com.lmxdawn.dubboapi.res.trade.EntrustOrderMatchDubboRes;
 import com.lmxdawn.dubboapi.service.trade.EntrustOrderDubboService;
+import com.lmxdawn.trade.constant.MqTopicConstant;
 import com.lmxdawn.trade.dao.EntrustOrderDao;
 import com.lmxdawn.trade.dao.EntrustOrderDetailDao;
 import com.lmxdawn.trade.dao.PairDao;
 import com.lmxdawn.trade.entity.EntrustOrder;
 import com.lmxdawn.trade.entity.EntrustOrderDetail;
 import com.lmxdawn.trade.entity.Pair;
+import com.lmxdawn.trade.enums.ResultEnum;
+import com.lmxdawn.trade.exception.JsonException;
+import com.lmxdawn.trade.mq.EntrustOrderMq;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.stream.function.StreamBridge;
 
 import java.util.*;
 
@@ -26,6 +32,9 @@ public class EntrustOrderDubboServiceImpl implements EntrustOrderDubboService {
 
     @Autowired
     private PairDao pairDao;
+
+    @Autowired
+    private StreamBridge streamBridge;
 
     @Override
     public Map<Long, EntrustOrderMatchDubboRes> mapByIdIn(List<Long> ids) {
@@ -117,5 +126,38 @@ public class EntrustOrderDubboServiceImpl implements EntrustOrderDubboService {
         batch.add(entrustOrderDetail2);
 
         return entrustOrderDetailDao.insertBatch(batch);
+    }
+
+    @Override
+    public boolean robotCreate(EntrustOrderRobotCreateDubboReq req) {
+
+        Long tradeCoinId = req.getTradeCoinId();
+        Long coinId = req.getCoinId();
+
+        // 查询交易对精度
+        Pair byTidAndCid = pairDao.findByTidAndCid(tradeCoinId, coinId);
+        if (byTidAndCid == null) {
+            return false;
+        }
+
+        Integer tradeAmountPrecision = byTidAndCid.getTradeAmountPrecision();
+
+        Double buyFee = byTidAndCid.getBuyFee();
+        Integer buyFeePrecision = byTidAndCid.getBuyFeePrecision();
+        Double sellFee = byTidAndCid.getSellFee();
+        Integer sellFeePrecision = byTidAndCid.getSellFeePrecision();
+
+        // 加入撮合队列
+        EntrustOrderMq entrustOrderMq = new EntrustOrderMq();
+        BeanUtils.copyProperties(req, entrustOrderMq);
+        entrustOrderMq.setId(0L);
+        entrustOrderMq.setIsRobot(1);
+        entrustOrderMq.setBuyFee(buyFee);
+        entrustOrderMq.setBuyFeePrecision(buyFeePrecision);
+        entrustOrderMq.setSellFee(sellFee);
+        entrustOrderMq.setSellFeePrecision(sellFeePrecision);
+        entrustOrderMq.setTradeAmountPrecision(tradeAmountPrecision);
+        streamBridge.send(MqTopicConstant.ENTRUST_ORDER_TOPIC, entrustOrderMq);
+        return true;
     }
 }
