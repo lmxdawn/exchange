@@ -6,6 +6,7 @@ import lombok.Data;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
@@ -34,9 +35,11 @@ public class PairRobotSaveDubboReq implements Serializable {
     private Long coinId;
 
     @ApiModelProperty(value = "小写的交易对名称")
+    @NotBlank(message = "小写的交易对名称不能为空")
     private String lowerCoinName;
 
     @ApiModelProperty(value = "大写的交易对名称")
+    @NotBlank(message = "大写的交易对名称不能为空")
     private String upperCoinName;
 
     @ApiModelProperty(value = "最低交易数量")

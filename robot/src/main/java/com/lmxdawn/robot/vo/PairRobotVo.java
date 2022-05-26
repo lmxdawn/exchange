@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 public class PairRobotVo {
     private Long tradeCoinId; // 交易币种ID
     private Long coinId; // 计价币种ID
+    private Long pairId; // 交易对ID
     private String lowerCoinName = ""; // 小写交易对名称
     private String upperCoinName = ""; // 大写交易对名称
     private int running = 1; // 是否开始

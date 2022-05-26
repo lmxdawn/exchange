@@ -4,12 +4,12 @@
 <mapper namespace="com.lmxdawn.trade.dao.PairRobotDao">
 
     <select id="listAll" parameterType="com.lmxdawn.trade.req.PairListPageReq" resultType="com.lmxdawn.trade.entity.PairRobot">
-        SELECT id,trade_coin_id,coin_id,lower_coin_name,upper_coin_name,min_amount,rand_range_0,randRange_1,rand_range_2,rand_range_3,rand_range_4,rand_range_5,rand_range_6,price_precision,amount_precision,max_sub_price,init_order_count,price_step_rate,run_time,status,create_time,modified_time
+        SELECT id,pair_id,trade_coin_id,coin_id,lower_coin_name,upper_coin_name,min_amount,rand_range_0,randRange_1,rand_range_2,rand_range_3,rand_range_4,rand_range_5,rand_range_6,price_precision,amount_precision,max_sub_price,init_order_count,price_step_rate,run_time,status,create_time,modified_time
         FROM `pair_robot`
     </select>
 
     <select id="listByPairIdIn" resultType="com.lmxdawn.trade.entity.PairRobot">
-        SELECT id,trade_coin_id,coin_id,lower_coin_name,upper_coin_name,min_amount,rand_range_0,randRange_1,rand_range_2,rand_range_3,rand_range_4,rand_range_5,rand_range_6,price_precision,amount_precision,max_sub_price,init_order_count,price_step_rate,run_time,status,create_time,modified_time
+        SELECT id,pair_id,trade_coin_id,coin_id,lower_coin_name,upper_coin_name,min_amount,rand_range_0,randRange_1,rand_range_2,rand_range_3,rand_range_4,rand_range_5,rand_range_6,price_precision,amount_precision,max_sub_price,init_order_count,price_step_rate,run_time,status,create_time,modified_time
         FROM `pair_robot`
         where `pair_id` in
         <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
@@ -18,7 +18,7 @@
     </select>
 
     <select id="findByTidAndCid" resultType="com.lmxdawn.trade.entity.PairRobot">
-        SELECT id,trade_coin_id,coin_id,lower_coin_name,upper_coin_name,min_amount,rand_range_0,randRange_1,rand_range_2,rand_range_3,rand_range_4,rand_range_5,rand_range_6,price_precision,amount_precision,max_sub_price,init_order_count,price_step_rate,run_time,status,create_time,modified_time
+        SELECT id,pair_id,trade_coin_id,coin_id,lower_coin_name,upper_coin_name,min_amount,rand_range_0,randRange_1,rand_range_2,rand_range_3,rand_range_4,rand_range_5,rand_range_6,price_precision,amount_precision,max_sub_price,init_order_count,price_step_rate,run_time,status,create_time,modified_time
         FROM `pair_robot`
         <where>
             trade_coin_id = #{tradeCoinId}
