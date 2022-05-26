@@ -109,6 +109,8 @@ nohup java -jar -Dspring.profiles.active=prod user/target/user-0.0.1-SNAPSHOT.ja
 
 > ws-route：消息推送路由 9010
 
+> robot：机器人 9011
+
 # Swagger
 
 > gateway的方式访问swagger，gateway启动后访问： `http://ip:prot/swagger-ui/index.html`
