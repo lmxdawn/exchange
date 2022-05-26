@@ -41,8 +41,8 @@ public class PairController {
     private PairDubboService pairDubboService;
 
     @ApiOperation(value = "交易对里币种列表")
-    @AuthRuleAnnotation(value = "market/pair/coinList")
-    @GetMapping(value = "market/pair/coinList")
+    @AuthRuleAnnotation(value = "trade/pair/coinList")
+    @GetMapping(value = "trade/pair/coinList")
     public BaseRes<List<CoinSimpleDubboRes>> coinList() {
 
         List<CoinSimpleDubboRes> list = coinDubboService.listAll();
@@ -51,8 +51,8 @@ public class PairController {
     }
 
     @ApiOperation(value = "交易对列表")
-    @AuthRuleAnnotation(value = "market/pair/index")
-    @GetMapping(value = "market/pair/index")
+    @AuthRuleAnnotation(value = "trade/pair/index")
+    @GetMapping(value = "trade/pair/index")
     public BaseRes<PageSimpleDubboRes<PairDubboRes>> index(@Valid PairQueryDubboReq req,
                                                            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -67,8 +67,8 @@ public class PairController {
 
 
     @ApiOperation(value = "交易对添加")
-    @AuthRuleAnnotation(value = "market/pair/save")
-    @PostMapping(value = "market/pair/save")
+    @AuthRuleAnnotation(value = "trade/pair/save")
+    @PostMapping(value = "trade/pair/save")
     public BaseRes save(@RequestBody @Valid PairSaveDubboReq req,
                         BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -88,8 +88,8 @@ public class PairController {
 
 
     @ApiOperation(value = "交易对修改")
-    @AuthRuleAnnotation(value = "market/pair/edit")
-    @PostMapping(value = "market/pair/edit")
+    @AuthRuleAnnotation(value = "trade/pair/edit")
+    @PostMapping(value = "trade/pair/edit")
     public BaseRes edit(@RequestBody @Valid PairSaveDubboReq req,
                         BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {

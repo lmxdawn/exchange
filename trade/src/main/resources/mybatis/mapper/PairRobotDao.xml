@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.lmxdawn.trade.dao.PairRobotDao">
+
+    <select id="listAll" parameterType="com.lmxdawn.trade.req.PairListPageReq" resultType="com.lmxdawn.trade.entity.PairRobot">
+        SELECT id,trade_coin_id,coin_id,lower_coin_name,upper_coin_name,min_amount,rand_range_0,randRange_1,rand_range_2,rand_range_3,rand_range_4,rand_range_5,rand_range_6,price_precision,amount_precision,max_sub_price,init_order_count,price_step_rate,run_time,status,create_time,modified_time
+        FROM `pair_robot`
+    </select>
+
+    <select id="listByPairIdIn" resultType="com.lmxdawn.trade.entity.PairRobot">
+        SELECT id,trade_coin_id,coin_id,lower_coin_name,upper_coin_name,min_amount,rand_range_0,randRange_1,rand_range_2,rand_range_3,rand_range_4,rand_range_5,rand_range_6,price_precision,amount_precision,max_sub_price,init_order_count,price_step_rate,run_time,status,create_time,modified_time
+        FROM `pair_robot`
+        where `pair_id` in
+        <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="findByTidAndCid" resultType="com.lmxdawn.trade.entity.PairRobot">
+        SELECT id,trade_coin_id,coin_id,lower_coin_name,upper_coin_name,min_amount,rand_range_0,randRange_1,rand_range_2,rand_range_3,rand_range_4,rand_range_5,rand_range_6,price_precision,amount_precision,max_sub_price,init_order_count,price_step_rate,run_time,status,create_time,modified_time
+        FROM `pair_robot`
+        <where>
+            trade_coin_id = #{tradeCoinId}
+            and coin_id = #{coinId}
+        </where>
+        limit 1
+    </select>
+
+    <insert id="insert" keyProperty="id" parameterType="com.lmxdawn.trade.entity.PairRobot">
+        INSERT INTO `pair_robot`(pair_id,trade_coin_id,coin_id,lower_coin_name,upper_coin_name,min_amount,rand_range_0,randRange_1,rand_range_2,rand_range_3,rand_range_4,rand_range_5,rand_range_6,price_precision,amount_precision,max_sub_price,init_order_count,price_step_rate,run_time,status,create_time,modified_time)
+        VALUES
+        (#{pairId},
+         #{tradeCoinId},
+         #{coinId},
+         #{lowerCoinName},
+         #{upperCoinName},
+         #{minAmount},
+         #{randRange0},
+         #{randRange1},
+         #{randRange2},
+         #{randRange3},
+         #{randRange4},
+         #{randRange5},
+         #{randRange6},
+         #{pricePrecision},
+         #{amountPrecision},
+         #{maxSubPrice},
+         #{initOrderCount},
+         #{priceStepRate},
+         #{runTime},
+         #{status},
+         #{createTime},
+         #{modifiedTime})
+    </insert>
+
+    <update id="update" parameterType="com.lmxdawn.trade.entity.PairRobot">
+        UPDATE `pair_robot`
+        <trim prefix="set" suffixOverrides=",">
+            <if test="lowerCoinName != null">`lower_coin_name`=#{lowerCoinName},</if>
+            <if test="upperCoinName != null">`upper_coin_name`=#{upperCoinName},</if>
+            <if test="minAmount != null">`min_amount`=#{minAmount},</if>
+            <if test="randRange0 != null">`rand_range_0`=#{randRange0},</if>
+            <if test="randRange1 != null">`randRange_1`=#{randRange1},</if>
+            <if test="randRange2 != null">`rand_range_2`=#{randRange2},</if>
+            <if test="randRange3 != null">`rand_range_3`=#{randRange3},</if>
+            <if test="randRange4 != null">`rand_range_4`=#{randRange4},</if>
+            <if test="randRange5 != null">`rand_range_5`=#{randRange5},</if>
+            <if test="randRange6 != null">`rand_range_6`=#{randRange6},</if>
+            <if test="pricePrecision != null">`price_precision`=#{pricePrecision},</if>
+            <if test="amountPrecision != null">`amount_precision`=#{amountPrecision},</if>
+            <if test="maxSubPrice != null">`max_sub_price`=#{maxSubPrice},</if>
+            <if test="initOrderCount != null">`init_order_count`=#{initOrderCount},</if>
+            <if test="priceStepRate != null">`price_step_rate`=#{priceStepRate},</if>
+            <if test="runTime != null">`run_time`=#{runTime},</if>
+            <if test="status != null">`status`=#{status},</if>
+            <if test="createTime != null">`create_time`=#{createTime},</if>
+            <if test="modifiedTime != null">`modified_time`=#{modifiedTime},</if>
+        </trim>
+        WHERE `id` = #{id}
+    </update>
+
+</mapper>

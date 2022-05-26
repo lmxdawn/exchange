@@ -58,4 +58,7 @@ public class PairDubboRes implements Serializable {
     @ApiModelProperty(value = "更新时间")
     private Date modifiedTime;
 
+    @ApiModelProperty(value = "机器人配置")
+    private PairRobotDubboRes robotDubboRes;
+
 }

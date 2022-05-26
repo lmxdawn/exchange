@@ -6,22 +6,28 @@ import com.lmxdawn.dubboapi.req.trade.PairQueryDubboReq;
 import com.lmxdawn.dubboapi.req.trade.PairSaveDubboReq;
 import com.lmxdawn.dubboapi.res.PageSimpleDubboRes;
 import com.lmxdawn.dubboapi.res.trade.PairDubboRes;
+import com.lmxdawn.dubboapi.res.trade.PairRobotDubboRes;
 import com.lmxdawn.dubboapi.res.trade.PairSimpleDubboRes;
 import com.lmxdawn.dubboapi.service.trade.PairDubboService;
 import com.lmxdawn.trade.dao.PairDao;
+import com.lmxdawn.trade.dao.PairRobotDao;
 import com.lmxdawn.trade.entity.Pair;
+import com.lmxdawn.trade.entity.PairRobot;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @DubboService
 public class PairDubboServiceImpl implements PairDubboService {
 
     @Autowired
     private PairDao pairDao;
+
+    @Autowired
+    private PairRobotDao pairRobotDao;
 
     @Override
     public PageSimpleDubboRes<PairDubboRes> list(PairQueryDubboReq req) {
@@ -30,16 +36,37 @@ public class PairDubboServiceImpl implements PairDubboService {
         PageHelper.offsetPage(offset, req.getLimit());
         List<PairDubboRes> infoDubboResList = pairDao.listPageDubbo(req);
 
+        Set<Long> pairIds = new HashSet<>();
+        for (PairDubboRes res : infoDubboResList) {
+            pairIds.add(res.getId());
+        }
+
+        Map<Long, PairRobot> pairRobotMap = new HashMap<>();
+        if (pairIds.size() > 0) {
+            List<PairRobot> pairRobots = pairRobotDao.listByPairIdIn(new ArrayList<>(pairIds));
+            for (PairRobot pairRobot : pairRobots) {
+                pairRobotMap.put(pairRobot.getPairId(), pairRobot);
+            }
+        }
+
         PageSimpleDubboRes<PairDubboRes> pageSimpleDubboRes = new PageSimpleDubboRes<>();
 
-        if (infoDubboResList == null || infoDubboResList.size() == 0) {
+        if (infoDubboResList.size() == 0) {
             return pageSimpleDubboRes;
         }
 
         PageInfo<PairDubboRes> infoDubboResPageInfo = new PageInfo<>(infoDubboResList);
 
+        List<PairDubboRes> collect = infoDubboResList.stream().peek(v -> {
+            PairRobotDubboRes res = new PairRobotDubboRes();
+            if (pairRobotMap.containsKey(v.getId())) {
+                BeanUtils.copyProperties(pairRobotMap.get(v.getId()), res);
+            }
+            v.setRobotDubboRes(res);
+        }).collect(Collectors.toList());
+
         pageSimpleDubboRes.setTotal(infoDubboResPageInfo.getTotal());
-        pageSimpleDubboRes.setList(infoDubboResList);
+        pageSimpleDubboRes.setList(collect);
         return pageSimpleDubboRes;
     }
 
