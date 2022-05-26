@@ -23,7 +23,7 @@ public class MarketRun implements Runnable {
     @Override
     public void run() {
 
-        while (pairRobotVo.getRunning() == 1) {
+        while (pairRobotVo.getStatus() == 1) {
 
             try {
                 // 获取外部行情价格
@@ -62,7 +62,9 @@ public class MarketRun implements Runnable {
      */
     private void createOrder(Integer direction, Integer count, BigDecimal price) {
 
-        BigDecimal diffPrice = this.pairRobotVo.getMaxSubPrice().divide(BigDecimal.valueOf(2), this.pairRobotVo.getPricePrecision(), BigDecimal.ROUND_HALF_DOWN);
+        BigDecimal bigMaxSubPrice = BigDecimal.valueOf(this.pairRobotVo.getMaxSubPrice());
+
+        BigDecimal diffPrice = bigMaxSubPrice.divide(BigDecimal.valueOf(2), this.pairRobotVo.getPricePrecision(), BigDecimal.ROUND_HALF_DOWN);
 
         // 价格加上价差
         if (direction == 1) {
@@ -73,13 +75,14 @@ public class MarketRun implements Runnable {
 
         for(int i = 0; i < count; i++) {
 
+            BigDecimal bigPriceStepRate = BigDecimal.valueOf(this.pairRobotVo.getPriceStepRate());
             // 价格变化
             if (direction == 1) {
                 // 买盘累减
-                price = price.subtract(price.multiply(this.pairRobotVo.getPriceStepRate())).setScale(this.pairRobotVo.getPricePrecision(), BigDecimal.ROUND_HALF_DOWN);
+                price = price.subtract(price.multiply(bigPriceStepRate)).setScale(this.pairRobotVo.getPricePrecision(), BigDecimal.ROUND_HALF_DOWN);
             } else {
                 // 卖盘累加
-                price = price.add(price.multiply(this.pairRobotVo.getPriceStepRate())).setScale(this.pairRobotVo.getPricePrecision(), BigDecimal.ROUND_HALF_DOWN);
+                price = price.add(price.multiply(bigPriceStepRate)).setScale(this.pairRobotVo.getPricePrecision(), BigDecimal.ROUND_HALF_DOWN);
             }
 
             double temRand;
