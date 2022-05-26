@@ -2,7 +2,7 @@ package com.lmxdawn.robot.job;
 
 import com.lmxdawn.dubboapi.service.trade.EntrustOrderDubboService;
 import com.lmxdawn.robot.run.MarketRun;
-import com.lmxdawn.robot.vo.PairVo;
+import com.lmxdawn.robot.vo.PairRobotVo;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.stereotype.Component;
 
@@ -22,16 +22,16 @@ public class MarketJob {
     @PostConstruct
     public void start() {
 
-        List<PairVo> list = new ArrayList<>();
+        List<PairRobotVo> list = new ArrayList<>();
 
-        PairVo pairVo1 = new PairVo();
-        pairVo1.setTradeCoinId(3L);
-        pairVo1.setCoinId(1L);
-        pairVo1.setCoinName("ethusdt");
-        list.add(pairVo1);
+        PairRobotVo pairRobotVo1 = new PairRobotVo();
+        pairRobotVo1.setTradeCoinId(3L);
+        pairRobotVo1.setCoinId(1L);
+        pairRobotVo1.setCoinName("ethusdt");
+        list.add(pairRobotVo1);
 
-        for (PairVo pairVo : list) {
-            MarketRun marketRun = new MarketRun(pairVo, entrustOrderDubboService);
+        for (PairRobotVo pairRobotVo : list) {
+            MarketRun marketRun = new MarketRun(pairRobotVo, entrustOrderDubboService);
             new Thread(marketRun).start();
         }
 

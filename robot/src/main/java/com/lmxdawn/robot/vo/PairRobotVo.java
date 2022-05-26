@@ -5,11 +5,12 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 @Data
-public class PairVo {
+public class PairRobotVo {
     private Long tradeCoinId; // 交易币种ID
     private Long coinId; // 计价币种ID
-    private String coinName = ""; // 如btcusdt
-    private boolean running = true; // 是否开始
+    private String lowerCoinName = ""; // 小写交易对名称
+    private String upperCoinName = ""; // 大写交易对名称
+    private int running = 1; // 是否开始
     private double minAmount = 0.001; // 最低交易量
     private double randRange0 = 20; // 交易量随机数范围 1%概率
     private double randRange1 = 4; // 交易量随机数范围 9%概率
