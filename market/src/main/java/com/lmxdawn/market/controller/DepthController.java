@@ -73,7 +73,7 @@ public class DepthController {
                 String depthAmountStr = redisTemplate.opsForValue().get(depthAmountKey);
                 DepthRes depthRes = new DepthRes();
                 depthRes.setPrice(Double.parseDouble(depthPrice));
-                BigDecimal depthAmount = !StringUtils.isBlank(depthAmountStr) ? BigDecimal.valueOf(Long.parseLong(depthAmountStr)) : BigDecimal.ZERO;
+                BigDecimal depthAmount = !StringUtils.isBlank(depthAmountStr) ? new BigDecimal(depthAmountStr) : BigDecimal.ZERO;
                 if (depthAmount.compareTo(BigDecimal.ZERO) <= 0) {
                     redisTemplate.delete(depthAmountKey);
                     redisTemplate.opsForZSet().remove(buyKey, depthPrice);
@@ -97,7 +97,7 @@ public class DepthController {
                 String depthAmountStr = redisTemplate.opsForValue().get(depthAmountKey);
                 DepthRes depthRes = new DepthRes();
                 depthRes.setPrice(Double.parseDouble(depthPrice));
-                BigDecimal depthAmount = !StringUtils.isBlank(depthAmountStr) ? BigDecimal.valueOf(Long.parseLong(depthAmountStr)) : BigDecimal.ZERO;
+                BigDecimal depthAmount = !StringUtils.isBlank(depthAmountStr) ? new BigDecimal(depthAmountStr) : BigDecimal.ZERO;
                 if (depthAmount.compareTo(BigDecimal.ZERO) <= 0) {
                     redisTemplate.delete(depthAmountKey);
                     redisTemplate.opsForZSet().remove(sellKey, depthPrice);

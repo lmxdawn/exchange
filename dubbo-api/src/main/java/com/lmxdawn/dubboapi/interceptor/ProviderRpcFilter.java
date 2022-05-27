@@ -10,7 +10,7 @@ public class ProviderRpcFilter implements Filter {
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
         String key = "x3EEX8Di6sWfNjer486bnQAzfXWkX1R1";
         String token = invocation.getAttachment("token");
-        System.out.println("提供端拦截了*****************************" + token);
+        // System.out.println("提供端拦截了*****************************" + token);
         // 验证 token
         Claims claims = JwtUtils.parse(token, key);
         if (claims == null || !claims.get("key").equals(1)) {

@@ -21,6 +21,6 @@ public class MatchDubboServiceImpl implements MatchDubboService {
         BeanUtils.copyProperties(req, matchEvent);
         matchService.publish(matchEvent);
 
-        return false;
+        return true;
     }
 }

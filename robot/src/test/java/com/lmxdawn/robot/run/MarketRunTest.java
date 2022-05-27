@@ -11,8 +11,8 @@ class MarketRunTest {
         PairRobotVo pairRobotVo = new PairRobotVo();
         pairRobotVo.setCoinId(1L);
         pairRobotVo.setTradeCoinId(3L);
-        pairRobotVo.setCoinName("ethusdt");
-        MarketRun marketRun = new MarketRun(pairRobotVo, null);
+        pairRobotVo.setLowerCoinName("ethusdt");
+        MarketRun marketRun = new MarketRun(pairRobotVo, null, null);
         new Thread(marketRun).start();
 
     }

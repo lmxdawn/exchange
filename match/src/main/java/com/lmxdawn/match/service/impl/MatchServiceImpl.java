@@ -40,6 +40,12 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public void publish(MatchEvent req) {
+
+        Double price = req.getPrice();
+        if (price <= 0) {
+            return;
+        }
+
         producer.onData(req);
     }
 }

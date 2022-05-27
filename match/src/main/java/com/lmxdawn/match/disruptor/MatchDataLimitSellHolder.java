@@ -95,6 +95,10 @@ public class MatchDataLimitSellHolder {
             }
         }
 
+        System.out.println("                                                  ");
+        System.out.println("--------------------------------------------------");
+        System.out.println("                                                  ");
+        System.out.println("*******************撮合买单 start*******************");
         // 匹配撮合
         Map<BigDecimal, List<MatchEvent>> map = getMap(pair);
 
@@ -105,6 +109,7 @@ public class MatchDataLimitSellHolder {
             while (iterator.hasNext()) {
                 Map.Entry<BigDecimal, List<MatchEvent>> listEntry = iterator.next();
                 BigDecimal bigPrice = listEntry.getKey();
+                System.out.println("买单价格：" + buyPrice + "，卖单价格：" + bigPrice);
                 // 限价，并且买单价格小于第一个撮合价格，则退出
                 if (type == 1 && buyPrice.compareTo(bigPrice) < 0) {
                     break;
@@ -160,6 +165,8 @@ public class MatchDataLimitSellHolder {
                         matchEvent.setAmount(bigAmount.subtract(completeAmount).doubleValue());
                     }
 
+                    System.out.println("撮合数量：" + bigAmount + "，买单数量：" + buyAmount + "，实际数量：" + completeAmount);
+
                     matchDetailMq.setAmount(completeAmount.doubleValue());
                     // 增加明细
                     matchDetailMqList.add(matchDetailMq);
@@ -186,10 +193,6 @@ public class MatchDataLimitSellHolder {
         }
 
 
-        System.out.println("                                                  ");
-        System.out.println("--------------------------------------------------");
-        System.out.println("                                                  ");
-        System.out.println("*******************撮合买单 start*******************");
         // 没有深度，或者剩余没有撮合
         // 如果是限价
         if (type == 1) {
@@ -210,18 +213,21 @@ public class MatchDataLimitSellHolder {
             }
         }
 
-        System.out.println(matchDetailMqList);
-        System.out.println(MatchDataLimitBuyHolder.getMap(pair));
-        System.out.println(MatchDataLimitSellHolder.getMap(pair));
-        System.out.println(MatchDataMarketBuyHolder.getList(pair));
-        System.out.println(MatchDataMarketSellHolder.getList(pair));
+        System.out.println("撮合队列：" + matchDetailMqList);
+        System.out.println("买盘数据：");
+        MatchDataLimitBuyHolder.dump(pair);
+        System.out.println("卖盘数据：");
+        MatchDataLimitSellHolder.dump(pair);
+        System.out.println("市场买盘" + MatchDataMarketBuyHolder.getList(pair));
+        System.out.println("市场卖盘" + MatchDataMarketSellHolder.getList(pair));
 
         return matchDetailMqList;
     }
 
     public static void put(MatchEvent event) {
         Long id = event.getId();
-        if (LIST_INDEX_DATA.containsKey(id)) {
+        // 处理机器人订单的问题
+        if (id > 0 && LIST_INDEX_DATA.containsKey(id)) {
             return;
         }
         Long tradeCoinId = event.getTradeCoinId();
@@ -237,7 +243,9 @@ public class MatchDataLimitSellHolder {
         listIndex.setPrice(bigPrice);
         listIndex.setIndex(index);
         listIndex.setPair(pair);
-        LIST_INDEX_DATA.put(id, listIndex);
+        if (id > 0) {
+            LIST_INDEX_DATA.put(id, listIndex);
+        }
         matchEvents.add(event);
         map.put(bigPrice, matchEvents);
     }
@@ -294,6 +302,14 @@ public class MatchDataLimitSellHolder {
             return;
         }
         matchEvents.remove(index);
+    }
+
+    public static void dump(Long pair) {
+        Map<BigDecimal, List<MatchEvent>> map = getMap(pair);
+        for (Map.Entry<BigDecimal, List<MatchEvent>> listEntry : map.entrySet()) {
+            BigDecimal bigPrice = listEntry.getKey();
+            System.out.println("深度价格信息：" + bigPrice);
+        }
     }
 
     @Data

@@ -14,7 +14,7 @@ public class ConsumerAuthFilter implements Filter {
         Map<String, Object> claims = new HashMap<>();
         claims.put("key", 1);
         String token = JwtUtils.createToken(claims, key,86400L); // 一天后过期
-        System.out.println("消费端拦截了*****************************" + token);
+        // System.out.println("消费端拦截了*****************************" + token);
         invocation.setAttachment("token",token);
         return invoker.invoke(invocation);
     }
