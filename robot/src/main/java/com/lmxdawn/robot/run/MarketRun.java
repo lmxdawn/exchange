@@ -61,10 +61,12 @@ public class MarketRun implements Runnable {
                     isOrder = true;
                     this.buildRandOrder(1, buyCreateCount, size.getBuyLastPrice());
                 } else if (price.compareTo(size.getSellFirstPrice()) > 0) {
-                    // 行情价格 > 卖盘最低价，需要构建买单
+                    // 行情价格 > 卖盘最低价，需要构建买单吃掉卖单
                     System.out.println("买行情价格 > 卖盘最低价，需要构建买单");
                     isOrder = true;
                     this.createOrder(1, size.getSellGreaterPriceAmount(), price);
+                    // 吃了卖单需要补充卖单
+                    this.buildRandOrder(2, size.getBuyGreaterPriceCount(), price);
                 }
 
                 // 获取平台的卖盘行情深度
@@ -76,10 +78,12 @@ public class MarketRun implements Runnable {
                     isOrder = true;
                     this.buildRandOrder(2, sellCreateCount, size.getSellLastPrice());
                 } else if (price.compareTo(size.getBuyFirstPrice()) < 0) {
-                    // 行情价格 < 买盘最高价，需要构建卖单
+                    // 行情价格 < 买盘最高价，需要构建卖单，吃掉买单
                     System.out.println("行情价格 < 买盘最高价，需要构建卖单");
                     isOrder = true;
                     this.createOrder(2, size.getBuyGreaterPriceAmount(), price);
+                    // 吃了买单需要补充买单
+                    this.buildRandOrder(1, size.getBuyGreaterPriceCount(), price);
                 }
 
                 if (!isOrder) {

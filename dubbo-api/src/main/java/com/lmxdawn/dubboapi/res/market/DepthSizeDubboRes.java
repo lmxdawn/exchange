@@ -26,6 +26,9 @@ public class DepthSizeDubboRes implements Serializable {
     @ApiModelProperty(value = "买盘大于最新价格的挂单数量")
     private BigDecimal buyGreaterPriceAmount;
 
+    @ApiModelProperty(value = "买盘大于最新价格的挂单数")
+    private Integer buyGreaterPriceCount;
+
     @ApiModelProperty(value = "买盘最后一个价格")
     private BigDecimal buyLastPrice;
 
@@ -43,6 +46,9 @@ public class DepthSizeDubboRes implements Serializable {
 
     @ApiModelProperty(value = "卖盘大于最新价格的挂单数量")
     private BigDecimal sellGreaterPriceAmount;
+
+    @ApiModelProperty(value = "卖盘大于最新价格的挂单数")
+    private Integer sellGreaterPriceCount;
 
     @ApiModelProperty(value = "卖盘最后一个价格")
     private BigDecimal sellLastPrice;

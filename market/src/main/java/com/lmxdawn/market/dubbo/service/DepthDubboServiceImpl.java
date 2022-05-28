@@ -33,6 +33,7 @@ public class DepthDubboServiceImpl implements DepthDubboService {
         BigDecimal buyFirstPrice = BigDecimal.valueOf(0);
         BigDecimal buyFirstAmount = BigDecimal.valueOf(0);
         BigDecimal buyGreaterPriceAmount = BigDecimal.valueOf(0);
+        int buyGreaterPriceCount = 0;
         BigDecimal buyLastPrice = price;
         int buySize = 0;
         // 买盘，从大到小获取
@@ -58,6 +59,7 @@ public class DepthDubboServiceImpl implements DepthDubboService {
                 // 买盘的价格大于最新价格的数量
                 if (depthPrice.compareTo(price) >= 0) {
                     buyGreaterPriceAmount = buyGreaterPriceAmount.add(depthAmount);
+                    buyGreaterPriceCount += 1;
                 }
             }
             buySize = depthBuyList.size();
@@ -69,6 +71,7 @@ public class DepthDubboServiceImpl implements DepthDubboService {
         BigDecimal sellFirstPrice = BigDecimal.valueOf(0);
         BigDecimal sellFirstAmount = BigDecimal.valueOf(0);
         BigDecimal sellGreaterPriceAmount = BigDecimal.valueOf(0);
+        int sellGreaterPriceCount = 0;
         BigDecimal sellLastPrice = price;
         int sellSize = 0;
         // 卖盘，从小到大获取
@@ -94,6 +97,7 @@ public class DepthDubboServiceImpl implements DepthDubboService {
                 // 卖盘的价格小于最新价格的数量
                 if (depthPrice.compareTo(price) <= 0) {
                     sellGreaterPriceAmount = sellGreaterPriceAmount.add(depthAmount);
+                    sellGreaterPriceCount += 1;
                 }
             }
             sellSize = depthSellList.size();
@@ -105,12 +109,14 @@ public class DepthDubboServiceImpl implements DepthDubboService {
         res.setBuyFirstPrice(buyFirstPrice);
         res.setBuyFirstAmount(buyFirstAmount);
         res.setBuyGreaterPriceAmount(buyGreaterPriceAmount);
+        res.setBuyGreaterPriceCount(buyGreaterPriceCount);
         res.setBuyLastPrice(buyLastPrice);
         res.setSellSize(sellSize);
         res.setSellRandPrice(sellRandPrice);
         res.setSellFirstPrice(sellFirstPrice);
         res.setSellFirstAmount(sellFirstAmount);
         res.setSellGreaterPriceAmount(sellGreaterPriceAmount);
+        res.setSellGreaterPriceCount(sellGreaterPriceCount);
         res.setSellLastPrice(sellLastPrice);
 
         return res;
