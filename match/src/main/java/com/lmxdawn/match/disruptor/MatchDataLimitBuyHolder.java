@@ -103,7 +103,7 @@ public class MatchDataLimitBuyHolder {
         System.out.println("*******************撮合卖单 start*******************");
         // 匹配撮合
         Map<BigDecimal, List<MatchEvent>> map = getMap(pair);
-        System.out.println("当前数据：" + map);
+        System.out.println("买盘当前数据：" + map);
         // 判断数量是否还大于0
         if (sellAmount.compareTo(BigDecimal.ZERO) > 0 && map.size() > 0) {
             Iterator<Map.Entry<BigDecimal, List<MatchEvent>>> iterator = map.entrySet().iterator();
@@ -206,6 +206,115 @@ public class MatchDataLimitBuyHolder {
         return matchDetailMqList;
     }
 
+    // 测试
+    // public static void main(String[] args) {
+    //
+    //
+    //     // 卖盘
+    //     MatchEvent matchEvent = new MatchEvent();
+    //     matchEvent.setId(143L);
+    //     matchEvent.setMemberId(4L);
+    //     matchEvent.setTradeCoinId(3L);
+    //     matchEvent.setCoinId(1L);
+    //     matchEvent.setType(1);
+    //     matchEvent.setDirection(2);
+    //     matchEvent.setAmount(1.0);
+    //     matchEvent.setPrice(6.0);
+    //     matchEvent.setTotal(0.0);
+    //     matchEvent.setBuyFee(0.1);
+    //     matchEvent.setBuyFeePrecision(2);
+    //     matchEvent.setSellFee(0.0);
+    //     matchEvent.setSellFeePrecision(0);
+    //     matchEvent.setTradeAmountPrecision(2);
+    //     MatchDataLimitBuyHolder.match(matchEvent);
+    //
+    //     matchEvent = new MatchEvent();
+    //     matchEvent.setId(142L);
+    //     matchEvent.setMemberId(4L);
+    //     matchEvent.setTradeCoinId(3L);
+    //     matchEvent.setCoinId(1L);
+    //     matchEvent.setType(1);
+    //     matchEvent.setDirection(2);
+    //     matchEvent.setAmount(1.0);
+    //     matchEvent.setPrice(7.0);
+    //     matchEvent.setTotal(0.0);
+    //     matchEvent.setBuyFee(0.1);
+    //     matchEvent.setBuyFeePrecision(2);
+    //     matchEvent.setSellFee(0.0);
+    //     matchEvent.setSellFeePrecision(0);
+    //     matchEvent.setTradeAmountPrecision(2);
+    //     MatchDataLimitBuyHolder.match(matchEvent);
+    //
+    //
+    //     // 买盘
+    //     // {2.0=[MatchEvent(id=148, memberId=4, tradeCoinId=3, coinId=1, type=1, direction=1, price=2.0, amount=1.0, total=0.0, buyFee=0.1, buyFeePrecision=2, sellFee=0.0, sellFeePrecision=0, tradeAmountPrecision=2, isRobot=null)],
+    //     // 3.0=[MatchEvent(id=
+    //     // 147
+    //     // , memberId=
+    //     // 4
+    //     // , tradeCoinId=
+    //     // 3
+    //     // , coinId=
+    //     // 1
+    //     // , type=
+    //     // 1
+    //     // , direction=
+    //     // 1
+    //     // , price=
+    //     // 3.0
+    //     // , amount=
+    //     // 1.0
+    //     // , total=
+    //     // 0.0
+    //     // , buyFee=
+    //     // 0.1
+    //     // , buyFeePrecision=
+    //     // 2
+    //     // , sellFee=
+    //     // 0.0
+    //     // , sellFeePrecision=
+    //     // 0
+    //     // , tradeAmountPrecision=
+    //     // 2
+    //     // , isRobot=null)],
+    //     // 4.0=[MatchEvent(id=146, memberId=4, tradeCoinId=3, coinId=1, type=1, direction=1, price=4.0, amount=1.0, total=0.0, buyFee=0.1, buyFeePrecision=2, sellFee=0.0, sellFeePrecision=0, tradeAmountPrecision=2, isRobot=null)]}
+    //
+    //     matchEvent = new MatchEvent();
+    //     matchEvent.setId(146L);
+    //     matchEvent.setMemberId(4L);
+    //     matchEvent.setTradeCoinId(3L);
+    //     matchEvent.setCoinId(1L);
+    //     matchEvent.setType(1);
+    //     matchEvent.setDirection(1);
+    //     matchEvent.setAmount(1.0);
+    //     matchEvent.setPrice(4.0);
+    //     matchEvent.setTotal(0.0);
+    //     matchEvent.setBuyFee(0.1);
+    //     matchEvent.setBuyFeePrecision(2);
+    //     matchEvent.setSellFee(0.0);
+    //     matchEvent.setSellFeePrecision(0);
+    //     matchEvent.setTradeAmountPrecision(2);
+    //     MatchDataLimitSellHolder.match(matchEvent);
+    //
+    //     matchEvent = new MatchEvent();
+    //     matchEvent.setId(147L);
+    //     matchEvent.setMemberId(4L);
+    //     matchEvent.setTradeCoinId(3L);
+    //     matchEvent.setCoinId(1L);
+    //     matchEvent.setType(1);
+    //     matchEvent.setDirection(1);
+    //     matchEvent.setAmount(1.0);
+    //     matchEvent.setPrice(3.0);
+    //     matchEvent.setTotal(0.0);
+    //     matchEvent.setBuyFee(0.1);
+    //     matchEvent.setBuyFeePrecision(2);
+    //     matchEvent.setSellFee(0.0);
+    //     matchEvent.setSellFeePrecision(0);
+    //     matchEvent.setTradeAmountPrecision(2);
+    //     MatchDataLimitSellHolder.match(matchEvent);
+    //
+    // }
+
     public static void put(MatchEvent event) {
         Long id = event.getId();
         // 处理机器人订单的问题
@@ -216,7 +325,7 @@ public class MatchDataLimitBuyHolder {
         Long coinId = event.getCoinId();
         Long pair = Long.valueOf(tradeCoinId.toString() + coinId.toString());
         // 买单队列价格降序排列
-        TreeMap<BigDecimal, List<MatchEvent>> map = DATA.computeIfAbsent(pair, k -> new TreeMap<>(Comparator.reverseOrder()));
+        TreeMap<BigDecimal, List<MatchEvent>> map = getMap(pair);
         Double price = event.getPrice();
         BigDecimal bigPrice = BigDecimal.valueOf(price);
         List<MatchEvent> matchEvents = map.computeIfAbsent(bigPrice, k -> new ArrayList<>());
@@ -258,8 +367,8 @@ public class MatchDataLimitBuyHolder {
         return DATA;
     }
 
-    public static Map<BigDecimal, List<MatchEvent>> getMap(Long pair) {
-        return DATA.computeIfAbsent(pair, k -> new TreeMap<>());
+    public static TreeMap<BigDecimal, List<MatchEvent>> getMap(Long pair) {
+        return DATA.computeIfAbsent(pair, k -> new TreeMap<>(Comparator.reverseOrder()));
     }
 
     public static void remove(Long id) {

@@ -201,7 +201,7 @@ public class MatchDetailStream {
                 key = String.format(key, pair);
                 String infoKey = direction == 1 ? CacheConstant.BUY_DEPTH_INFO : CacheConstant.SELL_DEPTH_INFO;
                 String keyPrice = direction == 1 ? matchPrice.max(price).toString() : matchPrice.min(price).toString();
-                System.out.println("价格：" + keyPrice);
+                // System.out.println("价格：" + keyPrice);
                 String amountKey = String.format(infoKey, pair, keyPrice);
                 Long increment = redisTemplate.opsForValue().increment(amountKey, -amount.multiply(bigPow).longValue());
                 if (increment == null || increment <= 0) {
@@ -217,7 +217,7 @@ public class MatchDetailStream {
                         String depthAmountStr = redisTemplate.opsForValue().get(depthAmountKey);
                         DepthVo depthVo = new DepthVo();
                         depthVo.setPrice(Double.parseDouble(depthPrice));
-                        BigDecimal depthAmount = !StringUtils.isBlank(depthAmountStr) ? BigDecimal.valueOf(Long.parseLong(depthAmountStr)) : BigDecimal.ZERO;
+                        BigDecimal depthAmount = !StringUtils.isBlank(depthAmountStr) ? new BigDecimal(depthAmountStr) : BigDecimal.ZERO;
                         if (depthAmount.compareTo(BigDecimal.ZERO) <= 0) {
                             redisTemplate.delete(depthAmountKey);
                             redisTemplate.opsForZSet().remove(key, depthPrice);
@@ -243,7 +243,7 @@ public class MatchDetailStream {
                 matchKey = String.format(matchKey, pair);
                 String matchInfoKey = matchDirection == 1 ? CacheConstant.BUY_DEPTH_INFO : CacheConstant.SELL_DEPTH_INFO;
                 String keyPrice = matchDirection == 1 ? matchPrice.max(price).toString() : matchPrice.min(price).toString();
-                System.out.println("对手单价格：" + keyPrice);
+                // System.out.println("对手单价格：" + keyPrice);
                 String matchAmountKey = String.format(matchInfoKey, pair, keyPrice);
                 Long matchIncrement = redisTemplate.opsForValue().increment(matchAmountKey, -amount.multiply(bigPow).longValue());
                 if (matchIncrement == null || matchIncrement <= 0) {
@@ -259,7 +259,7 @@ public class MatchDetailStream {
                         String depthAmountStr = redisTemplate.opsForValue().get(depthAmountKey);
                         DepthVo depthVo = new DepthVo();
                         depthVo.setPrice(Double.parseDouble(depthPrice));
-                        BigDecimal depthAmount = !StringUtils.isBlank(depthAmountStr) ? BigDecimal.valueOf(Long.parseLong(depthAmountStr)) : BigDecimal.ZERO;
+                        BigDecimal depthAmount = !StringUtils.isBlank(depthAmountStr) ? new BigDecimal(depthAmountStr) : BigDecimal.ZERO;
                         if (depthAmount.compareTo(BigDecimal.ZERO) <= 0) {
                             redisTemplate.delete(depthAmountKey);
                             redisTemplate.opsForZSet().remove(matchKey, depthPrice);
@@ -292,6 +292,7 @@ public class MatchDetailStream {
             wsMarketMq.setMatchMemberId(matchMemberId);
             wsMarketMq.setMatchOrderId(matchId);
             wsMarketMq.setData(JSON.toJSONString(dataVo));
+
             // 推送 ws 深度行情
             streamBridge.send(MqTopicConstant.WS_MARKET_TOPIC, wsMarketMq);
 

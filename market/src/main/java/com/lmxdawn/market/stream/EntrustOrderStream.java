@@ -69,6 +69,7 @@ public class EntrustOrderStream {
                 Long increment = redisTemplate.opsForValue().increment(String.format(infoKey, pair, price), bigAmount.multiply(bigPow).longValue());
 
                 Set<String> depthPriceList = direction == 1 ? redisTemplate.opsForZSet().reverseRange(key, 0, 100) : redisTemplate.opsForZSet().range(key, 0, 100);
+
                 List<DepthVo> depthVoList = new ArrayList<>();
                 if (depthPriceList != null) {
                     for (String depthPrice : depthPriceList) {
@@ -76,7 +77,7 @@ public class EntrustOrderStream {
                         String depthAmountStr = redisTemplate.opsForValue().get(depthAmountKey);
                         DepthVo depthVo = new DepthVo();
                         depthVo.setPrice(Double.parseDouble(depthPrice));
-                        BigDecimal depthAmount = !StringUtils.isBlank(depthAmountStr) ? BigDecimal.valueOf(Long.parseLong(depthAmountStr)) : BigDecimal.ZERO;
+                        BigDecimal depthAmount = !StringUtils.isBlank(depthAmountStr) ? new BigDecimal(depthAmountStr) : BigDecimal.ZERO;
                         if (depthAmount.compareTo(BigDecimal.ZERO) <= 0) {
                             redisTemplate.delete(depthAmountKey);
                             redisTemplate.opsForZSet().remove(key, depthPrice);

@@ -101,6 +101,7 @@ public class MatchDataLimitSellHolder {
         System.out.println("*******************撮合买单 start*******************");
         // 匹配撮合
         Map<BigDecimal, List<MatchEvent>> map = getMap(pair);
+        System.out.println("卖盘当前数据：" + map);
 
         // 限价判断数量大于0，市价判断成交量大于0
         if ((buyAmount.compareTo(BigDecimal.ZERO) > 0 || buyTotal.compareTo(BigDecimal.ZERO) > 0) && map.size() > 0) {
@@ -200,8 +201,9 @@ public class MatchDataLimitSellHolder {
                 System.out.println("剩余没有撮合1");
                 System.out.println(buyAmount);
                 buy.setAmount(buyAmount.doubleValue());
-                // 限价，压入卖单
+                // 限价，压入买单
                 MatchDataLimitBuyHolder.put(buy);
+                System.out.println(MatchDataLimitBuyHolder.getMap(pair));
             }
         } else {
             if (buyTotal.compareTo(BigDecimal.ZERO) > 0) {
@@ -234,7 +236,7 @@ public class MatchDataLimitSellHolder {
         Long coinId = event.getCoinId();
         Long pair = Long.valueOf(tradeCoinId.toString() + coinId.toString());
         // 卖单队列价格升序排列
-        TreeMap<BigDecimal, List<MatchEvent>> map = DATA.computeIfAbsent(pair, k -> new TreeMap<>(Comparator.naturalOrder()));
+        TreeMap<BigDecimal, List<MatchEvent>> map = getMap(pair);
         Double price = event.getPrice();
         BigDecimal bigPrice = BigDecimal.valueOf(price);
         List<MatchEvent> matchEvents = map.computeIfAbsent(bigPrice, k -> new ArrayList<>());
@@ -276,8 +278,8 @@ public class MatchDataLimitSellHolder {
         return DATA;
     }
 
-    public static Map<BigDecimal, List<MatchEvent>> getMap(Long pair) {
-        return DATA.computeIfAbsent(pair, k -> new TreeMap<>());
+    public static TreeMap<BigDecimal, List<MatchEvent>> getMap(Long pair) {
+        return DATA.computeIfAbsent(pair, k -> new TreeMap<>(Comparator.naturalOrder()));
     }
 
     public static void remove(Long id) {
