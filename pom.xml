@@ -37,7 +37,7 @@
         <seata.version>1.4.2</seata.version>
         <mysql.version>8.0.22</mysql.version>
         <mybatis.version>2.2.0</mybatis.version>
-        <pagehelper.version>5.2.1</pagehelper.version>
+        <pagehelper.version>5.3.1</pagehelper.version>
         <jjwt.version>0.9.1</jjwt.version>
         <fastjson.version>1.2.76</fastjson.version>
         <okhttp.version>3.8.1</okhttp.version>
