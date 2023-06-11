@@ -39,7 +39,7 @@
         <mybatis.version>2.2.0</mybatis.version>
         <pagehelper.version>5.3.1</pagehelper.version>
         <jjwt.version>0.9.1</jjwt.version>
-        <fastjson.version>1.2.76</fastjson.version>
+        <fastjson.version>1.2.83</fastjson.version>
         <okhttp.version>3.8.1</okhttp.version>
         <apache-commons.version>3.12.0</apache-commons.version>
         <huaweicloud-obs.version>3.21.8</huaweicloud-obs.version>
